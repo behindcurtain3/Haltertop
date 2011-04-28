@@ -7,6 +7,11 @@ gem 'rails', '3.0.6'
 
 gem 'sqlite3'
 
+group :development do
+  gem 'annotate-models', '1.0.4'
+  gem 'faker', '0.3.1'
+end
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

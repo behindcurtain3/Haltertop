@@ -1,21 +1,3 @@
-<div id="dialog" title="Welcome">
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-</div>
-<script type="text/javascript">
-  $(function(){
-    // Dialog
-    $('#dialog').dialog({
-      autoOpen: true,
-      width: 600,
-      buttons: {
-	"Ok": function() {
-	  $(this).dialog("close");
-	},
-	"Cancel": function() {
-	  $(this).dialog("close");
-	}
-      }
-    });
+<div id="dialog_main" title=""></div>
 
-  });
-</script>
+<%= javascript_include_tag 'home' %>

@@ -10,6 +10,13 @@ class PagesController < ApplicationController
     end
   end
 
+  def getstarted
+    @title = "Get Started"
+    respond_to do |format|
+      format.js # Only respond to ajax calls
+    end
+  end
+
   def about
     @title = "About"
     respond_to do |format|

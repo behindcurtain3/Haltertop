@@ -5,4 +5,5 @@ Haltertop::Application.routes.draw do
   match 'getstarted'    => "pages#getstarted"
 	match 'signin'        => "sessions#new"
   match 'about'         => "pages#about"
+  match 'contact'       => "pages#contact"
 end

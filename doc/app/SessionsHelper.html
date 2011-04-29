@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: SessionsHelper</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./app/helpers/sessions_helper_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="app/helpers/sessions_helper.rb">app/helpers/sessions_helper.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-i-authenticate">#authenticate</a></li>
+					
+					<li><a href="#method-i-clear_return_to">#clear_return_to</a></li>
+					
+					<li><a href="#method-i-current_user">#current_user</a></li>
+					
+					<li><a href="#method-i-current_user%3D">#current_user=</a></li>
+					
+					<li><a href="#method-i-current_user%3F">#current_user?</a></li>
+					
+					<li><a href="#method-i-deny_access">#deny_access</a></li>
+					
+					<li><a href="#method-i-redirect_back_or">#redirect_back_or</a></li>
+					
+					<li><a href="#method-i-remember_token">#remember_token</a></li>
+					
+					<li><a href="#method-i-sign_in">#sign_in</a></li>
+					
+					<li><a href="#method-i-sign_out">#sign_out</a></li>
+					
+					<li><a href="#method-i-signed_in%3F">#signed_in?</a></li>
+					
+					<li><a href="#method-i-store_location">#store_location</a></li>
+					
+					<li><a href="#method-i-user_from_remember_token">#user_from_remember_token</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./ApplicationController.html">ApplicationController</a></li>
+				
+					<li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+				
+					<li><a href="./PagesController.html">PagesController</a></li>
+				
+					<li><a href="./SessionsController.html">SessionsController</a></li>
+				
+					<li><a href="./SessionsHelper.html">SessionsHelper</a></li>
+				
+					<li><a href="./User.html">User</a></li>
+				
+					<li><a href="./UsersController.html">UsersController</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">SessionsHelper</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="authenticate-method" class="method-detail ">
+				<a name="method-i-authenticate"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">authenticate</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+checks if user is signed in
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="authenticate-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 33</span>
+33:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authenticate</span>
+34:     <span class="ruby-identifier">deny_access</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">signed_in?</span>
+35:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="current-user-method" class="method-detail ">
+				<a name="method-i-current_user"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">current_user</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Gets @<a href="SessionsHelper.html#method-i-current_user">current_user</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="current-user-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 15</span>
+15:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user</span>
+16:     <span class="ruby-comment cmt"># set @current_user equal to the user corresponding to the remember token</span>
+17:     <span class="ruby-comment cmt"># only if @current_user is undefined.</span>
+18:     <span class="ruby-ivar">@current_user</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">user_from_remember_token</span>
+19:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="current-user--method" class="method-detail ">
+				<a name="method-i-current_user%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">current_user=</span><span
+						class="method-args">(user)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Sets @<a href="SessionsHelper.html#method-i-current_user">current_user</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="current-user--source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 10</span>
+10:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user=</span>(<span class="ruby-identifier">user</span>)
+11:     <span class="ruby-ivar">@current_user</span> = <span class="ruby-identifier">user</span>
+12:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="current-user--method" class="method-detail ">
+				<a name="method-i-current_user%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">current_user?</span><span
+						class="method-args">(user)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+is the @<a
+href="SessionsHelper.html#method-i-current_user">current_user</a> the same
+as user?
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="current-user--source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 44</span>
+44:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">current_user?</span>(<span class="ruby-identifier">user</span>)
+45:     <span class="ruby-identifier">user</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">current_user</span>
+46:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="deny-access-method" class="method-detail ">
+				<a name="method-i-deny_access"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">deny_access</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+redirects a to signin_path
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="deny-access-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 38</span>
+38:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">deny_access</span>
+39:     <span class="ruby-identifier">store_location</span>
+40:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">signin_path</span>, <span class="ruby-value">:notice</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;Please sign in to access this page.&quot;</span>
+41:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="redirect-back-or-method" class="method-detail ">
+				<a name="method-i-redirect_back_or"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">redirect_back_or</span><span
+						class="method-args">(default)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="redirect-back-or-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 48</span>
+48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">redirect_back_or</span>(<span class="ruby-identifier">default</span>)
+49:     <span class="ruby-identifier">redirect_to</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">default</span>)
+50:     <span class="ruby-identifier">clear_return_to</span>
+51:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sign-in-method" class="method-detail ">
+				<a name="method-i-sign_in"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sign_in</span><span
+						class="method-args">(user)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="sign-in-source">
+<pre>
+   <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 4</span>
+4:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign_in</span>(<span class="ruby-identifier">user</span>)
+5:     <span class="ruby-identifier">cookies</span>.<span class="ruby-identifier">permanent</span>.<span class="ruby-identifier">signed</span>[<span class="ruby-value">:remember_token</span>] = [<span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">user</span>.<span class="ruby-identifier">salt</span>]
+6:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">current_user</span> = <span class="ruby-identifier">user</span>
+7:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sign-out-method" class="method-detail ">
+				<a name="method-i-sign_out"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sign_out</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+sign out a user
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sign-out-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 27</span>
+27:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sign_out</span>
+28:     <span class="ruby-identifier">cookies</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:remember_token</span>)
+29:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">current_user</span> = <span class="ruby-keyword kw">nil</span>
+30:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="signed-in--method" class="method-detail ">
+				<a name="method-i-signed_in%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">signed_in?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+is the user signed in?
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="signed-in--source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 22</span>
+22:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">signed_in?</span>
+23:     <span class="ruby-operator">!</span><span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">nil?</span>
+24:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="private-instance-method-details" class="method-section section">
+			<h3 class="section-header">Private Instance Methods</h3>
+
+		
+			<div id="clear-return-to-method" class="method-detail ">
+				<a name="method-i-clear_return_to"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">clear_return_to</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="clear-return-to-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 66</span>
+66:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear_return_to</span>
+67:       <span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>] = <span class="ruby-keyword kw">nil</span>
+68:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="remember-token-method" class="method-detail ">
+				<a name="method-i-remember_token"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">remember_token</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="remember-token-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 58</span>
+58:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remember_token</span>
+59:       <span class="ruby-identifier">cookies</span>.<span class="ruby-identifier">signed</span>[<span class="ruby-value">:remember_token</span>] <span class="ruby-operator">||</span> [<span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>]
+60:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="store-location-method" class="method-detail ">
+				<a name="method-i-store_location"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">store_location</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="store-location-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 62</span>
+62:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">store_location</span>
+63:       <span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>] = <span class="ruby-identifier">request</span>.<span class="ruby-identifier">fullpath</span>
+64:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="user-from-remember-token-method" class="method-detail ">
+				<a name="method-i-user_from_remember_token"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">user_from_remember_token</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="user-from-remember-token-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/helpers/sessions_helper.rb, line 54</span>
+54:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">user_from_remember_token</span>
+55:       <span class="ruby-constant">User</span>.<span class="ruby-identifier">authenticate_with_salt</span>(*<span class="ruby-identifier">remember_token</span>)
+56:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

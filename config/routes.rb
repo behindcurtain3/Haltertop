@@ -5,12 +5,10 @@ Haltertop::Application.routes.draw do
 
   root :to => "pages#home"
 
-  match '/news'          => "pages#news"
-  match '/getstarted'    => "pages#getstarted"
   match '/about'         => "pages#about"
   match '/contact'       => "pages#contact"
 
   match '/signin'        => "sessions#new"
-  match '/signout'       => "session#destroy"
+  match '/signout'       => "sessions#destroy"
   match '/signup'        => "users#new"
 end

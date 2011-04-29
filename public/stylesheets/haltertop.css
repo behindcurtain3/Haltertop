@@ -272,3 +272,16 @@ form.new_micropost textarea {
 span.float {
   float: right;
 }
+
+#small_signin {
+    float: right;
+}
+
+#small_signin form {
+    padding: 0;
+}
+
+#small_signin form input {
+    font-size: 10pt;
+    margin: 2px;
+}

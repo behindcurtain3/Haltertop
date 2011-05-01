@@ -11,4 +11,6 @@ Haltertop::Application.routes.draw do
   match '/signin'        => "sessions#new"
   match '/signout'       => "sessions#destroy"
   match '/signup'        => "users#new"
+
+	match '/play'					 => "pages#play"
 end

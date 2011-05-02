@@ -5,7 +5,8 @@ var gSelectedPieceIndex = -1;
 var gSelectedPieceHasMove = false;
 var gGameInProgress = false;
 var gImages;
-var gImagesLoaded;
+var gImagesLoaded = false;
+var gImageLoadIndex = 0;
 
 
 var cBoardWidth = 8;
@@ -40,9 +41,8 @@ function initGame(canvasElement){
     gCanvasElement.addEventListener("click", canvasOnClick, false);
     gCanvasCtx = gCanvasElement.getContext("2d");
 
+    // loadImages will call newGame() when finished
     loadImages();
-
-    newGame();
 }
 
 function newGame(){
@@ -229,32 +229,37 @@ $(function(){
 });
 
 function loadImages(){
+    gImagesSrc = [
+	"images/black-king.png",
+	"images/black-queen.png",
+	"images/black-rook.png",
+	"images/black-bishop.png",
+	"images/black-knight.png",
+	"images/black-pawn.png",
+	"images/white-king.png",
+	"images/white-queen.png",
+	"images/white-rook.png",
+	"images/white-bishop.png",
+	"images/white-knight.png",
+	"images/white-pawn.png"
+    ];
     gImages = [
 	new Image(), new Image(), new Image(), new Image(), new Image(), new Image(),
 	new Image(), new Image(), new Image(), new Image(), new Image(), new Image()
     ];
-    gImagesLoaded = [
-	false, false, false, false, false, false,
-	false, false, false, false, false, false 
-    ];
-    gImages[0].src = "images/black-king.png";
-    gImages[1].src = "images/black-queen.png";
-    gImages[2].src = "images/black-rook.png";
-    gImages[3].src = "images/black-bishop.png";
-    gImages[4].src = "images/black-knight.png";
-    gImages[5].src = "images/black-pawn.png";
-    gImages[6].src = "images/white-king.png";
-    gImages[7].src = "images/white-queen.png";
-    gImages[8].src = "images/white-rook.png";
-    gImages[9].src = "images/white-bishop.png";
-    gImages[10].src = "images/white-knight.png";
-    gImages[11].src = "images/white-pawn.png";
 
-    // Setup load listeners
-    for(var i = 0; i < gImages.length; i++){
-	gImages[i].onload = function(){
-	    gImagesLoaded[i] = true;
+    loadImage(gImageLoadIndex);
+}
+
+function loadImage(index){
+    gImages[index].src = gImagesSrc[index];
+    gImages[index].onload = function(){
+	gImageLoadIndex++;
+	if(gImageLoadIndex >= gImagesSrc.length){
+	    gImagesLoaded = true;
+	    newGame();
+	    return;
 	}
+	loadImage(gImageLoadIndex);
     }
-
 }

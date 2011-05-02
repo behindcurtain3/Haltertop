@@ -1,47 +1,72 @@
-$(function(){
-    // Setup our canvas
-    var canvas = document.getElementById("game");
-    var context = canvas.getContext("2d");
+var gCanvasElement;
+var gCanvasCtx;
+var gPieces;
+var gSelectedPieceIndex = -1;
+var gGameInProgress = false;
 
-    // Height & Width variables
-    var height = 64;
-    var width = 64;
-    var darkColor = "#987";
-    var lightColor = "#fff";
+var cBoardWidth = 8;
+var cBoardHeight = 8;
+var cPieceWidth = 64;
+var cPieceHeight = 64;
+var cDarkColor = "#987";
+var cLightColor = "#fff";
 
-    // Pieces image
-    var pieces = new Image();
-    pieces.src = "images/chess-set-symbols.png";
-    pieces.onload = function(){
-      // Draw pieces in their right places
-      // Black king
-      context.drawImage(pieces, 0, 0, 90, 90, 0, 0, 64,64);
-    }
 
+function Piece(type, row, column){
+    this.type = type;
+    this.row = row;
+    this.column = column;
+}
+
+
+function initGame(canvasElement){
+    if(!canvasElement)
+        return;
+
+    gCanvasElement = canvasElement;
+    gCanvasCtx = gCanvasElement.getContext("2d");
+
+    newGame();
+}
+
+function newGame(){
+    gPieces = [new Piece("black-king", 4,0)];
+
+    gSelectedPieceIndex = -1;
+    gGameInProgress = true;
+
+    drawBoard();
+}
+
+function drawBoard(){
     // Tracks whether to draw a black or white square
     var blackSquare = false;
 
     // Draw the board
-    for(var y = 0; y < 8; y++){
-      for(var x = 0; x < 8; x++){
+    for(var y = 0; y < cBoardHeight; y++){
+      for(var x = 0; x < cBoardWidth; x++){
 	if(blackSquare){
-	  context.fillStyle = lightColor;
+	  gCanvasCtx.fillStyle = cLightColor;
 	} else {
-	  context.fillStyle = darkColor;
+	  gCanvasCtx.fillStyle = cDarkColor;
 	}
-	context.fillRect(x * width, y * height, width, height);
+	gCanvasCtx.fillRect(x * cPieceWidth, y * cPieceHeight, cPieceWidth, cPieceHeight);
 	blackSquare = !blackSquare;
       }
       blackSquare = !blackSquare;
     }
 
     // Draw board border
-    context.moveTo(0,0);
-    context.lineTo(512,0);
-    context.lineTo(512,512);
-    context.lineTo(0,512);
-    context.lineTo(0,0);
-    context.strokeStyle = "#999";
-    context.stroke();
+    gCanvasCtx.moveTo(0,0);
+    gCanvasCtx.lineTo(512,0);
+    gCanvasCtx.lineTo(512,512);
+    gCanvasCtx.lineTo(0,512);
+    gCanvasCtx.lineTo(0,0);
+    gCanvasCtx.strokeStyle = "#999";
+    gCanvasCtx.stroke();
+}
 
+
+$(function(){
+    initGame(document.getElementById("game"));
 });

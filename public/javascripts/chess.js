@@ -4,12 +4,8 @@ var gPieces;
 var gSelectedPieceIndex = -1;
 var gSelectedPieceHasMove = false;
 var gGameInProgress = false;
-var gImages;
-var gImagesLoaded = false;
-var gImageLoadIndex = 0;
-var gImagePath = "../images/"
 var gGameId;
-
+var gPlayerColor;
 
 var cBoardWidth = 8;
 var cBoardHeight = 8;
@@ -36,7 +32,7 @@ function Piece(color, type, row, column){
 }
 
 
-function initGame(canvasElement, gameId){
+function initGame(canvasElement, gameId, color){
     if(!canvasElement)
         return;
 
@@ -45,9 +41,9 @@ function initGame(canvasElement, gameId){
     gCanvasCtx = gCanvasElement.getContext("2d");
 
     gGameId = gameId;
+    gPlayerColor = color;
 
-    // loadImages will call setupGame() when finished
-    loadImages();
+    setupGame();
 }
 
 function setupGame(){
@@ -103,7 +99,7 @@ function drawBoard(){
     var index = -1;
     for(var i = 0; i < gPieces.length; i++){
 	switch(gPieces[i].color){
-	    case "white":
+	    case "black":
 		switch(gPieces[i].type){
 		    case "king":
 			index = 0;
@@ -125,7 +121,7 @@ function drawBoard(){
 			break;
 		}
 		break;
-	    case "black":
+	    case "white":
 		switch(gPieces[i].type){
 		    case "king":
 			index = 6;
@@ -203,6 +199,9 @@ function canvasOnClick(e){
     } else {
 	// Check if gSelectPieceIndex has a value
 	if(gSelectedPieceIndex == -1){
+	    if(gPieces[pieceIndex].color != gPlayerColor){
+		return;
+	    }
 	    gSelectedPieceIndex = pieceIndex;
 	    drawBoard();
 	    return;
@@ -248,44 +247,4 @@ function clickOnEmptyCell(cell){
     gPieces[gSelectedPieceIndex].cell.column = cell.column;
 
     gSelectedPieceIndex = -1;
-}
-
-function loadImages(){
-    gImagesSrc = [
-	"black-king.png",
-	"black-queen.png",
-	"black-rook.png",
-	"black-bishop.png",
-	"black-knight.png",
-	"black-pawn.png",
-	"white-king.png",
-	"white-queen.png",
-	"white-rook.png",
-	"white-bishop.png",
-	"white-knight.png",
-	"white-pawn.png"
-    ];
-    gImages = [
-	new Image(), new Image(), new Image(), new Image(), new Image(), new Image(),
-	new Image(), new Image(), new Image(), new Image(), new Image(), new Image()
-    ];
-
-    loadImage(gImageLoadIndex);
-}
-
-function loadImage(index){
-    gImages[index].src = gImagePath + gImagesSrc[index];
-    gImages[index].onload = function(){
-	gImageLoadIndex++;
-	if(gImageLoadIndex >= gImagesSrc.length){
-	    gImagesLoaded = true;
-	    setupGame();
-	    return;
-	}
-	loadImage(gImageLoadIndex);
-    }
-
-    gImages[index].onerror = function(){
-	$('#status').html('Error loading images');
-    }
 }

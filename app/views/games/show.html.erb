@@ -1,11 +1,36 @@
+<%
+if current_user? @game.white
+  color = "white"
+elsif current_user? @game.black
+  color = "black"
+else
+  color = "observer"
+end
+
+%>
+
+
 <h1>Game [<%= @game.id %>]</h1>
 <div id="black"></div>
 <canvas id="game" width ="512" height="512"></canvas>
 <div id="white"><%= @game.white.name %></div>
 <div id="status"></div>
+<%= javascript_include_tag 'jquery.timers-1.2.js' %>
 <%= javascript_include_tag 'chess.js' %>
+<%= javascript_include_tag 'chess-util.js' %>
 <script type="text/javascript">
+  var gImages;
+  var gImagesLoaded = false;
+  var gImageLoadIndex = 0;
+  var gImagePath = "../images/"
+
   $(function(){
-    initGame(document.getElementById("game"), <%= @game.id %>);
+    loadImages();
+    $(document).everyTime(1000, "images_loading", function(){
+      if(gImagesLoaded){
+	$(document).stopTime("images_loading");
+	initGame(document.getElementById("game"), <%= @game.id %>, "<%= color %>");
+      }
+    });
   });
 </script>

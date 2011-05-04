@@ -54,12 +54,16 @@ class GamesController < ApplicationController
 	# PUT /games/#{id}/move
 	def move
 		@game = Game.find(params[:id])
-		if @game.update_board(params[:from_row], params[:to_row], params[:from_column], params[:to_column])
+		if current_user? @game.turn
+			if @game.update_board(params[:from_row], params[:to_row], params[:from_column], params[:to_column])
 			result = { :from_column => params[:from_column],
 									:to_column => params[:to_column],
 									:from_row => params[:from_row],
 									:to_row => params[:to_row]
 									}
+			else
+				result = {:result => "fail"}
+			end
 		else
 			result = {:result => "fail"}
 		end

@@ -7,6 +7,8 @@ var gGameInProgress = false;
 var gImages;
 var gImagesLoaded = false;
 var gImageLoadIndex = 0;
+var gImagePath = "../images/"
+var gGameId;
 
 
 var cBoardWidth = 8;
@@ -33,7 +35,7 @@ function Piece(type, row, column){
 }
 
 
-function initGame(canvasElement){
+function initGame(canvasElement, gameId){
     if(!canvasElement)
         return;
 
@@ -41,51 +43,28 @@ function initGame(canvasElement){
     gCanvasElement.addEventListener("click", canvasOnClick, false);
     gCanvasCtx = gCanvasElement.getContext("2d");
 
-    // loadImages will call newGame() when finished
+    gGameId = gameId;
+
+    // loadImages will call setupGame() when finished
     loadImages();
 }
 
-function newGame(){
-    gPieces = [
-	new Piece("black-king", 0,4),
-	new Piece("black-queen", 0,3),
-	new Piece("black-rook", 0,0),
-	new Piece("black-rook", 0,7),
-	new Piece("black-bishop", 0,2),
-	new Piece("black-bishop", 0,5),
-	new Piece("black-knight", 0,1),
-	new Piece("black-knight", 0,6),
-	new Piece("black-pawn", 1,0),
-	new Piece("black-pawn", 1,1),
-	new Piece("black-pawn", 1,2),
-	new Piece("black-pawn", 1,3),
-	new Piece("black-pawn", 1,4),
-	new Piece("black-pawn", 1,5),
-	new Piece("black-pawn", 1,6),
-	new Piece("black-pawn", 1,7),
+function setupGame(){
+    $.ajaxSetup ({
+        cache: false
+    });
 
-	new Piece("white-king", 7,4),
-	new Piece("white-queen", 7,3),
-	new Piece("white-rook", 7,0),
-	new Piece("white-rook", 7,7),
-	new Piece("white-bishop", 7,2),
-	new Piece("white-bishop", 7,5),
-	new Piece("white-knight", 7,1),
-	new Piece("white-knight", 7,6),
-	new Piece("white-pawn", 6,0),
-	new Piece("white-pawn", 6,1),
-	new Piece("white-pawn", 6,2),
-	new Piece("white-pawn", 6,3),
-	new Piece("white-pawn", 6,4),
-	new Piece("white-pawn", 6,5),
-	new Piece("white-pawn", 6,6),
-	new Piece("white-pawn", 6,7),
-    ];
+    $.getJSON('/boards/' + gGameId, function(json){
+        // Load all the pieces
+        gPieces = [];
+	$.each(json, function(i, piece){
+	    gPieces.push(new Piece(piece.type, piece.row, piece.column));
+	});
 
-    gSelectedPieceIndex = -1;
-    gGameInProgress = true;
-
-    drawBoard();
+	gSelectedPieceIndex = -1;
+	gGameInProgress = true;
+	drawBoard();
+    });
 }
 
 function drawBoard(){
@@ -191,17 +170,53 @@ function getCursorPosition(e) {
 }
 
 function canvasOnClick(e){
+    if(!gGameInProgress) return;
+
     var cell = getCursorPosition(e);
+    var pieceIndex = -1;
+
+    // Check to see if a piece was clicked
     for (var i = 0; i < gPieces.length; i++) {
 	if ((gPieces[i].cell.row == cell.row) &&
 	    (gPieces[i].cell.column == cell.column)) {
-	    clickOnPiece(i);
-	    return;
+	    pieceIndex = i;
+	    continue;
 	}
     }
 
-    clickOnEmptyCell(cell);
-    drawBoard();
+    if(gSelectedPieceIndex == pieceIndex){
+	// Unselect the piece
+	gSelectedPieceIndex = -1;
+	drawBoard();
+	return;
+    } else {
+	// Check if gSelectPieceIndex has a value
+	if(gSelectedPieceIndex == -1){
+	    gSelectedPieceIndex = pieceIndex;
+	    drawBoard();
+	    return;
+	}
+
+	// Attempt a move
+	var move = "from_row=" + gPieces[gSelectedPieceIndex].cell.row +
+		    "&to_row=" + cell.row +
+		    "&from_column=" + gPieces[gSelectedPieceIndex].cell.column +
+		    "&to_column=" + cell.column;
+
+	$.ajax({
+	    url: '/games/' + gGameId + '/move',
+	    data: move,
+	    dataType: "json",
+	    success: function(json){
+		if(!json.result){
+		    gPieces[gSelectedPieceIndex].cell.row = json.to_row;
+		    gPieces[gSelectedPieceIndex].cell.column = json.to_column;
+		    gSelectedPieceIndex = -1;
+		    drawBoard();
+		}
+	    }
+	});
+    }
 }
 
 function clickOnPiece(pieceIndex) {
@@ -224,24 +239,20 @@ function clickOnEmptyCell(cell){
     gSelectedPieceIndex = -1;
 }
 
-$(function(){
-    initGame(document.getElementById("game"));
-});
-
 function loadImages(){
     gImagesSrc = [
-	"images/black-king.png",
-	"images/black-queen.png",
-	"images/black-rook.png",
-	"images/black-bishop.png",
-	"images/black-knight.png",
-	"images/black-pawn.png",
-	"images/white-king.png",
-	"images/white-queen.png",
-	"images/white-rook.png",
-	"images/white-bishop.png",
-	"images/white-knight.png",
-	"images/white-pawn.png"
+	"black-king.png",
+	"black-queen.png",
+	"black-rook.png",
+	"black-bishop.png",
+	"black-knight.png",
+	"black-pawn.png",
+	"white-king.png",
+	"white-queen.png",
+	"white-rook.png",
+	"white-bishop.png",
+	"white-knight.png",
+	"white-pawn.png"
     ];
     gImages = [
 	new Image(), new Image(), new Image(), new Image(), new Image(), new Image(),
@@ -252,14 +263,18 @@ function loadImages(){
 }
 
 function loadImage(index){
-    gImages[index].src = gImagesSrc[index];
+    gImages[index].src = gImagePath + gImagesSrc[index];
     gImages[index].onload = function(){
 	gImageLoadIndex++;
 	if(gImageLoadIndex >= gImagesSrc.length){
 	    gImagesLoaded = true;
-	    newGame();
+	    setupGame();
 	    return;
 	}
 	loadImage(gImageLoadIndex);
+    }
+
+    gImages[index].onerror = function(){
+	$('#status').html('Error loading images');
     }
 }

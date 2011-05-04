@@ -1,0 +1,9 @@
+<h1>Game [<%= @game.id %>]</h1>
+<canvas id="game" width ="512" height="512"></canvas>
+<div id="status"></div>
+<%= javascript_include_tag 'chess.js' %>
+<script type="text/javascript">
+  $(function(){
+    initGame(document.getElementById("game"), <%= @game.id %>);
+  });
+</script>

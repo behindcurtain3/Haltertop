@@ -7,6 +7,14 @@ class User < ActiveRecord::Base
   # Ensures only these attributes can be set by update_attributes
   attr_accessible :name, :email, :password, :password_confirmation
 
+	# Relationships with other models
+	has_many :games_as_black, :foreign_key => "black_id", :class_name => "Game"
+	has_many :games_as_white, :foreign_key => "white_id", :class_name => "Game"
+
+	def games
+		games_as_black + games_as_white
+	end
+
   # Email regex check
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 

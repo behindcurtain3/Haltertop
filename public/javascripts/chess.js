@@ -29,7 +29,8 @@ function Cell(row, column){
 }
 
 
-function Piece(type, row, column){
+function Piece(color, type, row, column){
+    this.color = color;
     this.type = type;
     this.cell = new Cell(row, column);
 }
@@ -58,7 +59,7 @@ function setupGame(){
         // Load all the pieces
         gPieces = [];
 	$.each(json, function(i, piece){
-	    gPieces.push(new Piece(piece.type, piece.row, piece.column));
+	    gPieces.push(new Piece(piece.color, piece.type, piece.row, piece.column));
 	});
 
 	gSelectedPieceIndex = -1;
@@ -99,45 +100,55 @@ function drawBoard(){
     gCanvasCtx.stroke();
 
     // Draw pieces
+    var index = -1;
     for(var i = 0; i < gPieces.length; i++){
-	switch(gPieces[i].type){
-	    case "black-king":
-		drawImg(0, gPieces[i].cell.column, gPieces[i].cell.row);
+	switch(gPieces[i].color){
+	    case "white":
+		switch(gPieces[i].type){
+		    case "king":
+			index = 0;
+			break;
+		    case "queen":
+			index = 1;
+			break;
+		    case "rook":
+			index = 2;
+			break;
+		    case "bishop":
+			index = 3;
+			break;
+		    case "knight":
+			index = 4;
+			break;
+		    case "pawn":
+			index = 5;
+			break;
+		}
 		break;
-	    case "black-queen":
-		drawImg(1, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "black-rook":
-		drawImg(2, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "black-bishop":
-		drawImg(3, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "black-knight":
-		drawImg(4, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "black-pawn":
-		drawImg(5, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-king":
-		drawImg(6, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-queen":
-		drawImg(7, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-rook":
-		drawImg(8, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-bishop":
-		drawImg(9, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-knight":
-		drawImg(10, gPieces[i].cell.column, gPieces[i].cell.row);
-		break;
-	    case "white-pawn":
-		drawImg(11, gPieces[i].cell.column, gPieces[i].cell.row);
+	    case "black":
+		switch(gPieces[i].type){
+		    case "king":
+			index = 6;
+			break;
+		    case "queen":
+			index = 7;
+			break;
+		    case "rook":
+			index = 8;
+			break;
+		    case "bishop":
+			index = 9;
+			break;
+		    case "knight":
+			index = 10;
+			break;
+		    case "pawn":
+			index = 11;
+			break;
+		}
 		break;
 	}
+	drawImg(index, gPieces[i].cell.column, gPieces[i].cell.row);
     }
 }
 

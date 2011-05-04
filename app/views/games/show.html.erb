@@ -1,5 +1,7 @@
 <h1>Game [<%= @game.id %>]</h1>
+<div id="black"></div>
 <canvas id="game" width ="512" height="512"></canvas>
+<div id="white"><%= @game.white.name %></div>
 <div id="status"></div>
 <%= javascript_include_tag 'chess.js' %>
 <script type="text/javascript">

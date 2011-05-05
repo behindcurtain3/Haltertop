@@ -8,8 +8,6 @@ else
 end
 
 %>
-
-
 <h1>Game [<%= @game.id %>]</h1>
 <div id="black"></div>
 <canvas id="game" width ="512" height="512"></canvas>
@@ -23,14 +21,27 @@ end
   var gImagesLoaded = false;
   var gImageLoadIndex = 0;
   var gImagePath = "../images/"
+  var gChess;
 
   $(function(){
+    $.ajaxSetup ({
+        cache: false
+    });
+
     loadImages();
-    $(document).everyTime(1000, "images_loading", function(){
+    $(document).everyTime(500, "images_loading", function(){
       if(gImagesLoaded){
 	$(document).stopTime("images_loading");
-	initGame(document.getElementById("game"), <%= @game.id %>, "<%= color %>");
+	gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= color %>");
+	gChess.init();
+	<%  if color == "white" || color == "black" %>
+	gChess.canvasElement.addEventListener("click", clickListener, false);
+	<% end %>
       }
     });
   });
+
+  function clickListener(e){
+    gChess.canvasOnClick(e);
+  }
 </script>

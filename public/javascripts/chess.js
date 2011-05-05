@@ -9,7 +9,12 @@ function Chess(canvasElement, gameId, playerColor){
     this.gameInProgress = false;
     this.pieces = [];
     this.selectedPieceIndex = -1;
-    this.selectedPieceHasMoved = false;
+
+    // Animating piece moves
+    this.targetIndex = -1;
+    this.targetCell = new Cell(-1,-1);
+    this.targetTime = 750;
+    this.targetTimeElapsed = -1;
 
     // Drawing
     this.canvasValid = true;
@@ -48,48 +53,47 @@ Chess.prototype = {
     },
 
     draw: function(){
-	var self = this;
-	if(self.canvasValid) return;
+	if(this.canvasValid) return;
 
 	// Clear the canvas
-	self.canvasCtx.clearRect(0, 0, 512, 512);
+	this.canvasCtx.clearRect(0, 0, 512, 512);
 
 	// Tracks whether to draw a black or white square
 	var blackSquare = true;
 
 	// Draw the board
-	for(var y = 0; y < self.boardHeight; y++){
-	  for(var x = 0; x < self.boardWidth; x++){
-	    if(self.selectedPieceIndex != -1){
-		if(self.pieces[self.selectedPieceIndex].cell.row == y && self.pieces[self.selectedPieceIndex].cell.column == x){
-		    self.canvasCtx.fillStyle = self.colorHighlight;
+	for(var y = 0; y < this.boardHeight; y++){
+	  for(var x = 0; x < this.boardWidth; x++){
+	    if(this.selectedPieceIndex != -1){
+		if(this.pieces[this.selectedPieceIndex].cell.row == y && this.pieces[this.selectedPieceIndex].cell.column == x){
+		    this.canvasCtx.fillStyle = this.colorHighlight;
 		} else {
-		    self.canvasCtx.fillStyle = (blackSquare) ? self.colorLight : self.colorDark;
+		    this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
 		}
 	    } else {
-		self.canvasCtx.fillStyle = (blackSquare) ? self.colorLight : self.colorDark;
+		this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
 	    }
-	    self.canvasCtx.fillRect(x * self.cellWidth, y * self.cellHeight, self.cellWidth, self.cellHeight);
+	    this.canvasCtx.fillRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
 	    blackSquare = !blackSquare;
 	  }
 	  blackSquare = !blackSquare;
 	}
 
 	// Draw board border
-	self.canvasCtx.moveTo(0,0);
-	self.canvasCtx.lineTo(512,0);
-	self.canvasCtx.lineTo(512,512);
-	self.canvasCtx.lineTo(0,512);
-	self.canvasCtx.lineTo(0,0);
-	self.canvasCtx.strokeStyle = "#999";
-	self.canvasCtx.stroke();
+	this.canvasCtx.moveTo(0,0);
+	this.canvasCtx.lineTo(512,0);
+	this.canvasCtx.lineTo(512,512);
+	this.canvasCtx.lineTo(0,512);
+	this.canvasCtx.lineTo(0,0);
+	this.canvasCtx.strokeStyle = "#999";
+	this.canvasCtx.stroke();
 
 	// Draw pieces
 	var index = -1;
-	for(var i = 0; i < self.pieces.length; i++){
-	    switch(self.pieces[i].color){
+	for(var i = 0; i < this.pieces.length; i++){
+	    switch(this.pieces[i].color){
 		case "black":
-		    switch(self.pieces[i].type){
+		    switch(this.pieces[i].type){
 			case "king":
 			    index = 0;
 			    break;
@@ -111,7 +115,7 @@ Chess.prototype = {
 		    }
 		    break;
 		case "white":
-		    switch(self.pieces[i].type){
+		    switch(this.pieces[i].type){
 			case "king":
 			    index = 6;
 			    break;
@@ -133,15 +137,51 @@ Chess.prototype = {
 		    }
 		    break;
 	    }
-	    self.drawImg(index, self.pieces[i].cell.column, self.pieces[i].cell.row);
+	    if(this.targetIndex == i){
+		// Calculate the position of the piece by interpolating based on time
+		this.targetTimeElapsed += this.interval;
+		var percent = this.targetTimeElapsed / this.targetTime;
+
+    		if(percent > 1) percent = 1;
+
+		var x = this.translateColumn(this.pieces[this.targetIndex].cell.column);
+		var y = this.translateRow(this.pieces[this.targetIndex].cell.row);
+		var xToAdd = (this.translateColumn(this.targetCell.column) - x) * percent;
+		var yToAdd = (this.translateRow(this.targetCell.row) - y) * percent;
+
+		x += xToAdd;
+		y += yToAdd;
+		this.drawImgAt(index, x, y);
+
+		if(this.targetTimeElapsed >= this.targetTime){
+		    this.pieces[this.targetIndex].cell =  this.targetCell;
+		    this.targetIndex = -1;
+		}
+	    } else {
+		this.drawImg(index, this.pieces[i].cell.column, this.pieces[i].cell.row);
+	    }
 	}
-	self.canvasValid = true;
+	if(this.targetIndex == -1){
+	    this.canvasValid = true;
+	}
     },
 
     drawImg: function(index, column, row){
 	var x = column * this.cellWidth + this.horzSpacer;
 	var y = row * this.cellHeight + this.vertSpacer;
 	this.canvasCtx.drawImage(gImages[index], 0, 0, 64, 64, x, y, this.pieceWidth, this.pieceHeight);
+    },
+
+    drawImgAt: function(index, x, y){
+	this.canvasCtx.drawImage(gImages[index], 0, 0, 64, 64, x, y, this.pieceWidth, this.pieceHeight);
+    },
+
+    translateColumn: function(column){
+	return column * this.cellWidth + this.horzSpacer;
+    },
+
+    translateRow: function(row){
+	return row * this.cellHeight + this.vertSpacer;
     },
 
     canvasOnClick: function(e){
@@ -187,14 +227,16 @@ Chess.prototype = {
 		data: move,
 		dataType: "json",
 		success: function(json){
-		    if(!json.result){
-			that.pieces[this.selectedPieceIndex].cell.row = json.to_row;
-			that.pieces[this.selectedPieceIndex].cell.column = json.to_column;
-			
+		    if(json.result != "failed"){
+			//that.pieces[this.selectedPieceIndex].cell.row = json.to_row;
+			//that.pieces[this.selectedPieceIndex].cell.column = json.to_column;
+			that.targetIndex = that.selectedPieceIndex;
+			that.targetCell = new Cell(json.to_row, json.to_column);
+			that.targetTimeElapsed = 0;
 		    } else {
 			$.gritter.add({
-			    title: 'Ah ah ah',
-			    text: json.result
+			    title: json.title,
+			    text: json.text
 			});
 		    }
 		    that.selectedPieceIndex = -1;
@@ -242,4 +284,9 @@ function Piece(color, type, row, column){
     this.color = color;
     this.type = type;
     this.cell = new Cell(row, column);
+}
+
+function Position(x, y){
+    this.x = x;
+    this.y = y;
 }

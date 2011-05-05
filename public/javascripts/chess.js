@@ -12,6 +12,8 @@ function Chess(canvasElement, gameId, playerColor){
     this.selectedPieceHasMoved = false;
 
     // Drawing
+    this.canvasValid = true;
+    this.interval = 50;
     this.boardWidth = 8;
     this.boardHeight = 8;
     this.pieceWidth = 48;
@@ -29,6 +31,7 @@ function Chess(canvasElement, gameId, playerColor){
 Chess.prototype = {
     init: function(){
 	this.canvasCtx = this.canvasElement.getContext("2d");
+	this.canvasElement.onselectstart = function() { return false; }
 
 	var that = this;
 	$.getJSON('/boards/' + this.gameId, function(json){
@@ -40,47 +43,53 @@ Chess.prototype = {
 
 	    that.selectedPieceIndex = -1;
 	    that.gameInProgress = true;
-	    that.drawBoard();
+	    that.invalidate();
 	});
     },
 
-    drawBoard: function(){
+    draw: function(){
+	var self = this;
+	if(self.canvasValid) return;
+
+	// Clear the canvas
+	self.canvasCtx.clearRect(0, 0, 512, 512);
+
 	// Tracks whether to draw a black or white square
 	var blackSquare = true;
 
 	// Draw the board
-	for(var y = 0; y < this.boardHeight; y++){
-	  for(var x = 0; x < this.boardWidth; x++){
-	    if(this.selectedPieceIndex != -1){
-		if(this.pieces[this.selectedPieceIndex].cell.row == y && this.pieces[this.selectedPieceIndex].cell.column == x){
-		    this.canvasCtx.fillStyle = this.colorHighlight;
+	for(var y = 0; y < self.boardHeight; y++){
+	  for(var x = 0; x < self.boardWidth; x++){
+	    if(self.selectedPieceIndex != -1){
+		if(self.pieces[self.selectedPieceIndex].cell.row == y && self.pieces[self.selectedPieceIndex].cell.column == x){
+		    self.canvasCtx.fillStyle = self.colorHighlight;
 		} else {
-		    this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
+		    self.canvasCtx.fillStyle = (blackSquare) ? self.colorLight : self.colorDark;
 		}
 	    } else {
-		this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
+		self.canvasCtx.fillStyle = (blackSquare) ? self.colorLight : self.colorDark;
 	    }
-	    this.canvasCtx.fillRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
+	    self.canvasCtx.fillRect(x * self.cellWidth, y * self.cellHeight, self.cellWidth, self.cellHeight);
 	    blackSquare = !blackSquare;
 	  }
 	  blackSquare = !blackSquare;
 	}
 
 	// Draw board border
-	this.canvasCtx.moveTo(0,0);
-	this.canvasCtx.lineTo(512,0);
-	this.canvasCtx.lineTo(512,512);
-	this.canvasCtx.lineTo(0,512);
-	this.canvasCtx.lineTo(0,0);
-	this.canvasCtx.strokeStyle = "#999";
-	this.canvasCtx.stroke();
+	self.canvasCtx.moveTo(0,0);
+	self.canvasCtx.lineTo(512,0);
+	self.canvasCtx.lineTo(512,512);
+	self.canvasCtx.lineTo(0,512);
+	self.canvasCtx.lineTo(0,0);
+	self.canvasCtx.strokeStyle = "#999";
+	self.canvasCtx.stroke();
 
 	// Draw pieces
 	var index = -1;
-	for(var i = 0; i < this.pieces.length; i++){
-	    switch(this.pieces[i].color){
+	for(var i = 0; i < self.pieces.length; i++){
+	    switch(self.pieces[i].color){
 		case "black":
-		    switch(this.pieces[i].type){
+		    switch(self.pieces[i].type){
 			case "king":
 			    index = 0;
 			    break;
@@ -102,7 +111,7 @@ Chess.prototype = {
 		    }
 		    break;
 		case "white":
-		    switch(this.pieces[i].type){
+		    switch(self.pieces[i].type){
 			case "king":
 			    index = 6;
 			    break;
@@ -124,8 +133,9 @@ Chess.prototype = {
 		    }
 		    break;
 	    }
-	    this.drawImg(index, this.pieces[i].cell.column, this.pieces[i].cell.row);
+	    self.drawImg(index, self.pieces[i].cell.column, self.pieces[i].cell.row);
 	}
+	self.canvasValid = true;
     },
 
     drawImg: function(index, column, row){
@@ -152,7 +162,7 @@ Chess.prototype = {
 	if(this.selectedPieceIndex == pieceIndex){
 	    // Unselect the piece
 	    this.selectedPieceIndex = -1;
-	    this.drawBoard();
+	    this.invalidate();
 	    return;
 	} else {
 	    // Check if gSelectPieceIndex has a value
@@ -161,7 +171,7 @@ Chess.prototype = {
 		    return;
 		}
 		this.selectedPieceIndex = pieceIndex;
-		this.drawBoard();
+		this.invalidate();
 		return;
 	    }
 
@@ -181,9 +191,14 @@ Chess.prototype = {
 			that.pieces[this.selectedPieceIndex].cell.row = json.to_row;
 			that.pieces[this.selectedPieceIndex].cell.column = json.to_column;
 			
+		    } else {
+			$.gritter.add({
+			    title: 'Ah ah ah',
+			    text: json.result
+			});
 		    }
 		    that.selectedPieceIndex = -1;
-		    that.drawBoard();
+		    that.invalidate();
 		}
 	    });
 	}
@@ -210,6 +225,10 @@ Chess.prototype = {
 
 	var cell = new Cell( Math.floor( y / this.cellHeight ), Math.floor( x / this.cellWidth ) );
 	return cell;
+    },
+
+    invalidate: function(){
+	this.canvasValid = false;
     }
 }
 

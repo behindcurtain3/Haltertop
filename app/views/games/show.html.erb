@@ -37,8 +37,13 @@ end
 	<%  if color == "white" || color == "black" %>
 	gChess.canvasElement.addEventListener("click", clickListener, false);
 	<% end %>
+
+	$(document).everyTime(gChess.interval, "draw", function(){
+	  gChess.draw();
+	});
       }
     });
+
   });
 
   function clickListener(e){

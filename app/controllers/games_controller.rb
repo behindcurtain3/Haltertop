@@ -62,10 +62,10 @@ class GamesController < ApplicationController
 									:to_row => params[:to_row]
 									}
 			else
-				result = {:result => "fail"}
+				result = {:result => "Sorry, please submit a valid move."}
 			end
 		else
-			result = {:result => "fail"}
+			result = {:result => "Sneaky, but it isn't your move."}
 		end
 
 		respond_to do |format|

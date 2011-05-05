@@ -6,6 +6,7 @@ gem 'rails', '3.0.6'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+gem 'gritter'
 
 group :development do
   gem 'annotate-models', '1.0.4'

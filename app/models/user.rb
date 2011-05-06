@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 	has_many :games_as_black, :foreign_key => "black_id", :class_name => "Game"
 	has_many :games_as_white, :foreign_key => "white_id", :class_name => "Game"
 	has_many :turns, :foreign_key => "turn_id", :class_name => "Game"
+	has_many :moves
 
 	def games
 		games_as_black + games_as_white

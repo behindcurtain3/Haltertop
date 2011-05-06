@@ -2,6 +2,9 @@ class Game < ActiveRecord::Base
 	# setup class relationships, board is dependent on a game
 	has_one :board, :dependent => :destroy
 
+	# moves
+	has_many :moves, :dependent => :destroy
+
 	# User relationships
 	belongs_to :black, :class_name => "User"
 	belongs_to :white, :class_name => "User"
@@ -37,7 +40,7 @@ class Game < ActiveRecord::Base
 		end
 
 		def create_board
-			self.board = Board.new
+			self.board = Board.create
 		end
 
 		def swap_turns

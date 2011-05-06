@@ -25,7 +25,7 @@ class GamesController < ApplicationController
   # POST /games
   def create
     @game = Game.new
-		@game.white_id = current_user
+		@game.white = current_user
 
     # Attempt to save the new game
     if @game.save

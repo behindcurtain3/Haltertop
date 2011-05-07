@@ -3,9 +3,12 @@ class CreateMoves < ActiveRecord::Migration
     create_table :moves do |t|
       t.integer :game_id
       t.integer :user_id
-      t.string :piece
-			t.string :rank
-			t.string :file
+      t.integer :from_column
+			t.integer :to_column
+			t.integer :from_row
+			t.integer :to_row
+			t.string	:captured
+			t.string	:promoted
 
       t.timestamps
     end

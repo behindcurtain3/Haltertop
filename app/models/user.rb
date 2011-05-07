@@ -46,10 +46,10 @@ class User < ActiveRecord::Base
     user = find_by_email(email)
 
     # return nil, if email didn't match
-    nil if user.nil?
+    return nil if user.nil?
 
     # returns nil if not valid_password otherwise, return user
-    user if user.valid_password?(submitted_password)
+    return user if user.valid_password?(submitted_password)
   end
 
   # authentication for cookies

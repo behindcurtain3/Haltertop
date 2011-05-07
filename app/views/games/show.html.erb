@@ -37,9 +37,10 @@ end
 	<%  if color == "white" || color == "black" %>
 	gChess.canvasElement.addEventListener("click", clickListener, false);
 	<% end %>
+	gChess.yourturn = <%= current_user? @game.turn %>;
 
-	$(document).everyTime(gChess.interval, "draw", function(){
-	  gChess.draw();
+	$(document).everyTime(gChess.interval, "loop", function(){
+	  gChess.loop();
 	});
       }
     });

@@ -38,6 +38,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @title = "Edit"
+		
   end
 
   # POST /users
@@ -48,12 +49,17 @@ class UsersController < ApplicationController
     if @user.save
       # if successful, sign them in & welcome them
       sign_in @user
-      flash[:success] = "Welcome!"
+      gflash :success => "Welcome!"
       redirect_to @user
     else
       # if not successful, blank the passwords so they aren't sent back
       @user.password = ''
       @user.password_confirmation = ''
+
+			@user.errors.full_messages.each do |error|
+				gflash :error => error
+			end
+			
       render :action => "new"
     end
   end
@@ -64,7 +70,8 @@ class UsersController < ApplicationController
 
     # Attempt to update attributes
     if @user.update_attributes(params[:user])
-      flash[:success] = "Settings saved."
+			gflash :success => "Settings saved."
+			render :action => "show"
     else
       # if not successful re-render the edit page
       @title = "Edit"

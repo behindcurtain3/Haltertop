@@ -41,14 +41,15 @@ class GamesController < ApplicationController
   def update
     @game = Game.find(params[:id])
 
-    # Attempt to update attributes
-    #if @user.update_attributes(params[:user])
-    #  flash[:success] = "Settings saved."
-    #else
-      # if not successful re-render the edit page
-      #@title = "Edit"
-      #render :action => "edit"
-    #end
+		result = {
+			:result => "fail",
+			:title => "No Update",
+			:text => "The opponent has not yet made a move."
+		}
+
+    respond_to do |format|
+				format.json { render :json => result }
+		end
   end
 
 	# PUT /games/#{id}/move
@@ -56,10 +57,13 @@ class GamesController < ApplicationController
 		@game = Game.find(params[:id])
 		if current_user? @game.turn
 			if @game.update_board(params[:from_row], params[:to_row], params[:from_column], params[:to_column])
-			result = { :from_column => params[:from_column],
+			result = {
+									:result => "success",
+									:from_column => params[:from_column],
 									:to_column => params[:to_column],
 									:from_row => params[:from_row],
-									:to_row => params[:to_row]
+									:to_row => params[:to_row],
+									:turn => false
 									}
 			else
 				result = {:result => "failed",

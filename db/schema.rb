@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110506004136) do
+ActiveRecord::Schema.define(:version => 20110504174355) do
 
   create_table "boards", :force => true do |t|
     t.text     "pieces"
@@ -30,21 +30,6 @@ ActiveRecord::Schema.define(:version => 20110506004136) do
   add_index "games", ["black_id"], :name => "index_games_on_black_id"
   add_index "games", ["turn_id"], :name => "index_games_on_turn_id"
   add_index "games", ["white_id"], :name => "index_games_on_white_id"
-
-  create_table "moves", :force => true do |t|
-    t.integer  "game_id"
-    t.integer  "user_id"
-    t.string   "piece"
-    t.string   "rank"
-    t.string   "file"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "capture"
-    t.string   "promotion"
-  end
-
-  add_index "moves", ["game_id"], :name => "index_moves_on_game_id"
-  add_index "moves", ["user_id"], :name => "index_moves_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

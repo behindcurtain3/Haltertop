@@ -6,6 +6,7 @@ function Chess(canvasElement, gameId, playerColor){
     // Game
     this.gameId = gameId;
     this.playerColor = playerColor;
+    this.yourmove = false;
     this.gameInProgress = false;
     this.pieces = [];
     this.selectedPieceIndex = -1;
@@ -19,6 +20,8 @@ function Chess(canvasElement, gameId, playerColor){
     // Drawing
     this.canvasValid = true;
     this.interval = 50;
+    this.ajaxInteval = 2000;
+    this.ajaxTimeElapsed = 0;
     this.boardWidth = 8;
     this.boardHeight = 8;
     this.pieceWidth = 48;
@@ -50,6 +53,29 @@ Chess.prototype = {
 	    that.gameInProgress = true;
 	    that.invalidate();
 	});
+    },
+
+    loop: function(){
+	// Check calls to ajax
+	if(!this.yourturn){
+	    this.ajaxTimeElapsed += this.interval;
+	    if(this.ajaxTimeElapsed >= this.ajaxInterval){
+		this.ajaxTimeElapsed = 0;
+
+		// Check for an opponent move
+		$.ajax({
+		    url: '/games/' + this.gameId + '/update',
+		    dataType: "json",
+		    success: function(json){
+			$.gritter.add({
+			    title: json.title,
+			    text: json.text
+			});
+		    }
+		});
+	    }
+	}
+	this.draw();
     },
 
     draw: function(){
@@ -151,6 +177,7 @@ Chess.prototype = {
 
 		x += xToAdd;
 		y += yToAdd;
+
 		this.drawImgAt(index, x, y);
 
 		if(this.targetTimeElapsed >= this.targetTime){
@@ -185,7 +212,7 @@ Chess.prototype = {
     },
 
     canvasOnClick: function(e){
-	if(!this.gameInProgress) return;
+	if(!this.gameInProgress || !this.yourturn) return;
 
 	var cell = this.getCursorPosition(e);
 	var pieceIndex = -1;
@@ -228,11 +255,13 @@ Chess.prototype = {
 		dataType: "json",
 		success: function(json){
 		    if(json.result != "failed"){
-			//that.pieces[this.selectedPieceIndex].cell.row = json.to_row;
-			//that.pieces[this.selectedPieceIndex].cell.column = json.to_column;
+			// Setup animation
 			that.targetIndex = that.selectedPieceIndex;
 			that.targetCell = new Cell(json.to_row, json.to_column);
 			that.targetTimeElapsed = 0;
+
+			// Update the turn
+			that.yourturn = json.turn;
 		    } else {
 			$.gritter.add({
 			    title: json.title,

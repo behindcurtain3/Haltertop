@@ -30,7 +30,14 @@ class Move < ActiveRecord::Base
 			#add rank
 			notation += self.rank
 		else
-			# for a pawn add the
+			# for a pawns
+			if self.capture
+				# if a capture add the s
+			end
 		end
+	end
+
+	def column_to_file(column)
+
 	end
 end

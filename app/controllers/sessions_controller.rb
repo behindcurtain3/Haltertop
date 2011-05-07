@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
 
     if user.nil?
       # Create an error message and re-render the signin form
-      flash.now[:error] = "Invalid email/password combination."
+			gflash :error => "There seems to be a problem with your email/password combination. Make sure they are correct!"
       render :action => "new"
     else
       # Sign the user in and redirect them

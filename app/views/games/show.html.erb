@@ -9,9 +9,11 @@ end
 
 %>
 <h1>Game <%= @game.id %></h1>
-<div id="black"><%= (@game.black.nil?) ? "Awaiting Player" : @game.black.name %></div>
-<canvas id="game" width="512" height="512"></canvas>
-<div id="white"><%= (@game.white.nil?) ? "Awaiting Player" : @game.white.name %></div>
+<div class="player black" id="black"><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %></div>
+<div class="game">
+  <canvas id="game" width="512" height="512"></canvas>
+</div>
+<div class="player white" id="white"><%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></div>
 <div id="status"></div>
 <%= javascript_include_tag 'jquery.timers-1.2.js' %>
 <%= javascript_include_tag 'chess.js' %>

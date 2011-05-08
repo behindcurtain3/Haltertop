@@ -236,3 +236,36 @@ span.float {
     font-size: 10pt;
     margin: 2px;
 }
+
+/*
+
+Game Page
+
+*/
+
+div.player {
+    -moz-border-radius:    3px;
+    -webkit-border-radius:  3px;
+    border-radius:       3px;
+    border: 1px black solid;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+div.black {
+    background-color: #000;
+    color: #fff;
+}
+
+div.white {
+    background-color: #fff;
+    color: #000;
+    text-align: right;
+}
+
+div.game {
+    margin: 0px;
+    text-align: center;
+}

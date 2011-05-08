@@ -56,28 +56,6 @@ Chess.prototype = {
     },
 
     loop: function(){
-	// Check calls to ajax
-	if(!this.yourturn){
-	    /*
-	    this.ajaxTimeElapsed += this.interval;
-            
-	    if(this.ajaxTimeElapsed >= this.ajaxInterval){
-		this.ajaxTimeElapsed = 0;
-
-		// Check for an opponent move
-		$.ajax({
-		    url: '/games/' + this.gameId + '/status',
-		    dataType: "json",
-		    success: function(json){
-			$.gritter.add({
-			    title: json.title,
-			    text: json.text
-			});
-		    }
-		});
-	    }
-	    */
-	}
 	this.draw();
     },
 

@@ -1,0 +1,73 @@
+<%
+if current_user? @game.white
+  color = "white"
+elsif current_user? @game.black
+  color = "black"
+else
+  color = "observer"
+end
+
+%>
+<h1>Game <%= @game.id %></h1>
+<div id="black"><%= @game.black.name %></div>
+<canvas id="game" width ="512" height="512"></canvas>
+<div id="white"><%= @game.white.name %></div>
+<div id="status"></div>
+<%= javascript_include_tag 'jquery.timers-1.2.js' %>
+<%= javascript_include_tag 'chess.js' %>
+<%= javascript_include_tag 'chess-util.js' %>
+<script src="http://js.pusherapp.com/1.8/pusher.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var gImages;
+  var gImagesLoaded = false;
+  var gImageLoadIndex = 0;
+  var gImagePath = "../images/"
+  var gChess;
+
+  $(function(){
+    $.ajaxSetup ({
+        cache: false
+    });
+
+    loadImages();
+    $(document).everyTime(500, "images_loading", function(){
+      if(gImagesLoaded){
+	$(document).stopTime("images_loading");
+	gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= color %>");
+	gChess.init();
+	<%  if color == "white" || color == "black" %>
+	gChess.canvasElement.addEventListener("click", clickListener, false);
+	<% end %>
+	gChess.yourturn = <%= current_user? @game.turn %>;
+
+	$(document).everyTime(gChess.interval, "loop", function(){
+	  gChess.loop();
+	});
+      }
+    });
+
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) window.console.log(message);
+    };
+
+    var pusher = new Pusher('e0b03bb1cb7d458de516');
+    var channel = pusher.subscribe('<%= @game.id %>');
+    channel.bind('move', function(data) {
+      if(data.result == "success"){
+        gChess.move(data.from_column, data.to_column, data.from_row, data.to_row);
+	gChess.turn(data.turn);
+      } else {
+	$.gritter.add({
+	    title: data.title,
+	    text: data.text
+	});
+      }
+    });
+
+  });
+
+  function clickListener(e){
+    gChess.canvasOnClick(e);
+  }
+</script>

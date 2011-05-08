@@ -1,0 +1,2 @@
+require 'gritter'
+Gritter.initialize

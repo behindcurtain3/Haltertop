@@ -1,0 +1,9 @@
+Fri, 29 Apr 2011 00:43:30 -0700
+doc/README_FOR_APP	Thu, 28 Apr 2011 14:56:32 -0700
+app/controllers/users_controller.rb	Thu, 28 Apr 2011 23:18:36 -0700
+app/controllers/pages_controller.rb	Fri, 29 Apr 2011 00:35:51 -0700
+app/controllers/application_controller.rb	Thu, 28 Apr 2011 22:45:00 -0700
+app/controllers/sessions_controller.rb	Thu, 28 Apr 2011 23:19:58 -0700
+app/models/user.rb	Thu, 28 Apr 2011 21:02:30 -0700
+app/helpers/application_helper.rb	Thu, 28 Apr 2011 22:45:34 -0700
+app/helpers/sessions_helper.rb	Thu, 28 Apr 2011 22:53:56 -0700

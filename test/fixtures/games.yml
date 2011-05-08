@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  black_id: 
+  white_id: 1
+
+two:
+  black_id: 
+  white_id: 1

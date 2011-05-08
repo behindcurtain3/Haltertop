@@ -1,7 +1,13 @@
 <header>
-  <nav>
+  <% unless signed_in? %>
+  <div id="small_signin">
+  <%= render 'shared/signin' %>
+  </div>
+  <% else %>
+  <nav class="round">
     <ul>
-      <%= render 'shared/guest_menu' %>
+      <%= render 'shared/user_menu' %>
     </ul>
   </nav>
+  <% end %>
 </header>

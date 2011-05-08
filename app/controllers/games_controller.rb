@@ -31,14 +31,18 @@ class GamesController < ApplicationController
   # POST /games
   def create
     @game = Game.new
-		@game.white = current_user
+		if params[:game][:turn] == "black"
+			@game.black = current_user
+		else 
+			@game.white = current_user
+		end
 
     # Attempt to save the new game
     if @game.save
-      flash[:success] = "Game Created"
+      gflash :success => "Game Created"
       redirect_to @game
     else
-			flash[:error] = "Game could not be created"
+			gflash :error => "Game could not be created"
       render :action => "new"
     end
   end
@@ -56,7 +60,7 @@ class GamesController < ApplicationController
 									:to_row => params[:to_row],
 									:turn => @game.whos_turn
 									}
-									
+				# Use Pusher to send the move to all clients listening to the game
 				Pusher[@game.id.to_s].trigger('move', result)
 			else
 				result = {:result => "failed",

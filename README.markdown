@@ -4,3 +4,4 @@
 2. Add captures
 3. Add promotion
 4. Add check & checkmates
+5. z-ordering on pieces animations

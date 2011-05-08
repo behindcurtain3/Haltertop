@@ -55,7 +55,9 @@ class Game < ActiveRecord::Base
 		def setup_game
 			create_board
 
-			self.turn = self.white
+			unless self.white.nil?
+				self.turn = self.white
+			end
 		end
 
 		def create_board

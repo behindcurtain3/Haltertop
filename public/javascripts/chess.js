@@ -28,8 +28,8 @@ function Chess(canvasElement, gameId, playerColor){
     this.pieceHeight = 48;
     this.cellWidth = 64;
     this.cellHeight = 64;
-    this.horzSpacer = (this.cellWidth - this.pieceWidth) / 2;
-    this.vertSpacer = (this.cellHeight - this.pieceHeight) / 2;
+    this.horzSpacer = 8;
+    this.vertSpacer = 8;
     this.colorDark = "#f4a460";
     this.colorLight = "#fff";
     this.colorHighlight = "#6267f4";
@@ -39,6 +39,16 @@ function Chess(canvasElement, gameId, playerColor){
 Chess.prototype = {
     init: function(){
 	this.canvasCtx = this.canvasElement.getContext("2d");
+
+	this.cellWidth = this.canvasElement.width / this.boardWidth;
+	this.cellHeight = this.canvasElement.height / this.boardHeight;
+
+	this.pieceWidth = this.cellWidth * 0.75;
+	this.pieceHeight = this.cellHeight * 0.75;
+
+	this.horzSpacer = (this.cellWidth - this.pieceWidth) / 2;
+	this.vertSpacer = (this.cellHeight - this.pieceHeight) / 2;
+	
 	this.canvasElement.onselectstart = function() { return false; }
 
 	var that = this;
@@ -63,7 +73,7 @@ Chess.prototype = {
 	if(this.canvasValid) return;
 
 	// Clear the canvas
-	this.canvasCtx.clearRect(0, 0, 512, 512);
+	this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
 	// Tracks whether to draw a black or white square
 	var blackSquare = true;
@@ -88,9 +98,9 @@ Chess.prototype = {
 
 	// Draw board border
 	this.canvasCtx.moveTo(0,0);
-	this.canvasCtx.lineTo(512,0);
-	this.canvasCtx.lineTo(512,512);
-	this.canvasCtx.lineTo(0,512);
+	this.canvasCtx.lineTo(this.canvasElement.width,0);
+	this.canvasCtx.lineTo(this.canvasElement.width, this.canvasElement.height);
+	this.canvasCtx.lineTo(0, this.canvasElement.height);
 	this.canvasCtx.lineTo(0,0);
 	this.canvasCtx.strokeStyle = "#999";
 	this.canvasCtx.stroke();
@@ -175,13 +185,13 @@ Chess.prototype = {
     },
 
     drawImg: function(index, column, row){
-	var x = column * this.cellWidth + this.horzSpacer;
-	var y = row * this.cellHeight + this.vertSpacer;
-	this.canvasCtx.drawImage(gImages[index], 0, 0, 64, 64, x, y, this.pieceWidth, this.pieceHeight);
+	var x = this.translateColumn(column);
+	var y = this.translateRow(row);
+	this.canvasCtx.drawImage(gImages[index], 0, 0, gImages[index].width, gImages[index].height, x, y, this.pieceWidth, this.pieceHeight);
     },
 
     drawImgAt: function(index, x, y){
-	this.canvasCtx.drawImage(gImages[index], 0, 0, 64, 64, x, y, this.pieceWidth, this.pieceHeight);
+	this.canvasCtx.drawImage(gImages[index], 0, 0, gImages[index].width, gImages[index].height, x, y, this.pieceWidth, this.pieceHeight);
     },
 
     translateColumn: function(column){
@@ -238,11 +248,11 @@ Chess.prototype = {
 	}
     },
 
-    move: function(from_c, to_c, from_r, to_r){
+    move: function(json){
 	for(var i = 0; i < this.pieces.length; i++){
-	    if(this.pieces[i].cell.column == from_c && this.pieces[i].cell.row == from_r){
+	    if(this.pieces[i].cell.column == json.from_column && this.pieces[i].cell.row == json.from_row){
 		this.targetIndex = i;
-		this.targetCell = new Cell(to_r, to_c);
+		this.targetCell = new Cell(json.to_row, json.to_column);
 		this.targetTimeElapsed = 0;
 		this.selectedPieceIndex = -1;
 		this.invalidate();

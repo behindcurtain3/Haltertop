@@ -1,0 +1,12 @@
+<h1>New Game</h1>
+<%= form_for(@game) do |f| %>
+<div class="field">
+  <%= f.radio_button :turn, 'white' %>
+  <%= f.label :side_white, "White" %>
+  <%= f.radio_button :turn, 'black' %>
+  <%= f.label :side_black, "Black" %>
+</div>
+<div class="actions">
+  <%= f.submit "Play" %>
+</div>
+<% end %>

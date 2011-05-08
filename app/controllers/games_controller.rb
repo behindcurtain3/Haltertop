@@ -37,8 +37,8 @@ class GamesController < ApplicationController
     end
   end
 
-  # PUT /games/#{id}
-  def update
+  # GET /games/#{id}/status
+  def status
     @game = Game.find(params[:id])
 
 		result = {

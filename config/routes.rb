@@ -6,6 +6,7 @@ Haltertop::Application.routes.draw do
 	# games paths, no one can edit or destroy a game
 	resources :games, :except => [ :edit, :destroy ] do
 		get 'move', :on => :member
+    get 'status', :on => :member
 	end
 
 	resources :boards,

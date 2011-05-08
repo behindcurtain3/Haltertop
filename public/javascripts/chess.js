@@ -20,7 +20,7 @@ function Chess(canvasElement, gameId, playerColor){
     // Drawing
     this.canvasValid = true;
     this.interval = 50;
-    this.ajaxInteval = 2000;
+    this.ajaxInterval = 2000;
     this.ajaxTimeElapsed = 0;
     this.boardWidth = 8;
     this.boardHeight = 8;
@@ -59,12 +59,13 @@ Chess.prototype = {
 	// Check calls to ajax
 	if(!this.yourturn){
 	    this.ajaxTimeElapsed += this.interval;
+            
 	    if(this.ajaxTimeElapsed >= this.ajaxInterval){
 		this.ajaxTimeElapsed = 0;
 
 		// Check for an opponent move
 		$.ajax({
-		    url: '/games/' + this.gameId + '/update',
+		    url: '/games/' + this.gameId + '/status',
 		    dataType: "json",
 		    success: function(json){
 			$.gritter.add({

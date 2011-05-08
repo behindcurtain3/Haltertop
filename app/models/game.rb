@@ -22,6 +22,17 @@ class Game < ActiveRecord::Base
 				hash[:row] = to_r
 				hash[:column] = to_c
 
+        # Store the move
+        m = Move.new
+        m.from_column = from_c
+        m.to_column = to_c
+        m.from_row = from_r
+        m.to_row = to_r
+        m.game = self
+        m.user = self.turn
+        m.save
+
+        # Update the board
 				self.board.pieces = board
 				self.board.save
 				swap_turns

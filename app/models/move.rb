@@ -2,7 +2,6 @@ class Move < ActiveRecord::Base
 	belongs_to :game
 	belongs_to :user
 
-	validates :notation, :presence => true
 	validates :game_id, :presence => true
 	validates :user_id, :presence => true
 

@@ -7,11 +7,11 @@
 5. Add check & checkmates
 6. Add move log
 7. Add undo move option?
-8. z-ordering on pieces animations
+8. z-ordering on piece animations
 
 # Todo: Site
 
-1. Improved layout, work towards final version
+1. Improve layout, work towards final version
 2. Add achievements
 3. Add knowledge map
 4. Add videos/tutorials

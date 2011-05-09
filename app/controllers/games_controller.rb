@@ -30,23 +30,28 @@ class GamesController < ApplicationController
 
   # POST /games
   def create
-    @game = Game.new
     unless params[:game].nil?
+			# if params[:game] is set the user created a custom game
+			@game = Game.new
+
       if params[:game][:turn] == "black"
         @game.black = current_user
       else
         @game.white = current_user
       end
+
     else
-      @game.white = current_user
+			# else the user hit "play now", we want to find a game that is
+			# lacking a player, if none exists then create a new game
+			@game = current_user.find_match
     end
 
     # Attempt to save the new game
     if @game.save
-      gflash :success => "Game Created"
+      gflash :success => "Enjoy the game!"
       redirect_to @game
     else
-			gflash :error => "Game could not be created"
+			gflash :error => "Our referee, Bongo could not create a new game."
       render :action => "new"
     end
   end
@@ -76,7 +81,7 @@ class GamesController < ApplicationController
 
   # GET /games/#{id}/pieces
   def pieces
-    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id], true], :select => [ :name, :color, :column, :row ])
+    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :column, :row ])
 
 		respond_to do |format|
 			format.json { render :json => @pieces }

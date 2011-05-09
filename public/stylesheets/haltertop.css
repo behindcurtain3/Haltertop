@@ -12,12 +12,14 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100%;
+    padding: 0px;
+    margin: 0px;
 }
 
 section {
-  margin-top: 2em;
+  margin-top: 40px;
   font-size: 120%;
-  padding: 20px;
+  padding: 15px;
   background: #fff;
 }
 
@@ -42,7 +44,12 @@ footer nav {
 /* Header */
 
 header {
-  padding-top: 20px;
+    width: 720px;
+    position: absolute;
+    left: 50%;
+    margin-left: -360px;
+    margin-top: 0px;
+    padding-top: 0px;
 }
 
 header img {
@@ -61,12 +68,14 @@ header img {
   position:absolute;
   left:50%;
   margin-left: -360px;
+  margin-top: 0px;
+  padding: 0px;
 }
 
 /* Links */
 
 a {
-  color: #000;
+  color: #222;
   text-decoration: none;
 }
 
@@ -76,14 +85,15 @@ a:hover {
 }
 
 a:visited {
-  color: #000;
+  color: #222;
 }
 
 /* Navigation */
 
 nav {
-  float: right;
-  background-color: white;
+  text-align: center;
+  background-image: url("../images/css/bottom.png");
+  background-repeat: repeat-x;
   padding: 0 0.7em;
   white-space: nowrap;
 }
@@ -255,6 +265,10 @@ div.player p {
     margin-top: 5px;
     padding-left: 60px;
     padding-right: 60px;
+}
+
+div.player span {
+    font-size: 10pt;
 }
 
 div.black {

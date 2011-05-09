@@ -16,3 +16,4 @@
 3. Add knowledge map
 4. Add videos/tutorials
 5. Add following & feed
+6. Improve matchmaking

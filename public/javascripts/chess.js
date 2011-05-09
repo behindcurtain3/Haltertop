@@ -285,6 +285,14 @@ Chess.prototype = {
 	} else {
 	    this.yourturn = false;
 	}
+
+	if(t == "white"){
+	    $('#black-move').html('');
+	    $('#white-move').html('Current Move');
+	} else {
+	    $('#black-move').html('Current Move');
+	    $('#white-move').html('');
+	}
     },
 
     getCursorPosition: function(e){

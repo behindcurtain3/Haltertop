@@ -60,6 +60,35 @@ class User < ActiveRecord::Base
     (user && user.salt == cookie_salt) ? user : nil
   end
 
+	def find_match
+		games = Game.find(:all, :conditions => ['black_id is NULL OR white_id is NULL'])
+
+		game = games.find { | g | g.black != self && g.white != self }
+
+		if game.nil?
+			game = Game.new
+			game.white = self
+			game.turn = game.white
+		else
+			if game.white.nil?
+				game.white = self
+			end
+
+			if game.black.nil?
+				game.black = self
+			end
+
+			if game.turn.nil?
+				if game.moves.count == 0
+					game.turn = game.white
+				else
+					game.turn = game.black
+				end
+			end
+		end
+
+		return game
+	end
 
 
   # Private methods

@@ -31,11 +31,15 @@ class GamesController < ApplicationController
   # POST /games
   def create
     @game = Game.new
-		if params[:game][:turn] == "black"
-			@game.black = current_user
-		else 
-			@game.white = current_user
-		end
+    unless params[:game].nil?
+      if params[:game][:turn] == "black"
+        @game.black = current_user
+      else
+        @game.white = current_user
+      end
+    else
+      @game.white = current_user
+    end
 
     # Attempt to save the new game
     if @game.save
@@ -51,33 +55,33 @@ class GamesController < ApplicationController
 	def move
 		@game = Game.find(params[:id])
 		if current_user? @game.turn
-			if @game.update_board(params[:from_row], params[:to_row], params[:from_column], params[:to_column])
-				result = {
-									:result => "success",
-									:from_column => params[:from_column],
-									:to_column => params[:to_column],
-									:from_row => params[:from_row],
-									:to_row => params[:to_row],
-									:turn => @game.whos_turn
-									}
+			result = @game.update_board(params[:from_row].to_i, params[:to_row].to_i, params[:from_column].to_i, params[:to_column].to_i)
+				
 				# Use Pusher to send the move to all clients listening to the game
-				Pusher[@game.id.to_s].trigger('move', result)
-			else
-				result = {:result => "failed",
-									:title => "Hmm, something went wrong", 
-									:text => "The move you tried doesn't jive with our system. We're pretty sure you can find a better one anyways."}
-
-			end
+        if result[:status] == "success"
+  				Pusher[@game.id.to_s].trigger('move', result)
+        end
 		else
-			result = {:result => "failed",
-								:title => "Ah ah ah",
-								:text => "Sneaky, but it isn't your move."}
+			result = {
+        :result => "failed",
+				:title => "Ah ah ah",
+        :text => "Sneaky, but it isn't your move."
+      }
 		end
 
 		respond_to do |format|
 				format.json { render :json => result }
 		end
 	end
+
+  # GET /games/#{id}/pieces
+  def pieces
+    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id], true], :select => [ :name, :color, :column, :row ])
+
+		respond_to do |format|
+			format.json { render :json => @pieces }
+		end
+  end
 
   # Private methods
   private

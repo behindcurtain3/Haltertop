@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110506000638) do
+ActiveRecord::Schema.define(:version => 20110509040216) do
 
   create_table "boards", :force => true do |t|
     t.text     "pieces"
@@ -46,6 +46,17 @@ ActiveRecord::Schema.define(:version => 20110506000638) do
 
   add_index "moves", ["game_id"], :name => "index_moves_on_game_id"
   add_index "moves", ["user_id"], :name => "index_moves_on_user_id"
+
+  create_table "pieces", :force => true do |t|
+    t.string  "name"
+    t.string  "color"
+    t.integer "column"
+    t.integer "row"
+    t.boolean "active",  :default => true
+    t.integer "game_id"
+  end
+
+  add_index "pieces", ["game_id"], :name => "index_pieces_on_game_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

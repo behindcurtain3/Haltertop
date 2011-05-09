@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  type: MyString
+  color: MyString
+  column: 1
+  row: 1
+  active: false
+
+two:
+  type: MyString
+  color: MyString
+  column: 1
+  row: 1
+  active: false

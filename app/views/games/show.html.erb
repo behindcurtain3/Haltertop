@@ -8,13 +8,20 @@ else
 end
 
 %>
-<h1>Game <%= @game.id %></h1>
-<div class="player black" id="black"><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %></div>
-<div class="game">
-  <canvas id="game" width="512" height="512"></canvas>
+<div class="player black sm_round" id="black">
+  <%= image_tag 'icon.png', :class => 'sm_round' %>
+  <p><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %></p>
 </div>
-<div class="player white" id="white"><%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></div>
-<div id="status"></div>
+<div class="game">
+  <canvas class="sm_round" id="game" width="512" height="512"></canvas>
+  <div class="status sm_round" id="moves">
+    <h3>Game <%= @game.id %></h3>
+  </div>
+</div>
+<div class="player white sm_round" id="white">
+  <%= image_tag 'icon.png', :class => 'sm_round' %>
+  <p><%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></p>
+</div>
 <%= javascript_include_tag 'jquery.timers-1.2.js' %>
 <%= javascript_include_tag 'chess.js' %>
 <%= javascript_include_tag 'chess-util.js' %>
@@ -51,7 +58,8 @@ end
     var pusher = new Pusher('e0b03bb1cb7d458de516');
     var channel = pusher.subscribe('<%= @game.id %>');
     channel.bind('move', function(data) {
-      if(data.result == "success"){
+      console.log(data);
+      if(data.status == "success"){
         gChess.move(data);
 	gChess.turn(data.turn);
       } else {

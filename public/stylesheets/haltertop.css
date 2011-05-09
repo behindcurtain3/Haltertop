@@ -66,17 +66,17 @@ header img {
 /* Links */
 
 a {
-  color: #09c;
+  color: #000;
   text-decoration: none;
 }
 
 a:hover {
-  color: #069;
+  color: #888;
   text-decoration: underline;
 }
 
 a:visited {
-  color: #069;
+  color: #000;
 }
 
 /* Navigation */
@@ -105,10 +105,11 @@ nav ul li a {
 }
 
 nav ul li a:visited {
-  color: #09c;
+  color: #000;
 }
 
 nav ul li a:hover {
+  color: #888;
   text-decoration: underline;
 }
 
@@ -244,28 +245,64 @@ Game Page
 */
 
 div.player {
-    -moz-border-radius:    3px;
-    -webkit-border-radius:  3px;
-    border-radius:       3px;
     border: 1px black solid;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-top: 15px;
     margin-bottom: 15px;
+    margin-top: 10px;
+    height: 48px;
+}
+
+div.player p {
+    margin-top: 5px;
+    padding-left: 60px;
+    padding-right: 60px;
 }
 
 div.black {
-    background-color: #000;
+    background-image: url('../images/css/black.png');
+    background-repeat: repeat-x;
     color: #fff;
 }
 
+div.black img {
+    float: left;
+}
+
 div.white {
-    background-color: #fff;
+    background-image: url('../images/css/white.png');
+    background-repeat: repeat-x;
     color: #000;
     text-align: right;
 }
 
+div.white img {
+    float:right;
+}
+
 div.game {
+    padding: 0px;
     margin: 0px;
+}
+
+div.status {
+    border: 1px black solid;
+    float: right;
+    height: 512px;
+    width: 150px;
+    padding: 0px;
+    margin: 0px;
+
+    background-image: url('../images/css/top.png');
+    background-repeat: repeat-x;
+}
+
+div.status h3 {
+    margin-top: 5px;
     text-align: center;
+    color: #fff;
+}
+
+.sm_round {
+    -moz-border-radius:    3px;
+    -webkit-border-radius:  3px;
+    border-radius:       3px;
 }

@@ -12,7 +12,7 @@ function Chess(canvasElement, gameId, playerColor){
     this.selectedPieceIndex = -1;
 
     // Animating piece moves
-    this.targetIndex = -1;
+    this.movingPiece = null;
     this.targetCell = new Cell(-1,-1);
     this.targetTime = 750;
     this.targetTimeElapsed = -1;
@@ -52,11 +52,11 @@ Chess.prototype = {
 	this.canvasElement.onselectstart = function() { return false; }
 
 	var that = this;
-	$.getJSON('/boards/' + this.gameId, function(json){
+	$.getJSON('/games/' + this.gameId + '/pieces', function(json){
 	    // Load all the pieces
 	    that.pieces = [];
-	    $.each(json, function(i, piece){
-		that.pieces.push(new Piece(piece.color, piece.type, piece.row, piece.column));
+	    $.each(json, function(i, p){
+		that.pieces.push(new Piece(p.piece.color, p.piece.name, p.piece.row, p.piece.column));
 	    });
 
 	    that.selectedPieceIndex = -1;
@@ -102,7 +102,7 @@ Chess.prototype = {
 	this.canvasCtx.lineTo(this.canvasElement.width, this.canvasElement.height);
 	this.canvasCtx.lineTo(0, this.canvasElement.height);
 	this.canvasCtx.lineTo(0,0);
-	this.canvasCtx.strokeStyle = "#999";
+	this.canvasCtx.strokeStyle = "#000";
 	this.canvasCtx.stroke();
 
 	// Draw pieces
@@ -153,16 +153,19 @@ Chess.prototype = {
 			    break;
 		    }
 		    break;
+                default:
+                    index = 0;
+                    break;
 	    }
-	    if(this.targetIndex == i){
+	    if(this.movingPiece == this.pieces[i]){
 		// Calculate the position of the piece by interpolating based on time
 		this.targetTimeElapsed += this.interval;
 		var percent = this.targetTimeElapsed / this.targetTime;
 
     		if(percent > 1) percent = 1;
 
-		var x = this.translateColumn(this.pieces[this.targetIndex].cell.column);
-		var y = this.translateRow(this.pieces[this.targetIndex].cell.row);
+		var x = this.translateColumn(this.movingPiece.cell.column);
+		var y = this.translateRow(this.movingPiece.cell.row);
 		var xToAdd = (this.translateColumn(this.targetCell.column) - x) * percent;
 		var yToAdd = (this.translateRow(this.targetCell.row) - y) * percent;
 
@@ -172,14 +175,14 @@ Chess.prototype = {
 		this.drawImgAt(index, x, y);
 
 		if(this.targetTimeElapsed >= this.targetTime){
-		    this.pieces[this.targetIndex].cell =  this.targetCell;
-		    this.targetIndex = -1;
+		    this.pieces[i].cell =  this.targetCell;
+		    this.movingPiece = null;
 		}
 	    } else {
 		this.drawImg(index, this.pieces[i].cell.column, this.pieces[i].cell.row);
 	    }
 	}
-	if(this.targetIndex == -1){
+	if(this.movingPiece == null){
 	    this.canvasValid = true;
 	}
     },
@@ -243,21 +246,37 @@ Chess.prototype = {
 	    $.ajax({
 		url: '/games/' + this.gameId + '/move',
 		data: move,
-		dataType: "json"
+		dataType: "json",
+                success: function(json){
+                    if(json.status != "success"){
+                        $.gritter.add({
+                           title: json.title,
+                           text: json.text
+                        });
+                    }
+                }
 	    });
 	}
     },
 
     move: function(json){
+        var indexToSplice = -1;
 	for(var i = 0; i < this.pieces.length; i++){
+            if(this.pieces[i].cell.column == json.to_column && this.pieces[i].cell.row == json.to_row && json.capture){
+                indexToSplice = i;
+            }
+
 	    if(this.pieces[i].cell.column == json.from_column && this.pieces[i].cell.row == json.from_row){
-		this.targetIndex = i;
+                this.movingPiece = this.pieces[i];
 		this.targetCell = new Cell(json.to_row, json.to_column);
 		this.targetTimeElapsed = 0;
 		this.selectedPieceIndex = -1;
 		this.invalidate();
 	    }
 	}
+        if(indexToSplice != -1){
+            this.pieces.splice(indexToSplice, 1);
+        }
     },
 
     turn: function(t){
@@ -306,9 +325,4 @@ function Piece(color, type, row, column){
     this.color = color;
     this.type = type;
     this.cell = new Cell(row, column);
-}
-
-function Position(x, y){
-    this.x = x;
-    this.y = y;
 }

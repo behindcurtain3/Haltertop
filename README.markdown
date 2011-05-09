@@ -1,7 +1,18 @@
-# Todo
+# Todo: Game
 
 1. Check moves for validity
-2. Add captures
+2. ~~Add captures~~
 3. Add promotion
-4. Add check & checkmates
-5. z-ordering on pieces animations
+4. Add castling
+5. Add check & checkmates
+6. Add move log
+7. Add undo move option?
+8. z-ordering on pieces animations
+
+# Todo: Site
+
+1. Improved layout, work towards final version
+2. Add achievements
+3. Add knowledge map
+4. Add videos/tutorials
+5. Add following & feed

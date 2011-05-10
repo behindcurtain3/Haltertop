@@ -33,6 +33,9 @@ function loadImage(index){
     }
 
     gImages[index].onerror = function(){
-	$('#status').html('Error loading images');
+	$.gritter.add({
+	    title: "Error Loading",
+	    text: "The server was unable to load the images for the board."
+	});
     }
 }

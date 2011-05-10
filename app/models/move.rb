@@ -1,3 +1,21 @@
+# == Schema Information
+# Schema version: 20110509040216
+#
+# Table name: moves
+#
+#  id          :integer         not null, primary key
+#  game_id     :integer
+#  user_id     :integer
+#  from_column :integer
+#  to_column   :integer
+#  from_row    :integer
+#  to_row      :integer
+#  captured    :string(255)
+#  promoted    :string(255)
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 class Move < ActiveRecord::Base
 	belongs_to :game
 	belongs_to :user

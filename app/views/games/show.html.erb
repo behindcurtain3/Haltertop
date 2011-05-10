@@ -14,9 +14,15 @@ end
 </div>
 <div class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
-  <div class="status sm_round" id="moves">
+  <div class="status sm_round"  id="game_log">
     <h3>Game <%= @game.id %></h3>
+    <ul>
+      <% @game.moves.each do | move | %>
+      <li><%= "[#{move.from_column},#{move.from_row}] -> [#{move.to_column}, #{move.to_row}]" %>
+      <% end %>
+    </ul>
   </div>
+
 </div>
 <div class="player white sm_round" id="white">
   <%= image_tag 'icon.png', :class => 'sm_round' %>

@@ -1,3 +1,16 @@
+# == Schema Information
+# Schema version: 20110509040216
+#
+# Table name: games
+#
+#  id         :integer         not null, primary key
+#  black_id   :integer
+#  white_id   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#  turn_id    :integer
+#
+
 class Game < ActiveRecord::Base
 	# moves
 	has_many :moves, :dependent => :destroy

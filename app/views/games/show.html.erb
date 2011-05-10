@@ -10,7 +10,7 @@ end
 %>
 <div class="player black sm_round" id="black">
   <%= image_tag 'icon.png', :class => 'sm_round' %>
-  <p><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %> <span id="black-move"></span></p>
+  <p><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %> <span id="black-move">Current Move</span></p>
 </div>
 <div class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
@@ -20,7 +20,7 @@ end
 </div>
 <div class="player white sm_round" id="white">
   <%= image_tag 'icon.png', :class => 'sm_round' %>
-  <p><span id="white-move"></span> <%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></p>
+  <p><span id="white-move">Current Move</span> <%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></p>
 </div>
 <%= javascript_include_tag 'jquery.timers-1.2.js' %>
 <%= javascript_include_tag 'chess.js' %>
@@ -38,6 +38,9 @@ end
         cache: false
     });
 
+    $('#black-move').hide();
+    $('#white-move').hide();
+
     loadImages();
     $(document).everyTime(50, "images_loading", function(){
       if(gImagesLoaded){
@@ -47,7 +50,7 @@ end
 	<%  if color == "white" || color == "black" %>
 	gChess.canvasElement.addEventListener("click", clickListener, false);
 	<% end %>
-	gChess.yourturn = <%= current_user? @game.turn %>;
+	gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');
 
 	$(document).everyTime(gChess.interval, "loop", function(){
 	  gChess.loop();
@@ -58,7 +61,6 @@ end
     var pusher = new Pusher('e0b03bb1cb7d458de516');
     var channel = pusher.subscribe('<%= @game.id %>');
     channel.bind('move', function(data) {
-      console.log(data);
       if(data.status == "success"){
         gChess.move(data);
 	gChess.turn(data.turn);

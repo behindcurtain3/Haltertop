@@ -287,11 +287,11 @@ Chess.prototype = {
 	}
 
 	if(t == "white"){
-	    $('#black-move').html('');
-	    $('#white-move').html('Current Move');
+	    $('#black-move').fadeOut();
+	    $('#white-move').fadeIn();
 	} else {
-	    $('#black-move').html('Current Move');
-	    $('#white-move').html('');
+	    $('#black-move').fadeIn();
+	    $('#white-move').fadeOut();
 	}
     },
 

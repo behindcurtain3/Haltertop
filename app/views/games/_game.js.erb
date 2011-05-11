@@ -1,0 +1,49 @@
+var gImages;
+var gImagesLoaded = false;
+var gImageLoadIndex = 0;
+var gImagePath = "../images/"
+var gChess;
+
+$(function(){
+  $.ajaxSetup ({
+      cache: false
+  });
+
+  loadImages();
+  $(document).everyTime(50, "images_loading", function(){
+    if(gImagesLoaded){
+      $(document).stopTime("images_loading");
+      gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
+      gChess.init();
+      <%= "gChess.inverted = true;" if current_user? @game.black %>
+      <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
+      gChess.canvasElement.addEventListener("click", clickListener, false);
+      <% end %>
+      gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');
+
+      $(document).everyTime(gChess.interval, "loop", function(){
+	gChess.loop();
+      });
+      $("#board").fadeIn('slow');
+    }
+  });
+
+  var pusher = new Pusher('e0b03bb1cb7d458de516');
+  var channel = pusher.subscribe('<%= @game.id %>');
+  channel.bind('move', function(data) {
+    if(data.status == "success"){
+      gChess.move(data);
+      gChess.turn(data.turn);
+    } else {
+      $.gritter.add({
+	  title: data.title,
+	  text: data.text
+      });
+    }
+  });
+
+});
+
+function clickListener(e){
+  gChess.canvasOnClick(e);
+}

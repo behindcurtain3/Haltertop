@@ -20,8 +20,10 @@ function Chess(canvasElement, gameId, playerColor){
     // Drawing
     this.canvasValid = true;
     this.interval = 50;
-    this.ajaxInterval = 2000;
-    this.ajaxTimeElapsed = 0;
+    this.inverted = false;
+    this.invertForwards = [0,1,2,3,4,5,6,7];
+    this.invertBackwards = [7,6,5,4,3,2,1,0];
+
     this.boardWidth = 8;
     this.boardHeight = 8;
     this.pieceWidth = 48;
@@ -55,8 +57,15 @@ Chess.prototype = {
 	$.getJSON('/games/' + this.gameId + '/pieces', function(json){
 	    // Load all the pieces
 	    that.pieces = [];
+
 	    $.each(json, function(i, p){
-		that.pieces.push(new Piece(p.piece.color, p.piece.name, p.piece.row, p.piece.column));
+		var row = p.piece.row;
+		var column = p.piece.column;
+		if(that.inverted){
+		    row = that.invert(row, true);
+		    column = that.invert(column, true);
+		}
+		that.pieces.push(new Piece(p.piece.color, p.piece.name, row, column));
 	    });
 
 	    that.selectedPieceIndex = -1;
@@ -75,8 +84,8 @@ Chess.prototype = {
 	// Clear the canvas
 	this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
-	// Tracks whether to draw a black or white square
-	var blackSquare = true;
+	// Tracks whether to draw a black or white square in the upper left
+	var blackSquare = !this.inverted;
 
 	// Draw the board
 	for(var y = 0; y < this.boardHeight; y++){
@@ -237,10 +246,18 @@ Chess.prototype = {
 	    }
 
 	    // Attempt a move
-	    var move = "from_row=" + this.pieces[this.selectedPieceIndex].cell.row +
+	    var move;
+	    if(this.inverted){
+		move = "from_row=" + this.invert(this.pieces[this.selectedPieceIndex].cell.row, true) +
+			"&to_row=" + this.invert(cell.row, true) +
+			"&from_column=" + this.invert(this.pieces[this.selectedPieceIndex].cell.column, true) +
+			"&to_column=" + this.invert(cell.column, true);
+	    } else {
+		move = "from_row=" + this.pieces[this.selectedPieceIndex].cell.row +
 			"&to_row=" + cell.row +
 			"&from_column=" + this.pieces[this.selectedPieceIndex].cell.column +
 			"&to_column=" + cell.column;
+	    }
 
 	    var that = this;
 	    $.ajax({
@@ -261,6 +278,12 @@ Chess.prototype = {
 
     move: function(json){
         var indexToSplice = -1;
+	if(this.inverted){
+	    json.from_row = this.invert(json.from_row, true);
+	    json.to_row = this.invert(json.to_row, true);
+	    json.from_column = this.invert(json.from_column, true);
+	    json.to_column = this.invert(json.to_column, true);
+	}
 	for(var i = 0; i < this.pieces.length; i++){
             if(this.pieces[i].cell.column == json.to_column && this.pieces[i].cell.row == json.to_row && json.capture){
                 indexToSplice = i;
@@ -320,6 +343,14 @@ Chess.prototype = {
 
     invalidate: function(){
 	this.canvasValid = false;
+    },
+
+    invert: function(n, dir){
+	if(dir){
+	    return this.invertBackwards[n];
+	} else {
+	    return this.invertForwards[n];
+	}
     }
 }
 

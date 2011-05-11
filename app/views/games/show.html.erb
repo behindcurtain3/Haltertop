@@ -1,7 +1,8 @@
-<div class="player black sm_round" id="black">
-  <%= image_tag 'icon.png', :class => 'sm_round' %>
-  <p><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %> <span id="black-move">Current Move</span></p>
-</div>
+<% if current_user? @game.black %>
+<%= render 'white_player.html' %>
+<% else %>
+<%= render 'black_player.html' %>
+<%  end %>
 <div id="board" class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
   <div class="status sm_round"  id="game_log">
@@ -16,66 +17,16 @@
       <% end %>
     </ul>
   </div>
-
 </div>
-<div class="player white sm_round" id="white">
-  <%= image_tag 'icon.png', :class => 'sm_round' %>
-  <p><span id="white-move">Current Move</span> <%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></p>
-</div>
+<% if current_user? @game.black %>
+<%= render 'black_player.html' %>
+<% else %>
+<%= render 'white_player.html' %>
+<%  end %>
 <%= javascript_include_tag 'jquery.timers-1.2.js' %>
 <%= javascript_include_tag 'chess.js' %>
 <%= javascript_include_tag 'chess-util.js' %>
 <script src="http://js.pusherapp.com/1.8/pusher.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-  var gImages;
-  var gImagesLoaded = false;
-  var gImageLoadIndex = 0;
-  var gImagePath = "../images/"
-  var gChess;
-
-  $(function(){
-    $.ajaxSetup ({
-        cache: false
-    });
-
-    $('#black-move').hide();
-    $('#white-move').hide();
-
-    loadImages();
-    $(document).everyTime(50, "images_loading", function(){
-      if(gImagesLoaded){
-	$(document).stopTime("images_loading");
-	gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
-	gChess.init();
-	<%  if (current_user?(@game.black) || current_user?(@game.white)) %>
-	gChess.canvasElement.addEventListener("click", clickListener, false);
-	<% end %>
-	gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');
-
-	$(document).everyTime(gChess.interval, "loop", function(){
-	  gChess.loop();
-	});
-        $("#board").fadeIn('slow');
-      }
-    });
-
-    var pusher = new Pusher('e0b03bb1cb7d458de516');
-    var channel = pusher.subscribe('<%= @game.id %>');
-    channel.bind('move', function(data) {
-      if(data.status == "success"){
-        gChess.move(data);
-	gChess.turn(data.turn);
-      } else {
-	$.gritter.add({
-	    title: data.title,
-	    text: data.text
-	});
-      }
-    });
-
-  });
-
-  function clickListener(e){
-    gChess.canvasOnClick(e);
-  }
+<%= render 'game.js' %>
 </script>

@@ -7,20 +7,20 @@
 */
 
 body {
-    background-image: url('../images/background5.jpg');
+    /* background-image: url('../images/background5.jpg');
     background-position: 100% 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100%;
+    background-size: 100%; */
     padding: 0px;
     margin: 0px;
+    background-color: #669;
 }
 
 section {
   margin-top: 40px;
   font-size: 120%;
   padding: 15px;
-  background: #fff;
 }
 
 section h1 {
@@ -293,6 +293,7 @@ div.white img {
 }
 
 div.game {
+    display: none;
     padding: 0px;
     margin: 0px;
 }
@@ -307,6 +308,17 @@ div.status {
 
     background-image: url('../images/css/top.png');
     background-repeat: repeat-x;
+    background-color: #fff;
+}
+
+div.status ul {
+    padding-left: 20px;
+}
+
+div.status li {
+    list-style-type:decimal;
+    margin-left: 0px;
+    font-size: 10pt;
 }
 
 div.status h3 {
@@ -319,4 +331,8 @@ div.status h3 {
     -moz-border-radius:    3px;
     -webkit-border-radius:  3px;
     border-radius:       3px;
+}
+
+#black-move, #white-move {
+    diplay: none;
 }

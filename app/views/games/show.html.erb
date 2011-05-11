@@ -1,24 +1,18 @@
-<%
-if current_user? @game.white
-  color = "white"
-elsif current_user? @game.black
-  color = "black"
-else
-  color = "observer"
-end
-
-%>
 <div class="player black sm_round" id="black">
   <%= image_tag 'icon.png', :class => 'sm_round' %>
   <p><%= (@game.black.nil?) ? "Awaiting Player" : (current_user? @game.black) ? "You" : @game.black.name %> <span id="black-move">Current Move</span></p>
 </div>
-<div class="game">
+<div id="board" class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
   <div class="status sm_round"  id="game_log">
     <h3>Game <%= @game.id %></h3>
     <ul>
-      <% @game.moves.each do | move | %>
-      <li><%= "[#{move.from_column},#{move.from_row}] -> [#{move.to_column}, #{move.to_row}]" %>
+      <% @game.moves.each_slice(2) do | slice | %>
+      <li>
+        <% slice.each do | move | %>
+          <%= "[#{move.from_column},#{move.from_row}] -> [#{move.to_column}, #{move.to_row}]" %>&nbsp;
+        <% end %>
+      </li>
       <% end %>
     </ul>
   </div>
@@ -51,9 +45,9 @@ end
     $(document).everyTime(50, "images_loading", function(){
       if(gImagesLoaded){
 	$(document).stopTime("images_loading");
-	gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= color %>");
+	gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
 	gChess.init();
-	<%  if color == "white" || color == "black" %>
+	<%  if (current_user?(@game.black) || current_user?(@game.white)) %>
 	gChess.canvasElement.addEventListener("click", clickListener, false);
 	<% end %>
 	gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');
@@ -61,6 +55,7 @@ end
 	$(document).everyTime(gChess.interval, "loop", function(){
 	  gChess.loop();
 	});
+        $("#board").fadeIn('slow');
       }
     });
 

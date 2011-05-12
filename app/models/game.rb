@@ -66,9 +66,18 @@ class Game < ActiveRecord::Base
     m.game = self
     m.user = self.turn
 
-		# moves = generate_moves
-		# if moves contains m return valid
-		# else return fail
+    moves = generate_moves
+    valid_move = moves.find {|move| move.from_column == m.from_column && move.to_column == m.to_column && move.from_row == m.from_row && move.to_row == m.to_row }
+		
+    if valid_move.nil?
+      # requested move not found
+      result = {
+        :status => "failed",
+        :title => "Invalid Move",
+        :text => "The move you tried doesn't jive with the rules. We're pretty sure you can find a better one anyways."
+      }
+      return result
+    end
 
 		# Step 4e setup our result hash
 		result = {
@@ -136,12 +145,94 @@ class Game < ActiveRecord::Base
 			self.save
 		end
 
-		def valid_move (piece, move)
-			
+		def generate_moves
+      # stores all moves generated
+      move_list = []
 
-			return result
+      # who's turn is it?
+      color = (self.turn == self.white) ? "white" : "black"
+      opp_color = (self.turn == self.white) ? "black" : "white"
+
+      self.pieces.each { | piece |
+        next if(piece.color != color)
+          
+        case piece.name
+        when "king"
+          # king can move 1 space each direction
+          [[-1,-1],[0,-1],[1,-1], [-1,0],[1,0] ,[-1,1],[0,1],[1,1]].each do | move |
+            column = piece.column + move[0]
+            row = piece.row + move[1]
+            if valid_index?(column) && valid_index?(row)
+              if moveable?(color, column, row)
+                move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+              end
+            end
+          end
+        when "queen"
+        when "rook"
+        when "bishop"
+        when "knight"
+        when "pawn"
+          # changes direction based on color
+          row = ((color == "white") ? -1 : 1) + piece.row
+
+          if valid_index?(row)
+            # check for pawn attacks
+            [-1,1].each do | attack |
+              column = piece.column + attack
+              if valid_index?(column)
+                if attack?(opp_color, column, row)
+                  move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+                end
+              end
+            end
+
+            # check for normal moves
+            if open?(piece.column, row)
+              move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => row)
+
+              # check for 2 spaces if still at start
+              if (piece.row == 1 && piece.color == "black") || (piece.row == 6 && piece.color == "white")
+                row += ((color == "white") ? -1 : 1)
+                if valid_index?(row)
+                  if open?(piece.column, row)
+                    move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => row)
+                  end
+                end
+              end
+            end
+          end
+        end
+
+      }
+      return move_list
+    end
+
+    def valid_index?(i)
+			return (i >= 0 && i <= 7)
 		end
 
+    # true if space is empty or occupied by piece opposite of {color}, false if occupied by {color}
+    def moveable?(color, column, row)
+      piece = self.pieces.to_ary.find { |p| p.color == color && p.column == column && p.row == row && p.active == true }
+      return true if piece.nil?
+      return false
+    end
+
+    # true if there is no piece present, false otherwise
+    def open?(column, row)
+      piece = self.pieces.to_ary.find { |p| p.column == column && p.row == row && p.active == true }
+      return true if piece.nil?
+      return false
+    end
+
+    # true if occupied by piece of {color}, useful for pawns who can only attack if a square is occupied
+    def attack?(color, column, row)
+      piece = self.pieces.to_ary.find { |p| p.color == color && p.column == column && p.row == row && p.active == true }
+      return false if piece.nil?
+      return true
+    end
+    
     def setup_pieces
       Piece.create( :color => "black", :name => "king", :row => "0", :column => "4", :game => self)
       Piece.create( :color => "black", :name => "queen", :row => "0", :column => "3", :game => self)

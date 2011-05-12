@@ -17,6 +17,8 @@ class Piece < ActiveRecord::Base
 
   attr_accessible :name, :color, :column, :row, :active, :game
 
+  
+
 	# moves returns an array of [x,y] coordinates on the board that piece can move
 	# to based off its current position. *** Does not care about pieces blocking
 	# its path etc... it assumes an empty board

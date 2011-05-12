@@ -85,12 +85,12 @@ class Game < ActiveRecord::Base
 		# Step 4e setup our result hash
 		result = {
 			:status => "success",
-			:move => {
+			:move => [{
 				:from_column => from_c,
 				:to_column => to_c,
 				:from_row => from_r,
 				:to_row => to_r
-			},
+			}],
 			:turn => self.whos_turn,
 			:capture => false
 		}
@@ -109,6 +109,30 @@ class Game < ActiveRecord::Base
 
       # add capture to our result
       result[:capture] = true
+    end
+
+    # if the move was a castle, we need to add the rook movement to the result hash
+    if valid_move.castle
+      # find the column
+      f_column = 0 # 0 for both sides
+      t_column = 3
+      if m.from_column < m.to_column
+          f_column = 7
+          t_column = 5
+      end
+
+      rook = Piece.find(:first, :conditions => ["game_id = ? AND row = ? AND column = ? AND active = ?", self.id, m.from_row, f_column, true])
+
+      unless rook.nil?
+        rook[:column] = t_column
+        rook.save
+        result[:move] << {
+          :from_column => f_column,
+          :to_column => t_column,
+          :from_row => m.from_row,
+          :to_row => m.to_row
+        }
+      end
     end
 
     # save our move
@@ -202,6 +226,8 @@ class Game < ActiveRecord::Base
         next if(piece.color != color)
           
         case piece.name
+
+        # KING MOVES
         when "king"
           # king can move 1 space each direction
           [[-1,-1],[0,-1],[1,-1], [-1,0],[1,0] ,[-1,1],[0,1],[1,1]].each do | move |
@@ -213,6 +239,44 @@ class Game < ActiveRecord::Base
               end
             end
           end
+
+          # check for castling
+          if color == "black"
+            # only if the king is at the starting position
+            if piece.column == 4 && piece.row == 0
+              if self.black_king_side_castle
+                # Add 2 to column
+                if open?(piece.column + 1, piece.row) && open?(piece.column + 2, piece.row)
+                  move_list << Move.new(:castle => true, :from_column => piece.column, :to_column => piece.column + 2, :from_row => piece.row, :to_row => piece.row)
+                end
+              end
+
+              if self.black_queen_side_castle
+                # - 3 from column
+                if open?(piece.column - 1, piece.row) && open?(piece.column - 2, piece.row) && open?(piece.column - 3, piece.row)
+                  move_list << Move.new(:castle => true, :from_column => piece.column, :to_column => piece.column - 2, :from_row => piece.row, :to_row => piece.row)
+                end
+              end
+            end
+          else #white
+            if piece.column == 4 && piece.row == 7
+              if self.white_king_side_castle
+                # Add 2 to column
+                if open?(piece.column + 1, piece.row) && open?(piece.column + 2, piece.row)
+                  move_list << Move.new(:castle => true, :from_column => piece.column, :to_column => piece.column + 2, :from_row => piece.row, :to_row => piece.row)
+                end
+              end
+
+              if self.white_queen_side_castle
+                # - 3 from column
+                if open?(piece.column - 1, piece.row) && open?(piece.column - 2, piece.row) && open?(piece.column - 3, piece.row)
+                  move_list << Move.new(:castle => true, :from_column => piece.column, :to_column => piece.column - 2, :from_row => piece.row, :to_row => piece.row)
+                end
+              end
+            end
+          end
+
+        # QUEEN MOVES
         when "queen"
 					# left & right moves
 					[(piece.column-1).downto(0).to_a, (piece.column+1..7)].each do | move |
@@ -272,6 +336,8 @@ class Game < ActiveRecord::Base
 							end
 						end
 					end
+
+        # ROOK MOVES
         when "rook"
 					# left & right moves
 					[(piece.column-1).downto(0).to_a, (piece.column+1..7)].each do | move |
@@ -301,6 +367,7 @@ class Game < ActiveRecord::Base
 						end
 					end
 
+        # BISHOP MOVES
         when "bishop"
 					# from piece towards lower right
 					(1..4).each do | direction |
@@ -333,6 +400,7 @@ class Game < ActiveRecord::Base
 						end
 					end
 
+        # KNIGHT MOVES
         when "knight"
           [[-1,-2],[-2,-1], [1,-2],[2,-1], [-1,2],[-2,1], [1,2], [2,1] ].each do | move |
             column = piece.column + move[0]
@@ -344,6 +412,8 @@ class Game < ActiveRecord::Base
               end
             end
           end
+
+        # PAWN MOVES
         when "pawn"
           # changes direction based on color
           row = ((color == "white") ? -1 : 1) + piece.row

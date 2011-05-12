@@ -31,6 +31,7 @@ $(function(){
   var pusher = new Pusher('e0b03bb1cb7d458de516');
   var channel = pusher.subscribe('<%= @game.id %>');
   channel.bind('move', function(data) {
+    console.log(data);
     if(data.status == "success"){
       gChess.move(data);
       gChess.turn(data.turn);

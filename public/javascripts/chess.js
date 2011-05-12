@@ -81,6 +81,9 @@ Chess.prototype = {
     draw: function(){
 	if(this.canvasValid) return;
 
+        this.canvasValid = true;
+        this.targetTimeElapsed += this.interval;
+
 	// Clear the canvas
 	this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
@@ -166,17 +169,16 @@ Chess.prototype = {
                     index = 0;
                     break;
 	    }
-	    if(this.movingPiece == this.pieces[i]){
+	    if(this.pieces[i].moving){
 		// Calculate the position of the piece by interpolating based on time
-		this.targetTimeElapsed += this.interval;
 		var percent = this.targetTimeElapsed / this.targetTime;
 
     		if(percent > 1) percent = 1;
 
-		var x = this.translateColumn(this.movingPiece.cell.column);
-		var y = this.translateRow(this.movingPiece.cell.row);
-		var xToAdd = (this.translateColumn(this.targetCell.column) - x) * percent;
-		var yToAdd = (this.translateRow(this.targetCell.row) - y) * percent;
+		var x = this.translateColumn(this.pieces[i].cell.column);
+		var y = this.translateRow(this.pieces[i].cell.row);
+		var xToAdd = (this.translateColumn(this.pieces[i].target.column) - x) * percent;
+		var yToAdd = (this.translateRow(this.pieces[i].target.row) - y) * percent;
 
 		x += xToAdd;
 		y += yToAdd;
@@ -184,15 +186,14 @@ Chess.prototype = {
 		this.drawImgAt(index, x, y);
 
 		if(this.targetTimeElapsed >= this.targetTime){
-		    this.pieces[i].cell =  this.targetCell;
-		    this.movingPiece = null;
+		    this.pieces[i].cell =  this.pieces[i].target;
+		    this.pieces[i].moving = false;
+                    this.pieces[i].target = null;
 		}
+                this.canvasValid = false;
 	    } else {
 		this.drawImg(index, this.pieces[i].cell.column, this.pieces[i].cell.row);
 	    }
-	}
-	if(this.movingPiece == null){
-	    this.canvasValid = true;
 	}
     },
 
@@ -279,32 +280,37 @@ Chess.prototype = {
     move: function(json){
 	var that = this;
 	$.each(json, function(i, move){
-	    if(move.from_column == undefined)
+	    if(!$.isArray(move))
 		return true;
+            console.log(move);
+            for(var x = 0; x < move.length; x++){
 
-	    var indexToSplice = -1;
-	    if(that.inverted){
-		move.from_row = that.invert(move.from_row, true);
-		move.to_row = that.invert(move.to_row, true);
-		move.from_column = that.invert(move.from_column, true);
-		move.to_column = that.invert(move.to_column, true);
-	    }
-	    for(var i = 0; i < that.pieces.length; i++){
-		if(that.pieces[i].cell.column == move.to_column && that.pieces[i].cell.row == move.to_row){
-		    indexToSplice = i;
-		}
+                var indexToSplice = -1;
+                if(that.inverted){
+                    move[x].from_row = that.invert(move[x].from_row, true);
+                    move[x].to_row = that.invert(move[x].to_row, true);
+                    move[x].from_column = that.invert(move[x].from_column, true);
+                    move[x].to_column = that.invert(move[x].to_column, true);
+                }
+                for(var i = 0; i < that.pieces.length; i++){
+                    if(that.pieces[i].cell.column == move[x].to_column && that.pieces[i].cell.row == move[x].to_row){
+                        indexToSplice = i;
+                    }
 
-		if(that.pieces[i].cell.column == move.from_column && that.pieces[i].cell.row == move.from_row){
-		    that.movingPiece = that.pieces[i];
-		    that.targetCell = new Cell(move.to_row, move.to_column);
-		    that.targetTimeElapsed = 0;
-		    that.selectedPieceIndex = -1;
-		    that.invalidate();
-		}
-	    }
-	    if(indexToSplice != -1){
-		that.pieces.splice(indexToSplice, 1);
-	    }
+                    if(that.pieces[i].cell.column == move[x].from_column && that.pieces[i].cell.row == move[x].from_row){
+                        that.pieces[i].moving = true;
+                        that.pieces[i].target = new Cell(move[x].to_row, move[x].to_column)
+                        //that.movingPiece = that.pieces[i];
+                        //that.targetCell = new Cell(move[x].to_row, move[x].to_column);
+                        that.targetTimeElapsed = 0;
+                        that.selectedPieceIndex = -1;
+                        that.invalidate();
+                    }
+                }
+                if(indexToSplice != -1){
+                    that.pieces.splice(indexToSplice, 1);
+                }
+            }
 	});
     },
 
@@ -370,4 +376,6 @@ function Piece(color, type, row, column){
     this.color = color;
     this.type = type;
     this.cell = new Cell(row, column);
+    this.target = null;
+    this.moving = false;
 }

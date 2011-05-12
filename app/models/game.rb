@@ -67,6 +67,9 @@ class Game < ActiveRecord::Base
     m.user = self.turn
 
     moves = generate_moves
+		moves.each do | print |
+			puts "#{print.from_column}, #{print.from_row} - #{print.to_column}, #{print.to_row}"
+		end
     valid_move = moves.find {|move| move.from_column == m.from_column && move.to_column == m.to_column && move.from_row == m.from_row && move.to_row == m.to_row }
 		
     if valid_move.nil?
@@ -170,6 +173,34 @@ class Game < ActiveRecord::Base
           end
         when "queen"
         when "rook"
+					# left & right moves
+					[(piece.column-1).downto(0).to_a, (piece.column+1..7)].each do | move |
+						move.each do | c |
+							break unless valid_index?(c)
+
+							if moveable?(color, c, piece.row)
+								move_list << Move.new(:from_column => piece.column, :to_column => c, :from_row => piece.row, :to_row => piece.row)
+								break if attack?(opp_color, c, piece.row)
+							else
+								break # break if we can't move to a square since we can't move past it either
+							end
+						end
+					end
+
+					# up & down moves
+					[(piece.row-1).downto(0).to_a, (piece.row+1..7)].each do | move |
+						move.each do | r |
+							break unless valid_index?(r)
+
+							if moveable?(color, piece.column, r)
+								move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => r)
+								break if attack?(opp_color, piece.column, r)
+							else
+								break # break if we can't move to a square since we can't move past it either
+							end
+						end
+					end
+
         when "bishop"
         when "knight"
           [[-1,-2],[-2,-1], [1,-2],[2,-1], [-1,2],[-2,1], [1,2], [2,1] ].each do | move |

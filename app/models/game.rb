@@ -172,6 +172,16 @@ class Game < ActiveRecord::Base
         when "rook"
         when "bishop"
         when "knight"
+          [[-1,-2],[-2,-1], [1,-2],[2,-1], [-1,2],[-2,1], [1,2], [2,1] ].each do | move |
+            column = piece.column + move[0]
+            row = piece.row + move[1]
+            
+            if valid_index?(column) && valid_index?(row)
+              if moveable?(color, column, row)
+                move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+              end
+            end
+          end
         when "pawn"
           # changes direction based on color
           row = ((color == "white") ? -1 : 1) + piece.row

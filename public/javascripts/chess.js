@@ -290,7 +290,7 @@ Chess.prototype = {
 		move.to_column = that.invert(move.to_column, true);
 	    }
 	    for(var i = 0; i < that.pieces.length; i++){
-		if(that.pieces[i].cell.column == move.to_column && that.pieces[i].cell.row == move.to_row && move.capture){
+		if(that.pieces[i].cell.column == move.to_column && that.pieces[i].cell.row == move.to_row){
 		    indexToSplice = i;
 		}
 

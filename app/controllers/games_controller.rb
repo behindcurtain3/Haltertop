@@ -60,7 +60,7 @@ class GamesController < ApplicationController
 	def move
 		@game = Game.find(params[:id])
 		if current_user? @game.turn
-			result = @game.update_board(params[:from_row].to_i, params[:to_row].to_i, params[:from_column].to_i, params[:to_column].to_i)
+			result = @game.move(params[:from_row].to_i, params[:to_row].to_i, params[:from_column].to_i, params[:to_column].to_i)
 				
 				# Use Pusher to send the move to all clients listening to the game
         if result[:status] == "success"
@@ -68,7 +68,7 @@ class GamesController < ApplicationController
         end
 		else
 			result = {
-        :result => "failed",
+        :status => "failed",
 				:title => "Ah ah ah",
         :text => "Sneaky, but it isn't your move."
       }

@@ -277,29 +277,35 @@ Chess.prototype = {
     },
 
     move: function(json){
-        var indexToSplice = -1;
-	if(this.inverted){
-	    json.from_row = this.invert(json.from_row, true);
-	    json.to_row = this.invert(json.to_row, true);
-	    json.from_column = this.invert(json.from_column, true);
-	    json.to_column = this.invert(json.to_column, true);
-	}
-	for(var i = 0; i < this.pieces.length; i++){
-            if(this.pieces[i].cell.column == json.to_column && this.pieces[i].cell.row == json.to_row && json.capture){
-                indexToSplice = i;
-            }
+	var that = this;
+	$.each(json, function(i, move){
+	    if(move.from_column == undefined)
+		return true;
 
-	    if(this.pieces[i].cell.column == json.from_column && this.pieces[i].cell.row == json.from_row){
-                this.movingPiece = this.pieces[i];
-		this.targetCell = new Cell(json.to_row, json.to_column);
-		this.targetTimeElapsed = 0;
-		this.selectedPieceIndex = -1;
-		this.invalidate();
+	    var indexToSplice = -1;
+	    if(that.inverted){
+		move.from_row = that.invert(move.from_row, true);
+		move.to_row = that.invert(move.to_row, true);
+		move.from_column = that.invert(move.from_column, true);
+		move.to_column = that.invert(move.to_column, true);
 	    }
-	}
-        if(indexToSplice != -1){
-            this.pieces.splice(indexToSplice, 1);
-        }
+	    for(var i = 0; i < that.pieces.length; i++){
+		if(that.pieces[i].cell.column == move.to_column && that.pieces[i].cell.row == move.to_row && move.capture){
+		    indexToSplice = i;
+		}
+
+		if(that.pieces[i].cell.column == move.from_column && that.pieces[i].cell.row == move.from_row){
+		    that.movingPiece = that.pieces[i];
+		    that.targetCell = new Cell(move.to_row, move.to_column);
+		    that.targetTimeElapsed = 0;
+		    that.selectedPieceIndex = -1;
+		    that.invalidate();
+		}
+	    }
+	    if(indexToSplice != -1){
+		that.pieces.splice(indexToSplice, 1);
+	    }
+	});
     },
 
     turn: function(t){

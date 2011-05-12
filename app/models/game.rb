@@ -11,6 +11,12 @@
 #  turn_id    :integer
 #
 
+require 'pusher'
+
+Pusher.app_id = '5414'
+Pusher.key = 'e0b03bb1cb7d458de516'
+Pusher.secret = '8a8e8d9612f7391352e8'
+
 class Game < ActiveRecord::Base
 	# moves
 	has_many :moves, :dependent => :destroy
@@ -25,8 +31,20 @@ class Game < ActiveRecord::Base
 	before_create :setup_game
   after_create :setup_pieces
 
-	def update_board(from_r, to_r, from_c, to_c)
-    # find our piece
+	def move(from_r, to_r, from_c, to_c)
+		# Sequence of events:
+		# 1. Find the piece moved, if nil return failed
+		# 2. Generate list of all valid moves
+		# 3. If our move is not on the list return failed
+		# 4. If it is on the list:
+		#		a. Check for endgame condition
+		#		b. Update castling status
+		#		c. Update en passant status
+		#		d. Update the piece(s).
+		#		e. Generate move & push to users
+		#		f. If promotion... ask the user which piece to promote to
+
+    # Step 1: find our piece
     piece = Piece.find(:first, :conditions => ["game_id = ? AND row = ? AND column = ? AND active = ?", self.id, from_r, from_c, true])
 
     # return false if the piece wasn't found
@@ -39,20 +57,7 @@ class Game < ActiveRecord::Base
       return result
     end
 
-    # TODO: check move validity
-    # 
-    # setup our result hash
-    result = {
-      :status => "success",
-      :from_column => from_c,
-      :to_column => to_c,
-      :from_row => from_r,
-      :to_row => to_r,
-      :turn => self.whos_turn,
-      :capture => false
-    }
-
-    # Prep our new move
+		# Prep our new move
     m = Move.new
     m.from_column = from_c
     m.to_column = to_c
@@ -60,6 +65,23 @@ class Game < ActiveRecord::Base
     m.to_row = to_r
     m.game = self
     m.user = self.turn
+
+		# moves = generate_moves
+		# if moves contains m return valid
+		# else return fail
+
+		# Step 4e setup our result hash
+		result = {
+			:status => "success",
+			:move => {
+				:from_column => from_c,
+				:to_column => to_c,
+				:from_row => from_r,
+				:to_row => to_r
+			},
+			:turn => self.whos_turn,
+			:capture => false
+		}
 
     # update our piece
     piece[:row] = to_r
@@ -112,6 +134,12 @@ class Game < ActiveRecord::Base
 				self.turn = self.white
 			end
 			self.save
+		end
+
+		def valid_move (piece, move)
+			
+
+			return result
 		end
 
     def setup_pieces

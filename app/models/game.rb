@@ -157,6 +157,7 @@ class Game < ActiveRecord::Base
       opp_color = (self.turn == self.white) ? "black" : "white"
 
       self.pieces.each { | piece |
+				next unless(piece.active)
         next if(piece.color != color)
           
         case piece.name
@@ -172,6 +173,64 @@ class Game < ActiveRecord::Base
             end
           end
         when "queen"
+					# left & right moves
+					[(piece.column-1).downto(0).to_a, (piece.column+1..7)].each do | move |
+						move.each do | c |
+							break unless valid_index?(c)
+
+							if moveable?(color, c, piece.row)
+								move_list << Move.new(:from_column => piece.column, :to_column => c, :from_row => piece.row, :to_row => piece.row)
+								break if attack?(opp_color, c, piece.row)
+							else
+								break # break if we can't move to a square since we can't move past it either
+							end
+						end
+					end
+
+					# up & down moves
+					[(piece.row-1).downto(0).to_a, (piece.row+1..7)].each do | move |
+						move.each do | r |
+							break unless valid_index?(r)
+
+							if moveable?(color, piece.column, r)
+								move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => r)
+								break if attack?(opp_color, piece.column, r)
+							else
+								break # break if we can't move to a square since we can't move past it either
+							end
+						end
+					end
+
+					# diagonals
+					(1..4).each do | direction |
+						(1..7).each do | n |
+							case direction
+								when 1 # lower left
+									column = piece.column + n
+									row = piece.row + n
+								when 2 # lower right
+									column = piece.column - n
+									row = piece.row + n
+								when 3 # upper right
+									column = piece.column + n
+									row = piece.row - n
+								when 4 # upper left
+									column = piece.column - n
+									row = piece.row - n
+							end
+
+							if valid_index?(column) && valid_index?(row)
+								if moveable?(color, column, row)
+									move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+									break if attack?(opp_color, column, row)
+								else
+									break # break if we can't move to a square since we can't move past it either
+								end
+							else
+								break
+							end
+						end
+					end
         when "rook"
 					# left & right moves
 					[(piece.column-1).downto(0).to_a, (piece.column+1..7)].each do | move |
@@ -202,6 +261,37 @@ class Game < ActiveRecord::Base
 					end
 
         when "bishop"
+					# from piece towards lower right
+					(1..4).each do | direction |
+						(1..7).each do | n |
+							case direction
+								when 1 # lower left
+									column = piece.column + n
+									row = piece.row + n
+								when 2 # lower right
+									column = piece.column - n
+									row = piece.row + n
+								when 3 # upper right
+									column = piece.column + n
+									row = piece.row - n
+								when 4 # upper left
+									column = piece.column - n
+									row = piece.row - n
+							end
+							
+							if valid_index?(column) && valid_index?(row)
+								if moveable?(color, column, row)
+									move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+									break if attack?(opp_color, column, row)
+								else
+									break # break if we can't move to a square since we can't move past it either
+								end
+							else
+								break
+							end
+						end
+					end
+
         when "knight"
           [[-1,-2],[-2,-1], [1,-2],[2,-1], [-1,2],[-2,1], [1,2], [2,1] ].each do | move |
             column = piece.column + move[0]

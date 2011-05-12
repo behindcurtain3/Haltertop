@@ -119,14 +119,14 @@ class Game < ActiveRecord::Base
 
 		# Update castling status
 		# check the 4 corners and king start position
-		if self.black_king_side_castle && self.black_queen_side_castle
+		if self.black_king_side_castle || self.black_queen_side_castle
 			p = self.pieces.to_a.find { |piece| piece.name == 'king' && piece.column == 4 && piece.row == 0 && piece.active == true }
 			if p.nil?
 				self.black_queen_side_castle = false
 				self.black_king_side_castle = false
 			end
 		end
-		if self.white_king_side_castle && self.white_queen_side_castle
+		if self.white_king_side_castle || self.white_queen_side_castle
 			p = self.pieces.to_a.find { |piece| piece.name == 'king' && piece.column == 4 && piece.row == 7 && piece.active == true }
 			if p.nil?
 				self.white_queen_side_castle = false

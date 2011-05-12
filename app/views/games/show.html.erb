@@ -11,7 +11,7 @@
       <% @game.moves.each_slice(2) do | slice | %>
       <li>
         <% slice.each do | move | %>
-          <%= "[#{move.from_column},#{move.from_row}] -> [#{move.to_column}, #{move.to_row}]" %>&nbsp;
+          <%= "#{move.from_column},#{move.from_row} - #{move.to_column}, #{move.to_row}" %>&nbsp;
         <% end %>
       </li>
       <% end %>

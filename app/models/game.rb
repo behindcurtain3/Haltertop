@@ -67,9 +67,9 @@ class Game < ActiveRecord::Base
     m.user = self.turn
 
     moves = generate_moves
-		moves.each do | print |
-			puts "#{print.from_column}, #{print.from_row} - #{print.to_column}, #{print.to_row}"
-		end
+		#moves.each do | print |
+		#	puts "#{print.from_column}, #{print.from_row} - #{print.to_column}, #{print.to_row}"
+		#end
     valid_move = moves.find {|move| move.from_column == m.from_column && move.to_column == m.to_column && move.from_row == m.from_row && move.to_row == m.to_row }
 		
     if valid_move.nil?
@@ -117,9 +117,51 @@ class Game < ActiveRecord::Base
     # save the piece
 		piece.save
 
-    # swap turns
-		swap_turns
+		# Update castling status
+		# check the 4 corners and king start position
+		if self.black_king_side_castle && self.black_queen_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'king' && piece.column == 4 && piece.row == 0 && piece.active == true }
+			if p.nil?
+				self.black_queen_side_castle = false
+				self.black_king_side_castle = false
+			end
+		end
+		if self.white_king_side_castle && self.white_queen_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'king' && piece.column == 4 && piece.row == 7 && piece.active == true }
+			if p.nil?
+				self.white_queen_side_castle = false
+				self.white_king_side_castle = false
+			end
+		end
+
+		if self.black_queen_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'rook' && piece.column == 0 && piece.row == 0 && piece.active == true }
+			if p.nil?
+				self.black_queen_side_castle = false
+			end
+		end
+		if self.black_king_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'rook' && piece.column == 7 && piece.row == 0 && piece.active == true }
+			if p.nil?
+				self.black_king_side_castle = false
+			end
+		end
+		if self.white_queen_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'rook' && piece.column == 0 && piece.row == 7 && piece.active == true }
+			if p.nil?
+				self.white_queen_side_castle = false
+			end
+		end
+		if self.white_king_side_castle
+			p = self.pieces.to_a.find { |piece| piece.name == 'rook' && piece.column == 7 && piece.row == 7 && piece.active == true }
+			if p.nil?
+				self.white_king_side_castle = false
+			end
+		end
+
+		swap_turns # swap turns
     result[:turn] = self.whos_turn
+		self.save
 		return result
 	end
 
@@ -145,7 +187,6 @@ class Game < ActiveRecord::Base
 			else
 				self.turn = self.white
 			end
-			self.save
 		end
 
 		def generate_moves

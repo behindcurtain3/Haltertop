@@ -25,10 +25,8 @@ ActiveRecord::Schema.define(:version => 20110512010201) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "turn_id"
-    t.boolean  "black_king_moved",        :default => false
     t.boolean  "black_queen_side_castle", :default => true
     t.boolean  "black_king_side_castle",  :default => true
-    t.boolean  "white_king_moved",        :default => false
     t.boolean  "white_queen_side_castle", :default => true
     t.boolean  "white_king_side_castle",  :default => true
   end

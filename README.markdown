@@ -1,11 +1,11 @@
 # Todo: Game
 
-1. Check moves for validity
+1. ~~Check moves for validity~~
 2. ~~Add captures~~
 3. Add promotion
 4. Add castling
 5. Add check & checkmates
-6. Add move log
+6. Working move log w/ notation
 7. Add undo move option?
 8. z-ordering on piece animations
 

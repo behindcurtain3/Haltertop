@@ -3,11 +3,13 @@
 1. ~~Check moves for validity~~
 2. ~~Add captures~~
 3. Add promotion
-4. Add castling
+4. ~~Add castling~~
 5. Add check & checkmates
 6. Working move log w/ notation
 7. Add undo move option?
 8. z-ordering on piece animations
+9. Add en passant
+10. Add chatting
 
 # Todo: Site
 

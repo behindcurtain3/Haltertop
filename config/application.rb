@@ -38,5 +38,11 @@ module Haltertop
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    config.gem 'pusher'
   end
+
+  Pusher.app_id = '5414'
+  Pusher.key = 'e0b03bb1cb7d458de516'
+  Pusher.secret = '8a8e8d9612f7391352e8'
 end

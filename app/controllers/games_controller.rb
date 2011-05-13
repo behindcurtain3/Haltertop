@@ -1,9 +1,3 @@
-require 'pusher'
-
-Pusher.app_id = '5414'
-Pusher.key = 'e0b03bb1cb7d458de516'
-Pusher.secret = '8a8e8d9612f7391352e8'
-
 class GamesController < ApplicationController
   # before_filters are run before anything else is done on the controller
   # Authenticate the user

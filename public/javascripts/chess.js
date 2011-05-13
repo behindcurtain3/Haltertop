@@ -260,7 +260,6 @@ Chess.prototype = {
 			"&to_column=" + cell.column;
 	    }
 
-	    var that = this;
 	    $.ajax({
 		url: '/games/' + this.gameId + '/move',
 		data: move,

@@ -11,12 +11,6 @@
 #  turn_id    :integer
 #
 
-require 'pusher'
-
-Pusher.app_id = '5414'
-Pusher.key = 'e0b03bb1cb7d458de516'
-Pusher.secret = '8a8e8d9612f7391352e8'
-
 class Game < ActiveRecord::Base
 	# moves
 	has_many :moves, :dependent => :destroy
@@ -58,13 +52,7 @@ class Game < ActiveRecord::Base
     end
 
 		# Prep our new move
-    m = Move.new
-    m.from_column = from_c
-    m.to_column = to_c
-    m.from_row = from_r
-    m.to_row = to_r
-    m.game = self
-    m.user = self.turn
+    m = Move.new(:from_column => from_c, :to_column => to_c, :from_row => from_r, :to_row => to_r, :game => self, :user => self.turn)
 
     moves = generate_moves
 		#moves.each do | print |

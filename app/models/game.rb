@@ -58,7 +58,7 @@ class Game < ActiveRecord::Base
 		# Prep our new move
     m = Move.new(:from_column => from_c, :to_column => to_c, :from_row => from_r, :to_row => to_r, :game => self, :user => self.turn)
 
-    moves = generate_moves
+    moves = generate_moves(self.pieces.to_a, whos_turn)
 		#moves.each do | print |
 		#	puts "#{print.from_column}, #{print.from_row} - #{print.to_column}, #{print.to_row}"
 		#end
@@ -205,15 +205,14 @@ class Game < ActiveRecord::Base
 			end
 		end
 
-		def generate_moves
+		def generate_moves(pieces, color)
       # stores all moves generated
       move_list = []
 
-      # who's turn is it?
-      color = (self.turn == self.white) ? "white" : "black"
-      opp_color = (self.turn == self.white) ? "black" : "white"
+      # set the opposite color
+      opp_color = (color == "white") ? "black" : "white"
 
-      self.pieces.each { | piece |
+      pieces.each { | piece |
 				next unless(piece.active)
         next if(piece.color != color)
           

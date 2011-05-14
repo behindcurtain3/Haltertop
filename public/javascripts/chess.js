@@ -330,26 +330,21 @@ Chess.prototype = {
     },
 
     getCursorPosition: function(e){
-	/* returns Cell with .row and .column properties */
-	var x;
-	var y;
-	if (e.pageX != undefined && e.pageY != undefined) {
-	    x = e.pageX;
-	    y = e.pageY;
-	}
-	else {
-	    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-	    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-	}
-	x -= this.canvasElement.offsetParent.offsetLeft;
-	x -= this.canvasElement.offsetLeft;
-	y -= this.canvasElement.offsetTop;
+	var totalOffsetX = 0;
+        var totalOffsetY = 0;
+        var canvasX = 0;
+        var canvasY = 0;
+        var currentElement = this.canvasElement;
 
-	x = Math.min(x, this.boardWidth * this.cellWidth);
-	y = Math.min(y, this.boardHeight * this.cellHeight);
+        do{
+            totalOffsetX += currentElement.offsetLeft;
+            totalOffsetY += currentElement.offsetTop;
+        }
+        while(currentElement = currentElement.offsetParent)
 
-	var cell = new Cell( Math.floor( y / this.cellHeight ), Math.floor( x / this.cellWidth ) );
-	return cell;
+        canvasX = event.pageX - totalOffsetX;
+        canvasY = event.pageY - totalOffsetY;
+        return new Cell( Math.floor( canvasY / this.cellHeight ), Math.floor( canvasX / this.cellWidth ) );
     },
 
     invalidate: function(){

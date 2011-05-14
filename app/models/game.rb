@@ -1,14 +1,18 @@
 # == Schema Information
-# Schema version: 20110509040216
+# Schema version: 20110512230247
 #
 # Table name: games
 #
-#  id         :integer         not null, primary key
-#  black_id   :integer
-#  white_id   :integer
-#  created_at :datetime
-#  updated_at :datetime
-#  turn_id    :integer
+#  id                      :integer         not null, primary key
+#  black_id                :integer
+#  white_id                :integer
+#  created_at              :datetime
+#  updated_at              :datetime
+#  turn_id                 :integer
+#  black_queen_side_castle :boolean         default(TRUE)
+#  black_king_side_castle  :boolean         default(TRUE)
+#  white_queen_side_castle :boolean         default(TRUE)
+#  white_king_side_castle  :boolean         default(TRUE)
 #
 
 class Game < ActiveRecord::Base

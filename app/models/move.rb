@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110509040216
+# Schema version: 20110512230247
 #
 # Table name: moves
 #
@@ -14,6 +14,8 @@
 #  promoted    :string(255)
 #  created_at  :datetime
 #  updated_at  :datetime
+#  notation    :string(255)
+#  castle      :boolean
 #
 
 class Move < ActiveRecord::Base

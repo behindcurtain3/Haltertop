@@ -16,19 +16,26 @@ $(function(){
       gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
       gChess.init();
       <%= "gChess.inverted = true;" if current_user? @game.black %>
-      <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
+      <%  if (current_user?(@game.black) || current_user?(@game.white)) && @game.active %>
       gChess.canvasElement.addEventListener("click", clickListener, false);
       <% end %>
-      gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');
+      <% if @game.active %>
+      gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');      
+      <% else %>
+      gChess.gameInProgress = false;
+      $('#black-move').fadeOut();
+      $('#white-move').fadeOut();
+      <% end %>
 
       $(document).everyTime(gChess.interval, "loop", function(){
 	gChess.loop();
       });
+
       $("#board").fadeIn('slow');
     }
   });
 
-  var pusher = new Pusher('e0b03bb1cb7d458de516');
+  var pusher = new Pusher('<%= Pusher.key %>');
   var channel = pusher.subscribe('<%= @game.id %>');
   channel.bind('move', function(data) {
     console.log(data);

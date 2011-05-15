@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512230247) do
+ActiveRecord::Schema.define(:version => 20110515053927) do
 
   create_table "boards", :force => true do |t|
     t.text     "pieces"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(:version => 20110512230247) do
     t.boolean  "black_king_side_castle",  :default => true
     t.boolean  "white_queen_side_castle", :default => true
     t.boolean  "white_king_side_castle",  :default => true
+    t.boolean  "active",                  :default => true
+    t.string   "result"
   end
 
   add_index "games", ["black_id"], :name => "index_games_on_black_id"

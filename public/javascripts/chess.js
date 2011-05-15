@@ -87,8 +87,8 @@ Chess.prototype = {
 	// Clear the canvas
 	this.canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
-	// Tracks whether to draw a black or white square in the upper left
-	var blackSquare = !this.inverted;
+	// Tracks whether to draw a light or dark square in the upper left
+	var darkSquare = false;
 
 	// Draw the board
 	for(var y = 0; y < this.boardHeight; y++){
@@ -97,15 +97,15 @@ Chess.prototype = {
 		if(this.pieces[this.selectedPieceIndex].cell.row == y && this.pieces[this.selectedPieceIndex].cell.column == x){
 		    this.canvasCtx.fillStyle = this.colorHighlight;
 		} else {
-		    this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
+		    this.canvasCtx.fillStyle = (darkSquare) ? this.colorDark : this.colorLight;
 		}
 	    } else {
-		this.canvasCtx.fillStyle = (blackSquare) ? this.colorLight : this.colorDark;
+		this.canvasCtx.fillStyle = (darkSquare) ? this.colorDark : this.colorLight;
 	    }
 	    this.canvasCtx.fillRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
-	    blackSquare = !blackSquare;
+	    darkSquare = !darkSquare;
 	  }
-	  blackSquare = !blackSquare;
+	  darkSquare = !darkSquare;
 	}
 
 	// Draw board border

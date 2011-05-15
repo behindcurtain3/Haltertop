@@ -311,6 +311,7 @@ Chess.prototype = {
                 }
             }
 	});
+        this.pieces.sort(this.sortpieces);
     },
 
     turn: function(t){
@@ -357,6 +358,15 @@ Chess.prototype = {
 	} else {
 	    return this.invertForwards[n];
 	}
+    },
+
+    sortpieces: function(a, b){
+        if((a.moving && b.moving) || (!a.moving && !b.moving))
+            return 0;
+        else if(a.moving && !b.moving)
+            return 1;
+        else
+            return -1;
     }
 }
 

@@ -12,8 +12,6 @@ function Chess(canvasElement, gameId, playerColor){
     this.selectedPieceIndex = -1;
 
     // Animating piece moves
-    this.movingPiece = null;
-    this.targetCell = new Cell(-1,-1);
     this.targetTime = 750;
     this.targetTimeElapsed = -1;
 
@@ -24,6 +22,7 @@ function Chess(canvasElement, gameId, playerColor){
     this.invertForwards = [0,1,2,3,4,5,6,7];
     this.invertBackwards = [7,6,5,4,3,2,1,0];
 
+    // Display variables
     this.boardWidth = 8;
     this.boardHeight = 8;
     this.pieceWidth = 48;
@@ -236,11 +235,18 @@ Chess.prototype = {
 	    this.invalidate();
 	    return;
 	} else {
-	    // Check if gSelectPieceIndex has a value
-	    if(this.selectedPieceIndex == -1){
-		if(this.pieces[pieceIndex].color != this.playerColor){
+            // A piece was clicked, if it is the players own, switch the selectedPieceIndex
+            if(pieceIndex != -1){
+                if(this.pieces[pieceIndex].color == this.playerColor){
+                    this.selectedPieceIndex = pieceIndex;
+                    this.invalidate();
+                    return;
+                } else {
 		    return;
 		}
+            }
+            // If no piece is selected, select one
+	    if(this.selectedPieceIndex == -1){
 		this.selectedPieceIndex = pieceIndex;
 		this.invalidate();
 		return;
@@ -299,8 +305,6 @@ Chess.prototype = {
                     if(that.pieces[i].cell.column == move[x].from_column && that.pieces[i].cell.row == move[x].from_row){
                         that.pieces[i].moving = true;
                         that.pieces[i].target = new Cell(move[x].to_row, move[x].to_column)
-                        //that.movingPiece = that.pieces[i];
-                        //that.targetCell = new Cell(move[x].to_row, move[x].to_column);
                         that.targetTimeElapsed = 0;
                         that.selectedPieceIndex = -1;
                         that.invalidate();

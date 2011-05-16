@@ -1,21 +1,21 @@
 <%= form_for(@user) do |f| %>
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password %>
-  </div>
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation %>
-  </div>
-  <div class="actions">
-    <%= f.submit button_text %>
-  </div>
+  <p class="field">
+    <%= f.text_field :name, :placeholder => "Name" %>
+    <%= f.label :name %>
+  </p>
+  <p class="field">
+    <%= f.text_field :email, :placeholder => "Email Address" %>
+    <%= f.label :email %>
+  </p>
+  <p class="field">
+    <%= f.password_field :password, :placeholder => "Password" %>
+    <%= f.label :password %>
+  </p>
+  <p class="field">
+    <%= f.password_field :password_confirmation, :placeholder => "Confirm Password" %>
+    <%= f.label :password_confirmation %>
+  </p>
+  <p class="actions">
+    <%= f.submit button_text, :class => "button orange" %>
+  </p>
 <% end %>

@@ -1,12 +1,13 @@
-<h1>New Game</h1>
+<h1>Custom Game</h1>
 <%= form_for(@game) do |f| %>
 <div class="field">
+  <p>Play As:</p>
   <%= f.radio_button :turn, 'white' %>
   <%= f.label :side_white, "White" %>
   <%= f.radio_button :turn, 'black' %>
   <%= f.label :side_black, "Black" %>
 </div>
 <div class="actions">
-  <%= f.submit "Play" %>
+  <%= f.submit "Play", :class => "button orange" %>
 </div>
 <% end %>

@@ -1,6 +1,2 @@
-<h1>Matches</h1>
-<ul>
-<% @games.each do |game| %>
-  <li><%=  link_to "Match #{game.id}", game_path(game) %></li>
-<% end %>
-</ul>
+<h1>Your Matches</h1>
+<%= render :partial => "shared/game_list", :locals => { :games => @games } %>

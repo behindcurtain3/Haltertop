@@ -1,0 +1,5 @@
+<ul class="game_list">
+<% games.each do |game| %>
+  <%= render :partial => 'shared/versus', :locals => {:game => game } %>
+<% end %>
+</ul>

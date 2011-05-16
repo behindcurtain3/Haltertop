@@ -1,6 +1,8 @@
-<h3><%= @user.name %></h3>
-<ul class="game_list">
-<% @user.games.each do |game|%>
-    <%= render :partial => 'shared/versus', :locals => {:game => game } %>
-<% end %>
-</ul>
+<div class="user">
+  <%= image_tag 'icon.png', :class => 'sm_round' %>
+  <p><%= @user.name %></p>
+</div>
+<div>
+  <h3>Matches</h3>
+  <%= render :partial => 'shared/game_list', :locals => { :games => @user.games } %>
+</div>

@@ -6,7 +6,7 @@ class GamesController < ApplicationController
   # GET /games
   def index
     @title = "Games"
-    @games = Game.all
+    @games = current_user.games
   end
 
   # GET /games/#{id}

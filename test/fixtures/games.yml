@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110512230247
+# Schema version: 20110516033905
 #
 # Table name: games
 #
@@ -13,6 +13,8 @@
 #  black_king_side_castle  :boolean         default(TRUE)
 #  white_queen_side_castle :boolean         default(TRUE)
 #  white_king_side_castle  :boolean         default(TRUE)
+#  active                  :boolean         default(TRUE)
+#  result                  :string(255)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

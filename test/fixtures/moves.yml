@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110512230247
+# Schema version: 20110516033905
 #
 # Table name: moves
 #
@@ -16,6 +16,7 @@
 #  updated_at  :datetime
 #  notation    :string(255)
 #  castle      :boolean
+#  check       :boolean
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

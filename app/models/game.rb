@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110512230247
+# Schema version: 20110516033905
 #
 # Table name: games
 #
@@ -13,6 +13,8 @@
 #  black_king_side_castle  :boolean         default(TRUE)
 #  white_queen_side_castle :boolean         default(TRUE)
 #  white_king_side_castle  :boolean         default(TRUE)
+#  active                  :boolean         default(TRUE)
+#  result                  :string(255)
 #
 
 class Game < ActiveRecord::Base
@@ -126,6 +128,7 @@ class Game < ActiveRecord::Base
       unless rook.nil?
         rook[:column] = t_column
         rook.save
+        m.castle = true
         result[:move] << {
           :from_column => f_column,
           :to_column => t_column,
@@ -134,6 +137,10 @@ class Game < ActiveRecord::Base
         }
       end
     end
+
+    # Make notation
+    m.notate(piece)
+    result[:notation] = m.notation
 
     # Step 9: save our move & the piece
     m.save

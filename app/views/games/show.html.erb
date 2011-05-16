@@ -5,15 +5,17 @@
 <%  end %>
 <div id="board" class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
-  <div class="status sm_round"  id="game_log">
+  <div class="status sm_round">
     <h3>Game <%= @game.id %></h3>
-    <ul>
+    <ul id="move_list">
+      <% count = 1 %>
       <% @game.moves.each_slice(2) do | slice | %>
-      <li>
+      <li id="move_<%= count %>">
         <% slice.each do | move | %>
-          <%= "#{move.from_column},#{move.from_row} - #{move.to_column}, #{move.to_row}" %>&nbsp;
+          <%= "#{move.notation}" %>&nbsp;
         <% end %>
       </li>
+        <% count += 1 %>
       <% end %>
     </ul>
   </div>

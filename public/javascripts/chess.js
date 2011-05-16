@@ -10,6 +10,7 @@ function Chess(canvasElement, gameId, playerColor){
     this.gameInProgress = false;
     this.pieces = [];
     this.selectedPieceIndex = -1;
+    this.numMoves = 0;
 
     // Animating piece moves
     this.targetTime = 750;

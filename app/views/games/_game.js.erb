@@ -15,6 +15,7 @@ $(function(){
       $(document).stopTime("images_loading");
       gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
       gChess.init();
+      gChess.numMoves = <%= @game.moves.count %>
       <%= "gChess.inverted = true;" if current_user? @game.black %>
       <%  if (current_user?(@game.black) || current_user?(@game.white)) && @game.active %>
       gChess.canvasElement.addEventListener("click", clickListener, false);
@@ -42,6 +43,17 @@ $(function(){
     if(data.status == "success"){
       gChess.move(data);
       gChess.turn(data.turn);
+      gChess.numMoves++;
+
+      var i = Math.ceil(gChess.numMoves / 2);
+      if(gChess.numMoves % 2 != 0){
+        var s = '<li id="move_' + i + '">' + data.notation + '</li>';
+        $('#move_list').append(s);
+      } else {
+        $('#move_' + i).append('&nbsp;' + data.notation);
+      }
+      
+
     } else {
       $.gritter.add({
 	  title: data.title,

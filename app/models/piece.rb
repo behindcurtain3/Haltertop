@@ -21,10 +21,12 @@ class Piece < ActiveRecord::Base
 
 	# Takes a piece type, column & row and returns the proper notation
 	def notation
-		NOTATION_MAP.each do |type|
-			if type.key == self.name
-				return type.value
-			end
-		end
+		NOTATION_MAP.each_pair do |k,v|
+      if k == self.name
+        return v.downcase if self.color == 'black'
+        return v
+      end
+    end
+    return ""
 	end
 end

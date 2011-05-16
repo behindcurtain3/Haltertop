@@ -82,7 +82,7 @@ class UsersController < ApplicationController
   # DELETE /users/#{id}
   def destroy
     User.find(params[:id]).destroy
-    flash[:success] = "User terminated"
+    gflash :success => "User terminated"
     redirect_to users_path
   end
 

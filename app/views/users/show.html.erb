@@ -1,6 +1,6 @@
-<p>Hi <%= @user.name %></p>
-<ul>
+<h3><%= @user.name %></h3>
+<ul class="game_list">
 <% @user.games.each do |game|%>
-  <li><%= link_to "Play #{game.id}", game_path(game) %></li>
+    <%= render :partial => 'shared/versus', :locals => {:game => game } %>
 <% end %>
 </ul>

@@ -241,9 +241,10 @@ Chess.prototype = {
                     this.selectedPieceIndex = pieceIndex;
                     this.invalidate();
                     return;
-                } else {
-		    return;
-		}
+                }
+                if(this.selectedPieceIndex == -1){
+                    return; // don't allow a user to select an opponenets piece
+                }
             }
             // If no piece is selected, select one
 	    if(this.selectedPieceIndex == -1){

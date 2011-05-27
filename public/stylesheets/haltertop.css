@@ -34,6 +34,16 @@ header img {
   background: #fff;
 }
 
+header#logo {
+    float: left;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+}
+
 /* Content */
 
 .container {
@@ -101,6 +111,18 @@ nav ul li {
   display: inline-block;
   padding: 0;
   margin: 8px 0 0 0;
+}
+
+.red {
+  font-family: Delicious-bold;
+  color: #F00;
+  font-size: 36pt;
+}
+
+.dark {
+  font-family: Delicious-bold;
+  color: #000;
+  font-size: 36pt;
 }
 
 .button {
@@ -350,8 +372,12 @@ div.status ul {
 
 div.status li {
     list-style-type:decimal;
-    margin-left: 0px;
-    font-size: 10pt;
+    margin-left: 17px;
+}
+
+ul#move_list li {
+    font-family: Delicious;
+    font-size: 12pt;
 }
 
 div.status h3 {

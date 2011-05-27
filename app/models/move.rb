@@ -46,6 +46,10 @@ class Move < ActiveRecord::Base
       n = piece.notation.to_s
       n = n + "x" unless self.captured.nil?
       n = n + column_to_file(self.to_column).to_s + row_to_rank(self.to_row).to_s
+
+      if self.check
+        n = n + "+"
+      end
     end
 
     self.notation = n

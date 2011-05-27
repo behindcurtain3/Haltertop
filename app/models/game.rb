@@ -168,6 +168,8 @@ class Game < ActiveRecord::Base
       end
     end
 
+    m.check = isCheck?(m, whos_not_turn)
+
     # Make notation
     m.notate(piece)
     result[:notation] = m.notation
@@ -232,6 +234,14 @@ class Game < ActiveRecord::Base
 			return "black"
 		end
 	end
+
+  def whos_not_turn
+    if self.turn == self.white
+      return "black"
+    else
+      return "white"
+    end
+  end
 
 	private
 
@@ -518,6 +528,30 @@ class Game < ActiveRecord::Base
       return true
     end
 
+    # check if color is in check
+    def isCheck?(move, color)
+      opp_color = (color == "white") ? "black" : "white"
+
+      pieces = self.pieces.to_a
+      king = pieces.find { |p| p.name == "king" && p.color == color }
+
+      mover = pieces.index { |p| p.column == move.from_column && p.row == move.from_row }
+      tmp_pieces = perform_pseudo_move(pieces, move, mover)
+
+      # we want to generate moves for ourselves again to see if any pieces attack the king
+      moves = generate_moves(tmp_pieces, opp_color)
+
+      moves.each do | m |
+        if m.to_column == king.column && m.to_row == king.row
+          tmp_pieces = undo_pseudo_move(pieces, move, mover)
+          return true
+        end
+      end
+
+      tmp_pieces = undo_pseudo_move(pieces, move, mover)
+      return false
+    end
+
     # removes moves that leave color in check
     def filter_check(moves, color)
       
@@ -528,10 +562,6 @@ class Game < ActiveRecord::Base
 
       # set the opposite color
       opp_color = (color == "white") ? "black" : "white"
-
-      #puts "Color: #{color}"
-      puts "Length: #{moves.length}"
-      #puts "King: #{king.column}, #{king.row}"
 
       # for each move we generated go through and see if any opponent moves put color king in check
       moves.each_index do | i |
@@ -544,18 +574,13 @@ class Game < ActiveRecord::Base
           king.row = moves[i].to_row
         end
 
-        #puts "Move: #{pieces[mover].name} - #{moves[i].from_column},#{moves[i].from_row} #{moves[i].to_column},#{moves[i].to_row} K: #{king.column},#{king.row}"
-
         pieces = perform_pseudo_move(pieces, moves[i], mover)
-
         opp_moves = generate_moves(pieces, opp_color)
         
         opp_moves.each do | omove |
-          #puts "Move: #{omove.from_column}, #{omove.from_row}"
           if (omove.to_column == king.column && omove.to_row == king.row)
             # splice out the current move & break... only 1 needs to be found
             splices << moves[i]
-            #puts "^^^ SLICED ^^^"
             break
           end
         end
@@ -570,7 +595,6 @@ class Game < ActiveRecord::Base
       puts "Splices: #{splices.length}"
 
       moves.delete_if { |i|
-        #puts "#{i} --- #{splices.include?(i)}"
         splices.include?(i)
       }
 
@@ -580,7 +604,6 @@ class Game < ActiveRecord::Base
     def perform_pseudo_move(pieces, move, index)
       captured = pieces.index { |p| p.name != "king" && p.column == move.to_column && p.row == move.to_row && p.active }
       unless captured.nil?
-        #puts captured.to_s
         pieces[captured].active = false
       end
 
@@ -609,7 +632,6 @@ class Game < ActiveRecord::Base
     def undo_pseudo_move(pieces, move, index)
       captured = pieces.index { |p| p.name != "king" && p.column == move.to_column && p.row == move.to_row && p.active == false}
       unless captured.nil?
-        #puts captured.to_s
         pieces[captured].active = true
       end
 

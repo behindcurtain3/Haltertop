@@ -18,6 +18,8 @@
 #
 
 class Game < ActiveRecord::Base
+  serialize :enpassant
+
 	# moves
 	has_many :moves, :dependent => :destroy
   has_many :pieces, :dependent => :destroy
@@ -84,7 +86,7 @@ class Game < ActiveRecord::Base
       return result
     end
 
-		# Step 5: setup our result hash
+    # Step 5: setup our result hash
 		result = {
 			:status => "success",
 			:move => [{
@@ -97,6 +99,32 @@ class Game < ActiveRecord::Base
 			:capture => false
 		}
 
+    # check for enpassant capture
+    if valid_move.enpassant_capture?
+      # if an enpassant capture we need to take special care to destroy the captured piece
+      row = ((whos_turn == "white") ? 1 : -1) + self.enpassant[:row]
+
+      captured = Piece.find(:first, :conditions => ["game_id = ? AND row = ? AND column = ?", self.id, row, self.enpassant[:column]])
+
+      unless captured.nil?
+        m.captured = captured[:name]
+        captured.destroy
+
+        result[:capture] = {
+          :column => self.enpassant[:column],
+          :row => row
+        }
+        
+      end
+    end
+
+    # mark board for enpassant if necessary
+    if valid_move.enpassant.nil?
+      self.enpassant = nil
+    else
+      self.enpassant = valid_move.enpassant
+    end
+
     # Step 6: update our piece
     piece[:row] = to_r
     piece[:column] = to_c
@@ -106,11 +134,13 @@ class Game < ActiveRecord::Base
 
     # if so set it to false & update
     unless attacked.nil?
+      # add capture to our result
+      result[:capture] = {
+        :column => attacked.column,
+        :row => attacked.row
+      }
       m.captured = attacked[:name]
       attacked.destroy
-
-      # add capture to our result
-      result[:capture] = true
     end
 
     # Step 8: if the move was a castle, we need to add the rook movement to the result hash
@@ -424,12 +454,19 @@ class Game < ActiveRecord::Base
           row = ((color == "white") ? -1 : 1) + piece.row
 
           if valid_index?(row)
+
             # check for pawn attacks
             [-1,1].each do | attack |
               column = piece.column + attack
               if valid_index?(column)
                 if attack?(opp_color, column, row)
                   move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row)
+                elsif open?(column, row)
+                  unless self.enpassant.nil?
+                    if self.enpassant[:column] == column and self.enpassant[:row] == row
+                      move_list << Move.new(:from_column => piece.column, :to_column => column, :from_row => piece.row, :to_row => row, :enpassant_capture => true)
+                    end
+                  end
                 end
               end
             end
@@ -440,10 +477,11 @@ class Game < ActiveRecord::Base
 
               # check for 2 spaces if still at start
               if (piece.row == 1 && piece.color == "black") || (piece.row == 6 && piece.color == "white")
+                enpassant_row = row
                 row += ((color == "white") ? -1 : 1)
                 if valid_index?(row)
                   if open?(piece.column, row)
-                    move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => row)
+                    move_list << Move.new(:from_column => piece.column, :to_column => piece.column, :from_row => piece.row, :to_row => row, :enpassant => { :row => enpassant_row, :column => piece.column } )
                   end
                 end
               end

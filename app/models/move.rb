@@ -20,11 +20,15 @@
 #
 
 class Move < ActiveRecord::Base
+  serialize :enpassant
+
 	belongs_to :game
 	belongs_to :user
 
 	validates :game_id, :presence => true
 	validates :user_id, :presence => true
+
+  attr_accessible :game, :user, :enpassant, :enpassant_capture, :from_column, :to_column, :from_row, :to_row, :captured, :promoted, :castle, :check
 
   FILE_MAP = { 0 => 'a', 1 => 'b', 2 => 'c', 3 => 'd', 4 => 'e', 5 => 'f', 6 => 'g', 7 => 'h' }
   RANK_MAP = { 0 => 8, 1 => 7, 2 => 6, 3 => 5, 4 => 4, 5 => 3, 6 => 2, 7 => 1 }

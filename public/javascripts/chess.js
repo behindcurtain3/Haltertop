@@ -51,7 +51,7 @@ Chess.prototype = {
 	this.horzSpacer = (this.cellWidth - this.pieceWidth) / 2;
 	this.vertSpacer = (this.cellHeight - this.pieceHeight) / 2;
 	
-	this.canvasElement.onselectstart = function() { return false; }
+	this.canvasElement.onselectstart = function() {return false;}
 
 	var that = this;
 	$.getJSON('/games/' + this.gameId + '/pieces', function(json){
@@ -300,10 +300,6 @@ Chess.prototype = {
                     move[x].to_column = that.invert(move[x].to_column, true);
                 }
                 for(var i = 0; i < that.pieces.length; i++){
-                    if(that.pieces[i].cell.column == move[x].to_column && that.pieces[i].cell.row == move[x].to_row){
-                        indexToSplice = i;
-                    }
-
                     if(that.pieces[i].cell.column == move[x].from_column && that.pieces[i].cell.row == move[x].from_row){
                         that.pieces[i].moving = true;
                         that.pieces[i].target = new Cell(move[x].to_row, move[x].to_column)
@@ -312,12 +308,31 @@ Chess.prototype = {
                         that.invalidate();
                     }
                 }
-                if(indexToSplice != -1){
-                    that.pieces.splice(indexToSplice, 1);
-                }
+                
             }
 	});
         this.pieces.sort(this.sortpieces);
+    },
+
+    capture: function(piece){
+        if(!piece)
+            return;
+
+        if(this.inverted){
+            piece.column = this.invert(piece.column, true);
+            piece.row = this.invert(piece.row, true)
+        }
+
+        var indexToSplice = -1;
+        for(var i = 0; i < this.pieces.length; i++){
+            if(this.pieces[i].cell.column == piece.column && this.pieces[i].cell.row == piece.row){
+                indexToSplice = i;
+            }
+        }
+        
+        if(indexToSplice != -1){
+            this.pieces.splice(indexToSplice, 1);
+        }
     },
 
     turn: function(t){

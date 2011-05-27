@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110516033905) do
+ActiveRecord::Schema.define(:version => 20110526232525) do
 
   create_table "boards", :force => true do |t|
     t.text     "pieces"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20110516033905) do
     t.boolean  "white_king_side_castle",  :default => true
     t.boolean  "active",                  :default => true
     t.string   "result"
+    t.string   "enpassant"
   end
 
   add_index "games", ["black_id"], :name => "index_games_on_black_id"
@@ -49,8 +50,10 @@ ActiveRecord::Schema.define(:version => 20110516033905) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "notation"
-    t.boolean  "castle",      :default => false
-    t.boolean  "check",       :default => false
+    t.boolean  "castle",            :default => false
+    t.boolean  "check",             :default => false
+    t.string   "enpassant"
+    t.boolean  "enpassant_capture"
   end
 
   add_index "moves", ["game_id"], :name => "index_moves_on_game_id"

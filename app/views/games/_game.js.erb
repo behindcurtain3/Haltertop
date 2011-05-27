@@ -42,6 +42,7 @@ $(function(){
     console.log(data);
     if(data.status == "success"){
       gChess.move(data);
+      gChess.capture(data.capture);
       gChess.turn(data.turn);
       gChess.numMoves++;
 

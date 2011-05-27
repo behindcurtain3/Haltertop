@@ -30,18 +30,8 @@ header {
 }
 
 header img {
-  padding: 1em;
-  background: #fff;
-}
-
-header#logo {
-    float: left;
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 48px;
-    margin: 0;
-    padding: 0;
+  padding: 0;
+  margin: 0;
 }
 
 /* Content */
@@ -111,18 +101,14 @@ nav ul li {
   display: inline-block;
   padding: 0;
   margin: 8px 0 0 0;
+  vertical-align: top;
 }
 
-.red {
-  font-family: Delicious-bold;
-  color: #F00;
-  font-size: 36pt;
-}
-
-.dark {
-  font-family: Delicious-bold;
-  color: #000;
-  font-size: 36pt;
+nav ul li img {
+  padding: 0;
+  margin: 0;
+  margin-right: 25px;
+  vertical-align: top;
 }
 
 .button {

@@ -1,8 +1,12 @@
-<h3>Getting Started</h3>
-<p>SocialChess is a multiplayer chess app currently in <strong>early development</strong>. All you need to play is a modern web browser and you're all set!</p>
-<% if signed_in? %>
-<%= link_to "Play Now", play_path, :class => "button orange" %>
-<% else %>
-<%= link_to "Sign Up", signup_path, :class => "button orange" %>
-<%= link_to "Sign In", signin_path, :class => "button orange" %>
+<% unless signed_in? %>
+<div id="quicklogin">
+  <%= render 'shared/quick_login' %>
+</div>
 <% end %>
+<div style="width: 400px; height:275px;">
+  <h3>Getting Started</h3>
+  <p>SocialChess is a multiplayer chess app currently in <strong>early development</strong>. All you need to play is a modern web browser and you're all set!</p>
+  <% if signed_in? %>
+  <%= link_to "Play Now", play_path, :class => "button orange" %>
+  <% end %>
+</div>

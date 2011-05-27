@@ -395,6 +395,14 @@ div.user img {
     float:left;
 }
 
+div#quicklogin {
+    float:right;
+    border-left: solid 1px #000;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+}
+
 /* Forms */
 
 input, textarea {
@@ -430,6 +438,7 @@ input:focus, textarea:focus {
 }
 
 .field {
+    color: #222;
 }
 
 .field_with_errors {

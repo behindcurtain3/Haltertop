@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20110509040216
+# Schema version: 20110527073557
 #
 # Table name: pieces
 #
 #  id      :integer         not null, primary key
 #  name    :string(255)
 #  color   :string(255)
-#  column  :integer
+#  col     :integer
 #  row     :integer
 #  active  :boolean         default(TRUE)
 #  game_id :integer
@@ -15,7 +15,7 @@
 class Piece < ActiveRecord::Base
   belongs_to :game
 
-  attr_accessible :name, :color, :column, :row, :active, :game
+  attr_accessible :name, :color, :col, :row, :active, :game
 
 	NOTATION_MAP = { 'king' => 'K', 'queen' => 'Q', 'rook' => 'R', 'bishop' => 'B', 'knight' => 'N' }
 

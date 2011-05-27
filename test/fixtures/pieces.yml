@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20110509040216
+# Schema version: 20110527073557
 #
 # Table name: pieces
 #
 #  id      :integer         not null, primary key
 #  name    :string(255)
 #  color   :string(255)
-#  column  :integer
+#  col     :integer
 #  row     :integer
 #  active  :boolean         default(TRUE)
 #  game_id :integer

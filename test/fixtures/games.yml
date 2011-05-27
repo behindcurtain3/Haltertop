@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110516033905
+# Schema version: 20110527073557
 #
 # Table name: games
 #
@@ -15,6 +15,7 @@
 #  white_king_side_castle  :boolean         default(TRUE)
 #  active                  :boolean         default(TRUE)
 #  result                  :string(255)
+#  enpassant               :string(255)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

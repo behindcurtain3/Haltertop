@@ -60,7 +60,7 @@ Chess.prototype = {
 
 	    $.each(json, function(i, p){
 		var row = p.piece.row;
-		var column = p.piece.column;
+		var column = p.piece.col;
 		if(that.inverted){
 		    row = that.invert(row, true);
 		    column = that.invert(column, true);

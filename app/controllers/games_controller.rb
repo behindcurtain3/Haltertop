@@ -75,7 +75,7 @@ class GamesController < ApplicationController
 
   # GET /games/#{id}/pieces
   def pieces
-    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :column, :row ])
+    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :col, :row ])
 
 		respond_to do |format|
 			format.json { render :json => @pieces }

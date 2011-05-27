@@ -1,5 +1,5 @@
 <!-- Menu shown to logged in users -->
-<li><%= link_to "Home", root_path, :class => "button white" %></li>
-<li><%= link_to current_user.name, user_path(current_user), :class => "button gray" %></li>
-<li><%= link_to "Settings", edit_user_path(current_user), :class => "button gray" %></li>
-<li><%= link_to "Logout", signout_path, :class => "button gray" %></li>
+<li><%= link_to "New Match", play_path, :class => "button orange medium" %></li>
+<li><%= link_to "Current Matches", user_path(current_user), :class => "button gray medium" %></li>
+<li><%= link_to "Settings", edit_user_path(current_user), :class => "button gray medium" %></li>
+<li><%= link_to "Logout", signout_path, :class => "button gray medium" %></li>

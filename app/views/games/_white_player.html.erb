@@ -1,4 +1,4 @@
 <div class="player white sm_round" id="white">
-  <%= image_tag 'icon.png', :class => 'sm_round' %>
+  <%= gravatar_for @game.white %>
   <p><span id="white-move">Current Move</span> <%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %></p>
 </div>

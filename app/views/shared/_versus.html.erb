@@ -1,11 +1,11 @@
 <li class="versus round">
   <div class="left">
-    <%= image_tag 'icon.png', :class => 'sm_round' %>
+    <%= gravatar_for game.black %>
     <p><%= (game.black.nil?) ? "Awaiting Player" : (current_user? game.black) ? "You" : game.black.name %></p>
   </div>
   <div class="right">
     <%= (game.white.nil?) ? "Awaiting Player" : (current_user? game.white) ? "You" : game.white.name %>
-    <%= image_tag 'icon.png', :class => 'sm_round' %>
+    <%= gravatar_for game.white %>
   </div>
   <div class="center">
     <%= link_to "Play", game_path(game), :class => "button gray" %>

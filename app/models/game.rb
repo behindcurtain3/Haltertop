@@ -23,7 +23,7 @@ class Game < ActiveRecord::Base
 
 	# moves
 	has_many :moves, :dependent => :destroy
-  has_many :pieces, :dependent => :destroy
+	has_many :boards, :dependent => :destroy
 
 	# User relationships
 	belongs_to :black, :class_name => "User"
@@ -65,18 +65,12 @@ class Game < ActiveRecord::Base
     moves = generate_moves(self.pieces.to_a, whos_turn)
 
     # Step 3b: remove any moves generated that put their own side in check
-    moves = filter_check(moves, whos_turn)
-
-    # if the player has no moves
-    if moves.length == 0
-      self.active = false
-      self.save
-    end
+    moves = filter_check(self.pieces.to_a, moves, whos_turn)
 
 		# Step 4: Is requested move found in the valid moves?
     valid_move = moves.find {|move| move.from_column == m.from_column && move.to_column == m.to_column && move.from_row == m.from_row && move.to_row == m.to_row }
 
-    # return failed response if not a valid move
+    # check if the move they tried is valid
     if valid_move.nil?
       # requested move not found
       result = {
@@ -169,14 +163,7 @@ class Game < ActiveRecord::Base
       end
     end
 
-    m.check = isCheck?(m, whos_not_turn)
-
-    # Make notation
-    m.notate(piece)
-    result[:notation] = m.notation
-
-    # Step 9: save our move & the piece
-    m.save
+		# Step 9: save our piece
 		piece.save
 
 		# Step 10: Update castling status
@@ -221,9 +208,34 @@ class Game < ActiveRecord::Base
 			end
 		end
 
+		# Mark the move as in check or not
+    m.check = isCheck?(m, whos_not_turn)
+
+		# Make notation
+    m.notate(piece)
+    result[:notation] = m.notation
+
+		# look to see if the opponent has any valid moves
+		pieces = Piece.where("game_id = ?", self.id)
+		moves = generate_moves(pieces, whos_not_turn)
+		moves = filter_check(pieces, moves, whos_not_turn)
+		print moves
+
+		# check for endgame conditions
+    if moves.length == 0 && m.check
+			#check mate
+			self.active = false
+			self.result = (whos_turn == "white") ? "1-0" : "0-1"
+		elsif moves.length == 0 && !m.check
+			#stale mate
+			self.active = false
+			self.result = "1/2 - 1/2"
+    end
+
     # Step 11: swap turns and update game
 		swap_turns # swap turns
     result[:turn] = self.whos_turn
+		m.save
 		self.save
 		return result
 	end
@@ -554,10 +566,9 @@ class Game < ActiveRecord::Base
     end
 
     # removes moves that leave color in check
-    def filter_check(moves, color)
+    def filter_check(pieces, moves, color)
       
       splices = []
-      pieces = self.pieces.to_a
       king = pieces.find { |p| p.name == "king" && p.color == color }
       return [] if king.nil?
 

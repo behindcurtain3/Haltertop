@@ -48,9 +48,10 @@ section {
   font-family: Delicious, sans-serif;
   padding: 5px 10px 15px 15px;
   background-color: #fff;
-  -moz-box-shadow: 0 0 10px 3px #000;
-  -webkit-box-shadow: 0 0 10px 3px #000;
-  box-shadow: 0 0 10px 3px #000;
+  -moz-box-shadow: 0 0 25px #000;
+  -webkit-box-shadow: 0 0 25px #000;
+  box-shadow: 0 0 25px #000;
+  overflow: auto;
 }
 
 section h1 {
@@ -106,6 +107,39 @@ nav ul li img {
   margin: 0;
   margin-right: 50px;
   vertical-align: top;
+}
+
+.sidebar {
+    float:right;
+    border-left: solid 1px #000;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    margin-left: 15px;
+    width: 250px;
+}
+
+.userbar {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.userbar img {
+    float: left;
+    margin-right: 15px;
+}
+
+.userbar .small {
+    font-size: 12pt;
+    padding: 0;
+}
+
+.light {
+    color: #bbb;
+}
+
+.red {
+    color: #a00;
 }
 
 .button {
@@ -401,6 +435,7 @@ div#quicklogin {
     padding-left: 15px;
     padding-right: 15px;
     text-align: center;
+    margin-left: 15px;
 }
 
 /* Forms */

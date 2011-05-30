@@ -1,11 +1,13 @@
-<% unless signed_in? %>
-<div id="quicklogin">
+<div class="sidebar">
+<% if signed_in? %>
+  <%= render 'shared/user_bar' %>
+<% else %>
   <%= render 'shared/quick_login' %>
-</div>
 <% end %>
-<div style="width: 400px; height:275px;">
+</div>
+<div>
   <h3>Getting Started</h3>
-  <p>SocialChess is a multiplayer chess app currently in <strong>early development</strong>. All you need to play is a modern web browser and you're all set!</p>
+  <p>SocialChess is a multiplayer chess app currently in <strong><span class="red">alpha</span></strong> testing. All you need to play is a modern web browser and you're all set!</p>
   <% if signed_in? %>
   <%= link_to "Play Now", play_path, :class => "button orange" %>
   <% end %>

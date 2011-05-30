@@ -10,7 +10,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110527073557) do
+ActiveRecord::Schema.define(:version => 20110530120854) do
+
+  create_table "boards", :force => true do |t|
+    t.integer  "game_id"
+    t.string   "fen"
+    t.string   "algebraic"
+    t.integer  "move_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "boards", ["game_id"], :name => "index_boards_on_game_id"
 
   create_table "games", :force => true do |t|
     t.integer  "black_id"
@@ -34,19 +45,16 @@ ActiveRecord::Schema.define(:version => 20110527073557) do
   create_table "moves", :force => true do |t|
     t.integer  "game_id"
     t.integer  "user_id"
-    t.integer  "from_column"
-    t.integer  "to_column"
-    t.integer  "from_row"
-    t.integer  "to_row"
-    t.string   "captured"
+    t.string   "capture"
     t.string   "promoted"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "notation"
-    t.boolean  "castle",            :default => false
-    t.boolean  "check",             :default => false
+    t.string   "castle"
+    t.string   "check"
     t.string   "enpassant"
-    t.boolean  "enpassant_capture"
+    t.string   "from"
+    t.string   "to"
   end
 
   add_index "moves", ["game_id"], :name => "index_moves_on_game_id"

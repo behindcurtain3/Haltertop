@@ -1,0 +1,7 @@
+<div class="userbar">
+  <%= gravatar_for current_user %>
+  <p><%= current_user.name %><br />
+    <span class="light small">Member For: <%= time_ago_in_words( current_user.created_at ) %></span>
+  </p>
+  <p>Played: <%= pluralize(current_user.games.count, "match") %>
+</div>

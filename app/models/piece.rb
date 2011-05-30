@@ -1,23 +1,7 @@
-# == Schema Information
-# Schema version: 20110527073557
-#
-# Table name: pieces
-#
-#  id      :integer         not null, primary key
-#  name    :string(255)
-#  color   :string(255)
-#  col     :integer
-#  row     :integer
-#  active  :boolean         default(TRUE)
-#  game_id :integer
-#
+class Piece
+  attr_accessor :name, :color, :position, :active
 
-class Piece < ActiveRecord::Base
-  belongs_to :game
-
-  attr_accessible :name, :color, :col, :row, :active, :game
-
-	NOTATION_MAP = { 'king' => 'K', 'queen' => 'Q', 'rook' => 'R', 'bishop' => 'B', 'knight' => 'N' }
+	NOTATION_MAP = { 'king' => 'K', 'queen' => 'Q', 'rook' => 'R', 'bishop' => 'B', 'knight' => 'N', 'pawn' => 'P' }
 
 	# Takes a piece type, column & row and returns the proper notation
 	def notation
@@ -27,6 +11,6 @@ class Piece < ActiveRecord::Base
         return v
       end
     end
-    return ""
+    return "" # for pawns
 	end
 end

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110530123612
+# Schema version: 20110530120854
 #
 # Table name: boards
 #
@@ -10,7 +10,6 @@
 #  move_number :integer
 #  created_at  :datetime
 #  updated_at  :datetime
-#  turn_id     :integer
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

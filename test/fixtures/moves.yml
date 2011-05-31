@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110530123612
+# Schema version: 20110531063830
 #
 # Table name: moves
 #
@@ -16,6 +16,7 @@
 #  enpassant  :string(255)
 #  from       :string(255)
 #  to         :string(255)
+#  piece      :string(255)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

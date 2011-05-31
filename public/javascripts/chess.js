@@ -6,7 +6,7 @@ function Chess(canvasElement, gameId, playerColor){
     // Game
     this.gameId = gameId;
     this.playerColor = playerColor;
-    this.yourmove = false;
+    this.yourturn = false;
     this.gameInProgress = false;
     this.pieces = [];
     this.selectedPieceIndex = -1;
@@ -18,6 +18,7 @@ function Chess(canvasElement, gameId, playerColor){
 
     // Drawing
     this.canvasValid = true;
+    this.animating = false;
     this.interval = 50;
     this.inverted = false;
     this.invertForwards = [0,1,2,3,4,5,6,7];
@@ -59,13 +60,13 @@ Chess.prototype = {
 	    that.pieces = [];
 
 	    $.each(json, function(i, p){
-		var row = p.piece.row;
-		var column = p.piece.col;
+		var row = p.position.row;
+		var column = p.position.col;
 		if(that.inverted){
 		    row = that.invert(row, true);
 		    column = that.invert(column, true);
 		}
-		that.pieces.push(new Piece(p.piece.color, p.piece.name, row, column));
+		that.pieces.push(new Piece(p.color, p.name, row, column));
 	    });
 
 	    that.selectedPieceIndex = -1;
@@ -190,7 +191,7 @@ Chess.prototype = {
 		    this.pieces[i].moving = false;
                     this.pieces[i].target = null;
 		}
-                this.canvasValid = false;
+		this.canvasValid = false;
 	    } else {
 		this.drawImg(index, this.pieces[i].cell.column, this.pieces[i].cell.row);
 	    }
@@ -255,17 +256,17 @@ Chess.prototype = {
 	    }
 
 	    // Attempt a move
-	    var move;
+	    var move = "type=standard";
 	    if(this.inverted){
-		move = "from_row=" + this.invert(this.pieces[this.selectedPieceIndex].cell.row, true) +
-			"&to_row=" + this.invert(cell.row, true) +
-			"&from_column=" + this.invert(this.pieces[this.selectedPieceIndex].cell.column, true) +
-			"&to_column=" + this.invert(cell.column, true);
+		move += "&fr=" + this.invert(this.pieces[this.selectedPieceIndex].cell.row, true) +
+			"&tr=" + this.invert(cell.row, true) +
+			"&fc=" + this.invert(this.pieces[this.selectedPieceIndex].cell.column, true) +
+			"&tc=" + this.invert(cell.column, true);
 	    } else {
-		move = "from_row=" + this.pieces[this.selectedPieceIndex].cell.row +
-			"&to_row=" + cell.row +
-			"&from_column=" + this.pieces[this.selectedPieceIndex].cell.column +
-			"&to_column=" + cell.column;
+		move += "&fr=" + this.pieces[this.selectedPieceIndex].cell.row +
+			"&tr=" + cell.row +
+			"&fc=" + this.pieces[this.selectedPieceIndex].cell.column +
+			"&tc=" + cell.column;
 	    }
 
 	    $.ajax({
@@ -294,18 +295,18 @@ Chess.prototype = {
 
                 var indexToSplice = -1;
                 if(that.inverted){
-                    move[x].from_row = that.invert(move[x].from_row, true);
-                    move[x].to_row = that.invert(move[x].to_row, true);
-                    move[x].from_column = that.invert(move[x].from_column, true);
-                    move[x].to_column = that.invert(move[x].to_column, true);
+                    move[x].from.row = that.invert(move[x].from.row, true);
+                    move[x].to.row = that.invert(move[x].to.row, true);
+                    move[x].from.col = that.invert(move[x].from.col, true);
+                    move[x].to.col = that.invert(move[x].to.col, true);
                 }
                 for(var i = 0; i < that.pieces.length; i++){
-                    if(that.pieces[i].cell.column == move[x].from_column && that.pieces[i].cell.row == move[x].from_row){
+                    if(that.pieces[i].cell.column == move[x].from.col && that.pieces[i].cell.row == move[x].from.row){
                         that.pieces[i].moving = true;
-                        that.pieces[i].target = new Cell(move[x].to_row, move[x].to_column)
+                        that.pieces[i].target = new Cell(move[x].to.row, move[x].to.col)
                         that.targetTimeElapsed = 0;
                         that.selectedPieceIndex = -1;
-                        that.invalidate();
+			that.invalidate();
                     }
                 }
                 
@@ -319,13 +320,13 @@ Chess.prototype = {
             return;
 
         if(this.inverted){
-            piece.column = this.invert(piece.column, true);
-            piece.row = this.invert(piece.row, true)
+            piece.at.col = this.invert(piece.at.col, true);
+            piece.at.row = this.invert(piece.at.row, true)
         }
 
         var indexToSplice = -1;
         for(var i = 0; i < this.pieces.length; i++){
-            if(this.pieces[i].cell.column == piece.column && this.pieces[i].cell.row == piece.row){
+            if(this.pieces[i].cell.column == piece.at.col && this.pieces[i].cell.row == piece.at.row){
                 indexToSplice = i;
             }
         }

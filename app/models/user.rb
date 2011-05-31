@@ -83,7 +83,6 @@ class User < ActiveRecord::Base
 		if game.nil?
 			game = Game.new
 			game.white = self
-			game.turn = game.white
 		else
 			if game.white.nil?
 				game.white = self
@@ -91,14 +90,6 @@ class User < ActiveRecord::Base
 
 			if game.black.nil?
 				game.black = self
-			end
-
-			if game.turn.nil?
-				if game.moves.count == 0
-					game.turn = game.white
-				else
-					game.turn = game.black
-				end
 			end
 		end
 

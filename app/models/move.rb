@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110530123612
+# Schema version: 20110531063830
 #
 # Table name: moves
 #
@@ -16,14 +16,16 @@
 #  enpassant  :string(255)
 #  from       :string(255)
 #  to         :string(255)
+#  piece      :string(255)
 #
 
 class Move < ActiveRecord::Base
-  serialize :enpassant
-	serialize :from
-	serialize :to
-	serialize :capture
-	serialize :check
+  serialize :enpassant, Point
+	serialize :from, Point
+	serialize :to, Point
+	serialize :capture, Piece
+	serialize :check, Point
+	serialize :piece, Piece
 
 	belongs_to :game
 	belongs_to :user
@@ -32,23 +34,23 @@ class Move < ActiveRecord::Base
 	validates :user_id, :presence => true
 
   attr_accessible :game, :user, 
-		:from, :to,
+		:from, :to, :piece,
 		:capture, :promoted, :castle, :check, :enpassant, :notation
 
 
   
 
-  def notate(piece)
+  def notate
     n = ""
     # add piece that is moving
     if !castle.nil?
-      if self.castle == "q" || self.castle == "Q"
+      if self.castle[:from].col < self.castle[:to].col
         n = "0-0-0"
       else
         n = "0-0"
       end
     else
-      n = piece.notation
+      n = self.piece.notation
       n = n + "x" unless self.capture.nil?
       n = n + self.to.notation
 

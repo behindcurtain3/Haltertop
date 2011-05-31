@@ -45,7 +45,7 @@ class GamesController < ApplicationController
       gflash :success => "Enjoy the game!"
       redirect_to @game
     else
-			gflash :error => "Our referee, Bongo could not create a new game."
+			gflash :error => "Could not create a new game."
       render :action => "new"
     end
   end
@@ -53,19 +53,15 @@ class GamesController < ApplicationController
 	# PUT /games/#{id}/move
 	def move
 		@game = Game.find(params[:id])
-		if current_user? @game.turn
-			result = @game.move(params[:from_row].to_i, params[:to_row].to_i, params[:from_column].to_i, params[:to_column].to_i)
+		if current_user? @game.current_board.whos_turn
+			result = @game.try_move(params)
 				
 				# Use Pusher to send the move to all clients listening to the game
         if result[:status] == "success"
   				Pusher[@game.id.to_s].trigger('move', result)
         end
 		else
-			result = {
-        :status => "failed",
-				:title => "Ah ah ah",
-        :text => "Sneaky, but it isn't your move."
-      }
+			result = @game.invalid_move_error
 		end
 
 		respond_to do |format|
@@ -75,7 +71,10 @@ class GamesController < ApplicationController
 
   # GET /games/#{id}/pieces
   def pieces
-    @pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :col, :row ])
+		@game = Game.find(params[:id])
+		@board = @game.current_board
+    #@pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :col, :row ])
+		@pieces = @board.get_pieces
 
 		respond_to do |format|
 			format.json { render :json => @pieces }

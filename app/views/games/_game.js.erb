@@ -14,16 +14,17 @@ $(function(){
     if(gImagesLoaded){
       $(document).stopTime("images_loading");
       gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
-      gChess.init();
       gChess.numMoves = <%= @game.moves.count %>
       <%= "gChess.inverted = true;" if current_user? @game.black %>
-      <%  if (current_user?(@game.black) || current_user?(@game.white)) && @game.active %>
+      gChess.init();
+      
+      <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
       gChess.canvasElement.addEventListener("click", clickListener, false);
       <% end %>
-      <% if @game.active %>
-      gChess.turn('<%= (@game.turn == @game.white) ? "white" : "black" %>');      
+      
+      <% if @game.result.nil? %>
+      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
       <% else %>
-      gChess.gameInProgress = false;
       $('#black-move').fadeOut();
       $('#white-move').fadeOut();
       <% end %>

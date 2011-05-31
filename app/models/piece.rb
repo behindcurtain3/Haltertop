@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :name, :color, :position, :active
+  attr_accessor :name, :color, :position
 
 	NOTATION_MAP = { 'king' => 'K', 'queen' => 'Q', 'rook' => 'R', 'bishop' => 'B', 'knight' => 'N', 'pawn' => 'P' }
 

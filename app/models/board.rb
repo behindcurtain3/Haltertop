@@ -40,8 +40,9 @@ class Board < ActiveRecord::Base
 		valid_move = moves.find { | m | m.from == move.from && m.to == move.to }
 		return nil if valid_move.nil?
 
+    destructible_pieces = Marshal.load(Marshal.dump(self.pieces))
 		# filter out moves that would leave us in check
-		moves = filter_for_self_check(self.pieces, moves, self.turn)
+		moves = filter_for_self_check(destructible_pieces, moves, self.turn)
 		return nil if moves.length == 0
 		valid_move = moves.find { | m | m.from == move.from && m.to == move.to }
 		return nil if valid_move.nil?
@@ -109,20 +110,6 @@ class Board < ActiveRecord::Base
 	private
 
 		def perform_move(move)
-			# look for enpassant capture
-			unless self.enpassant.nil?
-				lookAt = Point.new((self.turn == "w") ? self.enpassant.row + 1 : self.enpassant.row - 1, self.enpassant.col)
-
-				p = self.pieces.find { |p| p.position == lookAt }
-				unless p.nil?
-					move.capture = p
-					self.pieces.delete p
-				end
-			end
-
-			#set enpassant status for future moves
-			self.enpassant = move.enpassant
-
 			splices = []
 			# actually move the pieces now
 			self.pieces.each do | piece |
@@ -181,6 +168,22 @@ class Board < ActiveRecord::Base
 			self.pieces.delete_if { |i|
 				splices.include?(i)
 			}
+
+      # look for enpassant capture
+			unless self.enpassant.nil?
+        if move.to == self.enpassant
+          lookAt = Point.new((self.turn == "w") ? self.enpassant.row + 1 : self.enpassant.row - 1, self.enpassant.col)
+
+          p = self.pieces.find { |p| p.position == lookAt }
+          unless p.nil?
+            move.capture = p
+            self.pieces.delete p
+          end
+        end
+			end
+
+			#set enpassant status for future moves
+			self.enpassant = move.enpassant
 
 			if self.turn == "b"
 				self.fullmoves += 1

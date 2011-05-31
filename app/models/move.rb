@@ -50,7 +50,9 @@ class Move < ActiveRecord::Base
         n = "0-0"
       end
     else
-      n = self.piece.notation
+      if self.piece.name != "pawn"
+        n = self.piece.notation
+      end
       n = n + "x" unless self.capture.nil?
       n = n + self.to.notation
 

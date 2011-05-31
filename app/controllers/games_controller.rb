@@ -73,7 +73,6 @@ class GamesController < ApplicationController
   def pieces
 		@game = Game.find(params[:id])
 		@board = @game.current_board
-    #@pieces = Piece.find(:all, :conditions => ['game_id = ? AND active = ?', params[:id].to_i, true], :select => [ :name, :color, :col, :row ])
 		@pieces = @board.get_pieces
 
 		respond_to do |format|

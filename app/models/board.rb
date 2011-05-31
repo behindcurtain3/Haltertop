@@ -101,6 +101,11 @@ class Board < ActiveRecord::Base
 		filter_for_self_check(self.pieces, moves, self.turn)
 	end
 
+	def get_pieces
+		setup if !ready?
+		return self.pieces
+	end
+
 	private
 
 		def perform_move(move)

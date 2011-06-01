@@ -40,15 +40,15 @@ class Board < ActiveRecord::Base
 		valid_move = moves.find { | m | m.from == move.from && m.to == move.to }
 		return nil if valid_move.nil?
 
-    destructible_pieces = Marshal.load(Marshal.dump(self.pieces))
 		# filter out moves that would leave us in check
-		moves = filter_for_self_check(destructible_pieces, moves, self.turn)
+		moves = filter_for_self_check(self.pieces, moves, self.turn)
 		return nil if moves.length == 0
 		valid_move = moves.find { | m | m.from == move.from && m.to == move.to }
 		return nil if valid_move.nil?
 
 		# perform the move
 		valid_move = perform_move(valid_move)
+    valid_move.check = isCheck(self.turn)
 
 		# create a new board and set it equal to this one, then save it
 		next_board = Board.new
@@ -106,6 +106,29 @@ class Board < ActiveRecord::Base
 		setup if !ready?
 		return self.pieces
 	end
+
+  # check if color is in check
+    def isCheck(color)
+			piece_color = (color == "w") ? "white" : "black"
+      opponent = (color == "w") ? "b" : "w"
+
+      king = self.pieces.find { |p| p.name == "king" && p.color == piece_color }
+      return nil if king.nil?
+
+      # we want to generate moves for ourselves again to see if any pieces attack the king
+      board = Board.new
+			board.game = self.game
+			board.set self.fen
+      next_moves = board.moves(opponent)
+
+      next_moves.each do | m |
+        if m.to == king.position
+          return king.position
+        end
+      end
+
+      return nil
+    end
 
 	private
 
@@ -192,8 +215,10 @@ class Board < ActiveRecord::Base
 				move.user = self.game.white
 			end
 
+      # in check?
+      opponent = (self.turn == "w") ? "b" : "w"
+			self.turn = opponent
 
-			self.turn = (self.turn == "w") ? "b" : "w"
 			self.save_fen
 
 			return move
@@ -204,8 +229,8 @@ class Board < ActiveRecord::Base
       move_list = []
 
       # set the opposite color
-			color = (color == "w") ? "white" : "black"
       opp_color = (color == "w") ? "black" : "white"
+			color = (color == "w") ? "white" : "black"
 
       pieces.each { | piece |
 				#next unless(piece.active)
@@ -384,7 +409,7 @@ class Board < ActiveRecord::Base
 							if valid_index?(column) && valid_index?(row)
 								if moveable?(color, column, row)
 									move_list << Move.new(:from => Point.new(piece.position.row, piece.position.col), :to => Point.new(row,column))
-									break if attack?(opp_color, column, row)
+                  break if attack?(opp_color, column, row)
 								else
 									break # break if we can't move to a square since we can't move past it either
 								end
@@ -523,31 +548,6 @@ class Board < ActiveRecord::Base
       piece = self.pieces.find { |p| p.color == color && p.position.col == column && p.position.row == row }
       return false if piece.nil?
       return true
-    end
-
-    # check if color is in check
-    def isCheck?(move, color)
-			color = (color == "w") ? "white" : "black"
-      opp_color = (color == "white") ? "black" : "white"
-
-      pieces = self.pieces
-      king = pieces.find { |p| p.name == "king" && p.color == color }
-
-      mover = pieces.index { |p| p.position = move.from }
-      #tmp_pieces = perform_pseudo_move(pieces, move, mover)
-
-      # we want to generate moves for ourselves again to see if any pieces attack the king
-      moves = generate_moves(tmp_pieces, opp_color)
-
-      moves.each do | m |
-        if m.to_column == king.col && m.to_row == king.row
-          #tmp_pieces = undo_pseudo_move(pieces, move, mover)
-          return true
-        end
-      end
-
-      #tmp_pieces = undo_pseudo_move(pieces, move, mover)
-      return false
     end
 
 		# takes pieces etc and produces a fen string

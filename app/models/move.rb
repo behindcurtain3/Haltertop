@@ -56,7 +56,7 @@ class Move < ActiveRecord::Base
       n = n + "x" unless self.capture.nil?
       n = n + self.to.notation
 
-      if !self.check.nil?
+      unless self.check.nil?
         n = n + "+"
       end
     end

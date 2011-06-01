@@ -6,18 +6,23 @@
 <div id="board" class="game">
   <canvas class="sm_round" id="game" width="512" height="512"></canvas>
   <div class="status sm_round">
-    <h3>Game <%= @game.id %></h3>
-    <ul id="move_list">
-      <% count = 1 %>
-      <% @game.moves.each_slice(2) do | slice | %>
-      <li id="move_<%= count %>">
-        <% slice.each do | move | %>
-          <%= "#{move.notation}" %>&nbsp;
+    <div class="status_top">
+      <h3>Game <%= @game.id %></h3>
+    </div>
+    <div class="status_content">
+      <p>Moves:</p>
+      <ul id="move_list">
+        <% count = 1 %>
+        <% @game.moves.each_slice(2) do | slice | %>
+        <li id="move_<%= count %>">
+          <% slice.each do | move | %>
+            <%= "#{move.notation}" %>&nbsp;
+          <% end %>
+        </li>
+          <% count += 1 %>
         <% end %>
-      </li>
-        <% count += 1 %>
-      <% end %>
-    </ul>
+      </ul>
+    </div>
   </div>
 </div>
 <% if current_user? @game.black %>

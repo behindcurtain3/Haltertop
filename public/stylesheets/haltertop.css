@@ -16,13 +16,6 @@ header {
     margin-top: 0px;
     padding-top: 0px;
 
-    /*
-    -moz-box-shadow: 0 5px 250px 25px #aaa;
-    -webkit-box-shadow: 0 5px 250px 20px #aaa;
-    box-shadow: 0 5px 250px 20px #aaa;
-    */
-    -moz-box-shadow: 0 0 10px #000;
-    -webkit-box-shadow: 0 0 10px #000;
     box-shadow: 0 0 10px #000;
 }
 
@@ -48,8 +41,7 @@ section {
   font-family: Delicious, sans-serif;
   padding: 5px 10px 15px 15px;
   background-color: #fff;
-  -moz-box-shadow: 0 0 25px #000;
-  -webkit-box-shadow: 0 0 25px #000;
+
   box-shadow: 0 0 25px #000;
   overflow: auto;
 }
@@ -370,47 +362,56 @@ div.game {
     margin: 0px;
 }
 
-div.status {
+.status {
     border: 1px black solid;
     float: right;
     height: 510px;
     width: 165px;
     padding: 0px;
     margin: 0px;
-
-    background-image: url('../images/css/top.png');
-    background-repeat: repeat-x;
-    background-color: #fff;
+    background: #fff url('../images/css/top.png') repeat-x top left scroll;
+    position: relative;
 }
 
-div.status ul {
-    padding-left: 25px;
-}
-
-div.status li {
-    list-style-type:decimal;
-    margin-left: 17px;
-}
-
-ul#move_list li {
-    font-family: Delicious;
-    font-size: 12pt;
-}
-
-div.status h3 {
+.status h3 {
     margin-top: 5px;
     text-align: center;
     color: #fff;
+}
+
+.status_top {
+    margin: 0px;
+    padding: 0px;
+    height: 48px;
+}
+
+.status_content {
+    position: absolute;
+    left: 0;
+    top: 48px;
+    height: 462px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    overflow: auto;
+}
+
+.status_content ul {
+    padding-left: 25px;
+}
+
+.status_content li {
+    list-style-type: decimal;
+    margin-left: 5px;
+    font-family: Delicious;
+    font-size: 12pt;
 }
 
 .sm_round {
     -moz-border-radius:    3px;
     -webkit-border-radius:  3px;
     border-radius:       3px;
-}
-
-#black-move, #white-move {
-    diplay: none;
 }
 
 .actions {

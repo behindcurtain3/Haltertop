@@ -455,13 +455,24 @@ div.user img {
     float:left;
 }
 
-div#quicklogin {
-    float:right;
-    border-left: solid 1px #000;
-    padding-left: 15px;
-    padding-right: 15px;
-    text-align: center;
-    margin-left: 15px;
+#quicklogin {
+    text-align: right;
+    margin: 0;
+    padding: 0;
+}
+
+#quicklogin input, textarea {
+    margin-top: 6px;
+    padding: 5px;
+    outline: 0;
+    font: normal 13px/100% Verdana, Tahoma, sans-serif;
+    width: 100px;
+
+}
+
+#quicklogin textarea {
+    width: 100px;
+    max-width: 100px;
 }
 
 /* Forms */
@@ -491,6 +502,7 @@ input:hover, textarea:hover,
 input:focus, textarea:focus {
     border-color: #C9C9C9;
     -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 8px;
 }
 
 .form label {
@@ -504,4 +516,8 @@ input:focus, textarea:focus {
 
 .field_with_errors {
     color: red;
+}
+
+.reflect {
+    -webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
 }

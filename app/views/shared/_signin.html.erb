@@ -1,7 +1,7 @@
 <%= form_for(:session, :url => sessions_path, :class => "signin") do |f| %>
-  <div class="ui-widget">
-    <%= f.text_field :email, :size => '15', :placeholder => "Email Address" %>
-    <%= f.password_field :password,  :size => '15', :placeholder => "Password" %>
+  <div id="quicklogin">
+    <%= f.text_field :email, :size => '10', :placeholder => "Email Address" %>
+    <%= f.password_field :password,  :size => '10', :placeholder => "Password" %>
     <%= f.submit "Sign in", :class => "button orange" %>
   </div>
 <% end %>

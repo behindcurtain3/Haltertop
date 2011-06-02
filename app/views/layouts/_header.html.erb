@@ -4,7 +4,7 @@
     <nav>
       <ul>
     <% unless signed_in? %>
-        <%= render 'shared/guest_menu' %>
+        <%= render 'shared/signin' %>
     <% else %>
         <%= render 'shared/user_menu' %>
     <% end %>

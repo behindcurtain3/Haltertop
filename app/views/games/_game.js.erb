@@ -10,20 +10,22 @@ $(function(){
   });
 
   loadImages();
+
+  gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
+  gChess.numMoves = <%= @game.moves.count %>;
+  <%= "gChess.inverted = true;" if current_user? @game.black %>
+  gChess.init();
+  
   $(document).everyTime(50, "images_loading", function(){
     if(gImagesLoaded){
       $(document).stopTime("images_loading");
-      gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
-      gChess.numMoves = <%= @game.moves.count %>
-      <%= "gChess.inverted = true;" if current_user? @game.black %>
-      gChess.init();
+      gChess.loadPieces();
+      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
       
       <% if @game.result.nil? %>
         <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
         gChess.canvasElement.addEventListener("click", clickListener, false);
         <% end %>
-
-      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
 
       $(document).everyTime(gChess.interval, "loop", function(){
 	gChess.loop();

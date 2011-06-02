@@ -54,6 +54,9 @@ Chess.prototype = {
 	
 	this.canvasElement.onselectstart = function() {return false;}
 
+    },
+
+    loadPieces: function(){
 	var that = this;
 	$.getJSON('/games/' + this.gameId + '/pieces', function(json){
 	    // Load all the pieces

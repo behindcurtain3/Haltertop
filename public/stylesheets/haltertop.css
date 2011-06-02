@@ -366,6 +366,14 @@ div.white img {
     font-size: 80%;
 }
 
+#black-move {
+    color: lightgray;
+}
+
+#white-move {
+    color: gray;
+}
+
 div.game {
     display: none;
     padding: 0px;

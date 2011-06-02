@@ -22,6 +22,9 @@
           <% count += 1 %>
         <% end %>
       </ul>
+      <% unless @game.result.nil? %>
+      <p>Result: <%=  @game.result %></p>
+      <% end %>
     </div>
   </div>
 </div>

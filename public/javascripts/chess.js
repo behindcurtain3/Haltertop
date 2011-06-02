@@ -72,6 +72,10 @@ Chess.prototype = {
 	    that.selectedPieceIndex = -1;
 	    that.gameInProgress = true;
 	    that.invalidate();
+
+            $(document).oneTime(that.interval, "loop", function(){
+                that.loop();
+            });
 	});
     },
 

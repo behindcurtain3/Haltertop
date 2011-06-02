@@ -18,25 +18,42 @@ $(function(){
       <%= "gChess.inverted = true;" if current_user? @game.black %>
       gChess.init();
       
-      <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
-      gChess.canvasElement.addEventListener("click", clickListener, false);
-      <% end %>
-      
       <% if @game.result.nil? %>
+        <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
+        gChess.canvasElement.addEventListener("click", clickListener, false);
+        <% end %>
+
       gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
-      <% else %>
-      $('#black-move').fadeOut();
-      $('#white-move').fadeOut();
-      <% end %>
 
       $(document).everyTime(gChess.interval, "loop", function(){
 	gChess.loop();
       });
 
+      <% else %>
+        <% if @game.winner? @game.black %>
+          $('#black').addClass('highlight');
+          $('#black-move').fadeIn();
+          $('#white-move').fadeOut();
+        <% elsif @game.winner? @game.white %>
+          $('#white').addClass('highlight');
+          $('#black-move').fadeOut();
+          $('#white-move').fadeIn();
+        <% else %>
+          $('#black-move').fadeOut();
+          $('#white-move').fadeOut();
+        <% end %>
+          // Just loop once
+          $(document).oneTime(gChess.interval, "loop", function(){
+            gChess.loop();
+          });
+      <% end %>
+
+      
+
       $("#board").fadeIn('slow');
     }
   });
-
+  <% if @game.result.nil? %>
   var pusher = new Pusher('<%= Pusher.key %>');
   var channel = pusher.subscribe('<%= @game.id %>');
   channel.bind('move', function(data) {
@@ -63,6 +80,7 @@ $(function(){
       });
     }
   });
+  <% end %>
 
 });
 

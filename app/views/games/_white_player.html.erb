@@ -1,4 +1,5 @@
 <div class="player white sm_round" id="white">
   <%= gravatar_for @game.white %>
-  <p><%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %><br /><span id="white-move">Current Move</span></p>
+  <p><%= (@game.white.nil?) ? "Awaiting Player" : (current_user? @game.white) ? "You" : @game.white.name %><br />
+    <span id="white-move"><%= (@game.winner? @game.white) ? "Winner" : "Current Move" %></span></p>
 </div>

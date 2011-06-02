@@ -33,12 +33,10 @@ class Move < ActiveRecord::Base
 	validates :game_id, :presence => true
 	validates :user_id, :presence => true
 
+  attr_accessor :checkmate
   attr_accessible :game, :user, 
 		:from, :to, :piece,
 		:capture, :promoted, :castle, :check, :enpassant, :notation
-
-
-  
 
   def notate
     n = ""
@@ -56,8 +54,12 @@ class Move < ActiveRecord::Base
       n = n + "x" unless self.capture.nil?
       n = n + self.to.notation
 
-      unless self.check.nil?
-        n = n + "+"
+      unless self.checkmate.nil?
+        n += "#"
+      else
+        unless self.check.nil?
+          n = n + "+"
+        end
       end
     end
 

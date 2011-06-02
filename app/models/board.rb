@@ -48,7 +48,30 @@ class Board < ActiveRecord::Base
 
 		# perform the move
 		valid_move = perform_move(valid_move)
+
+    # self.turn has been swapped, so use it here
     valid_move.check = isCheck(self.turn)
+
+    # check for endgame conditions
+    # basically repeat above looking to see if there are any valid moves
+    moves = generate_moves(self.pieces, self.turn)
+    moves = filter_for_self_check(self.pieces, moves, self.turn)
+
+    # no more moves == game over
+    if moves.nil?
+      if valid_move.check.nil?
+        self.game.result = Game.DRAW
+      else
+        valid_move.checkmate = true
+        
+        if self.turn == "w" # black had last move
+          self.game.result = Game.BLACK_WIN
+        else # white had last move
+          self.game.result = Game.WHITE_WIN
+        end
+      end
+      self.game.save
+    end
 
 		# create a new board and set it equal to this one, then save it
 		next_board = Board.new

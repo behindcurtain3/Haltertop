@@ -12,6 +12,10 @@
 #
 
 class Game < ActiveRecord::Base
+  DRAW = "1/2 - 1/2"
+  WHITE_WIN = "1-0"
+  BLACK_WIN = "0-1"
+
 	# moves
 	has_many :moves, :dependent => :destroy
 	has_many :boards, :dependent => :destroy
@@ -60,6 +64,24 @@ class Game < ActiveRecord::Base
 	def current_board
 		return Board.find(:last, :conditions => ["game_id = ?", self.id])
 	end
+
+  def winner?(user)
+    if self.result.nil?
+      return false
+    else
+      if self.result == DRAW
+        return false
+      else
+        if self.result == WHITE_WIN && user == self.white
+          return true
+        elsif self.result == BLACK_WIN && user == self.black
+          return true
+        else
+          return false
+        end
+      end
+    end
+  end
 
 	def wrong_user_error
 		error = {

@@ -344,9 +344,15 @@ Chess.prototype = {
 	}
 
 	if(t == "white"){
+            $('#white').addClass("highlight", 1000);
+            $('#black').removeClass("highlight", 1000);
+
 	    $('#black-move').fadeOut();
 	    $('#white-move').fadeIn();
 	} else {
+            $('#black').addClass("highlight", 1000);
+            $('#white').removeClass("highlight", 1000);
+
 	    $('#black-move').fadeIn();
 	    $('#white-move').fadeOut();
 	}

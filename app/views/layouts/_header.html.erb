@@ -1,12 +1,14 @@
 <header>
-  <nav>
-    <ul>
-      <li><%= link_to image_tag("logo.png"), root_path %></li>
-  <% unless signed_in? %>
-      <%= render 'shared/guest_menu' %>
-  <% else %>
-      <%= render 'shared/user_menu' %>
-  <% end %>
-    </ul>
-  </nav>
+  <div class="container">
+    <%= link_to image_tag("logo.png"), root_path, :class => "left" %>
+    <nav>
+      <ul>
+    <% unless signed_in? %>
+        <%= render 'shared/guest_menu' %>
+    <% else %>
+        <%= render 'shared/user_menu' %>
+    <% end %>
+      </ul>
+    </nav>
+  </div>
 </header>

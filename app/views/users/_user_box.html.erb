@@ -1,0 +1,6 @@
+<div class="userbox">
+  <%= image_for current_user, "left sm_round" %>
+  <p><%= current_user.name %><br />
+    <span class="light">Member for <%= time_ago_in_words( current_user.created_at ) %></span>
+  </p>
+</div>

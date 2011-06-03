@@ -1,7 +1,4 @@
-<div class="user">
-  <%= image_for @user %>
-  <p><%= @user.name %></p>
-</div>
+<%= render :partial => 'users/user_box', :locals => { :user => current_user } %>
 <div>
   <h3>Matches</h3>
   <%= render :partial => 'shared/game_list', :locals => { :games => @user.games } %>

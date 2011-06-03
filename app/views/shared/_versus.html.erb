@@ -1,13 +1,17 @@
 <li class="versus round">
-  <div class="left">
-    <%= image_for game.black %>
-    <p><%= (game.black.nil?) ? "Awaiting Player" : (current_user? game.black) ? "You" : game.black.name %></p>
-  </div>
-  <div class="right">
+  <div class="left white_player">
     <%= (game.white.nil?) ? "Awaiting Player" : (current_user? game.white) ? "You" : game.white.name %>
     <%= image_for game.white %>
   </div>
+  <div class="right black_player">
+    <%= (game.black.nil?) ? "Awaiting Player" : (current_user? game.black) ? "You" : game.black.name %>
+    <%= image_for game.black %>
+  </div>
   <div class="center">
+    <% if game.result.nil? %>
     <%= link_to "Play", game_path(game), :class => "button gray" %>
+    <% else %>
+    <%= link_to game.result, game_path(game), :class => "button gray" %>
+    <% end %>
   </div>
 </li>

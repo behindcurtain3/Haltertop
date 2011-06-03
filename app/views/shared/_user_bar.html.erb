@@ -1,8 +1,5 @@
 <div class="userbar">
-  <%= image_for current_user %>
-  <p><%= current_user.name %><br />
-    <span class="light small">Member For: <%= time_ago_in_words( current_user.created_at ) %></span>
-  </p>
+  <%= render :partial => 'users/user_box', :locals => { :user => current_user } %>
   <p>Played: <%= pluralize(current_user.games.count, "match") %></p>
   <p>Friends:</p>
   <ul class="friend_list">

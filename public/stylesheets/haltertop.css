@@ -40,7 +40,7 @@ header img {
 }
 
 .content {
-    font-size: 110% !important;
+    font-size: 110%;
     font-family: Delicious, san-serif;
     margin-top: 25px;
     padding: 5px 10px 15px 15px;
@@ -120,16 +120,6 @@ nav ul li img {
 .userbar {
     margin-top: 10px;
     text-align: left;
-}
-
-.userbar img {
-    float: left;
-    margin-right: 15px;
-}
-
-.userbar .small {
-    font-size: 12pt;
-    padding: 0;
 }
 
 .light {
@@ -276,15 +266,28 @@ li.versus {
 
 div.left {
     float: left;
-    background-image: url('../images/css/black.png');
-    background-repeat: repeat-x;
-    color: #fff;
-    width: 50%;
-    height: 48px;
 }
 
 div.left img {
     float: left;
+    margin-right: 5px;
+}
+
+.white_player {
+    background-image: url('../images/css/white.png');
+    background-repeat: repeat-x;
+    color: #000;
+    width: 50%;
+    height: 48px;
+}
+
+.black_player {
+    background-image: url('../images/css/black.png');
+    background-repeat: repeat-x;
+
+    color: #fff;
+    width: 50%;
+    height: 48px;
 }
 
 li.versus p {
@@ -297,16 +300,12 @@ li.versus p {
 
 div.right {
     float: right;
-    background-image: url('../images/css/white.png');
-    background-repeat: repeat-x;
-    color: #000;
     text-align: right;
-    width: 50%;
-    height: 48px;
 }
 
 div.right img {
     float: right;
+    margin-left: 5px;
 }
 
 li.versus .center {
@@ -469,6 +468,19 @@ div.game {
 
 .actions {
     margin-top: 25px;
+}
+
+.userbox {
+    font-size: 120%;
+}
+
+.userbox img {
+    margin-right: 15px;
+}
+
+.userbox span {
+    font-size: 75%;
+    padding: 0;
 }
 
 div.user {

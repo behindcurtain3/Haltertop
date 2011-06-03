@@ -1,4 +1,4 @@
-<%= render :partial => 'users/user_box', :locals => { :user => current_user } %>
+<%= render :partial => 'users/user_box', :locals => { :user => @user } %>
 <div>
   <h3>Matches</h3>
   <%= render :partial => 'shared/game_list', :locals => { :games => @user.games } %>

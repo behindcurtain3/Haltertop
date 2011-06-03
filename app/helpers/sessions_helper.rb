@@ -56,13 +56,29 @@ module SessionsHelper
     clear_return_to
   end
 
+	def facebook_signed
+		return nil if not session[:access_token]
+		@graph ||= Koala::Facebook::GraphAPI.new(session[:access_token])
+	end
+
+	def facebook_auth
+		@oauth ||= Koala::Facebook::OAuth.new(auth_facebook_url)
+	end
+
+	def facebook_url
+		Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url, :permissions => ["email"])
+	end
+
+	def facebook_token(code)
+		facebook_auth.get_access_token(code)
+	end
+
   private
     def user_from_remember_token
 			if session[:access_token]
-				@graph = Koala::Facebook::GraphAPI.new(session[:access_token])
 				
-				if @graph
-					u = @graph.get_object("me")
+				if facebook_signed
+					u = facebook_signed.get_object("me")
 					return User.find_by_fbid(u['id'])
 				end
 

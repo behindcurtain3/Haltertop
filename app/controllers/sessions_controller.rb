@@ -23,14 +23,20 @@ class SessionsController < ApplicationController
   end
 
 	def redirect
-		session[:access_token] = Koala::Facebook::OAuth.new(auth_facebook_url).get_access_token(params[:code]) if params[:code]
+		#oauth = facebook_auth
+		#url = facebook_url
+
+		#puts "Class: #{oauth.class}"
+		#session[:access_token] = oauth.get_access_token(params[:code]) if params[:code]
+		session[:access_token] = facebook_token(params[:code]) if params[:code]
+		#session[:access_token] = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url).get_access_token(params[:code]) if params[:code]
 
 		# needs to: check if token is avail...
 		#		check if user w/ same email exists, if so update the users fbid
 		#		if user doesn't exist create one, assign it a random password also
 		# if no token return to root
 		if session[:access_token]
-			graph = Koala::Facebook::GraphAPI.new(session[:access_token])
+			graph = facebook_signed
 			if graph.nil?
 				gflash :error => "Unable to setup GraphAPI"
 				redirect_to root_path
@@ -51,6 +57,9 @@ class SessionsController < ApplicationController
 				redirect_to root_path
 			else
 				# create new user
+				puts "User: #{fbuser}"
+				puts "Email: #{fbuser['email']}"
+				puts "ID: #{fbuser['id']}"
 				ouruser = User.new
 				ouruser.name = fbuser['name']
 				ouruser.email = fbuser['email']

@@ -3,5 +3,9 @@
   <p><%= current_user.name %><br />
     <span class="light small">Member For: <%= time_ago_in_words( current_user.created_at ) %></span>
   </p>
-  <p>Played: <%= pluralize(current_user.games.count, "match") %>
+  <p>Played: <%= pluralize(current_user.games.count, "match") %></p>
+  <p>Friends:</p>
+  <% @friends.each do | f | %>
+  <%= image_for f %>
+  <% end %>
 </div>

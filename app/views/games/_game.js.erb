@@ -9,6 +9,9 @@ $(function(){
       cache: false
   });
 
+  $('#black-move').hide();
+  $('#white-move').hide();
+
   loadImages();
 
   gChess = new Chess(document.getElementById("game"), <%= @game.id %>, "<%= (current_user? @game.white) ? "white" : (current_user? @game.black) ? "black" : "observer" %>");
@@ -20,11 +23,11 @@ $(function(){
     if(gImagesLoaded){
       $(document).stopTime("images_loading");
       gChess.loadPieces();
-      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
       
       <% if @game.result.nil? %>
+      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
         <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
-        gChess.canvasElement.addEventListener("click", clickListener, false);
+      gChess.canvasElement.addEventListener("click", clickListener, false);
         <% end %>
 
       $(document).everyTime(gChess.interval, "loop", function(){
@@ -35,22 +38,15 @@ $(function(){
         <% if @game.winner? @game.black %>
           $('#black').addClass('highlight');
           $('#black-move').fadeIn();
-          $('#white-move').fadeOut();
         <% elsif @game.winner? @game.white %>
           $('#white').addClass('highlight');
-          $('#black-move').fadeOut();
           $('#white-move').fadeIn();
-        <% else %>
-          $('#black-move').fadeOut();
-          $('#white-move').fadeOut();
         <% end %>
           // Just loop once
           $(document).oneTime(gChess.interval, "loop", function(){
             gChess.loop();
           });
       <% end %>
-
-      
 
       $("#board").fadeIn('slow');
     }

@@ -34,9 +34,23 @@
 <%= render 'white_player.html' %>
 <%  end %>
 <%= javascript_include_tag 'jquery.timers-1.2.js' %>
+<%= javascript_include_tag 'jquery.simplemodal.1.4.1.min.js' %>
 <%= javascript_include_tag 'chess.js' %>
 <%= javascript_include_tag 'chess-util.js' %>
 <script src="http://js.pusherapp.com/1.8/pusher.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 <%= render 'game.js' %>
 </script>
+
+<div id="promotion_modal" style="display: none;">
+  <ul class="piece_list">
+    <li><%= image_tag "white-queen.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "white-rook.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "white-bishop.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "white-knight.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "black-queen.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "black-rook.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "black-bishop.png", :class => "simplemodal-close" %></li>
+    <li><%= image_tag "black-knight.png", :class => "simplemodal-close" %></li>
+  </ul>
+</div>

@@ -25,8 +25,14 @@ module SessionsHelper
 
   # sign out a user
   def sign_out
-    cookies.delete(:remember_token)
-    self.current_user = nil
+		if session[:access_token]
+			session[:access_token] = nil
+			cookies.delete(:access_token)
+		end
+		if session[:remember_token]
+	    cookies.delete(:remember_token)
+		end
+		self.current_user = nil
   end
 
   # checks if user is signed in
@@ -52,7 +58,18 @@ module SessionsHelper
 
   private
     def user_from_remember_token
-      User.authenticate_with_salt(*remember_token)
+			if session[:access_token]
+				@graph = Koala::Facebook::GraphAPI.new(session[:access_token])
+				
+				if @graph
+					u = @graph.get_object("me")
+					return User.find_by_fbid(u['id'])
+				end
+
+			end
+
+			# finally try normal authentication
+			User.authenticate_with_salt(*remember_token)
     end
 
     def remember_token

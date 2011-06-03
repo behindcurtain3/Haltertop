@@ -1,4 +1,7 @@
 <h1>Testing Facebook Integration</h1>
 
-<p>User: <%= @user %></p>
-<p>OAuth: <%= @oath %></p>
+
+<p>ID: <%= @user['id'] %>
+<p>User: <%= @graph.get_object("me") %></p>
+
+<p><%= image_tag @graph.get_picture("me") %>

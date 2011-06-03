@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110531100534) do
+ActiveRecord::Schema.define(:version => 20110603003909) do
 
   create_table "boards", :force => true do |t|
     t.integer  "game_id"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20110531100534) do
     t.string   "encrypted_password"
     t.string   "salt"
     t.boolean  "admin"
+    t.string   "fbid"
   end
 
 end

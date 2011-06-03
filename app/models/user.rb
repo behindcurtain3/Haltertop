@@ -17,10 +17,10 @@ require 'digest'
 
 class User < ActiveRecord::Base
   # Provides get/set methods
-  attr_accessor :password
+  attr_accessor :password, :password_changed
 
   # Ensures only these attributes can be set by update_attributes
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation, :fbid
 
 	# Relationships with other models
 	has_many :games_as_black, :foreign_key => "black_id", :class_name => "Game"
@@ -96,13 +96,20 @@ class User < ActiveRecord::Base
 		return game
 	end
 
+	def facebook
+		return nil if self.fbid.nil?
+		@fb ||= Koala::Facebook::GraphAPI.new
+	end
 
   # Private methods
   private
     # Encrypts the users password
     def encrypt_password
       self.salt = make_salt if new_record?
-      self.encrypted_password = encrypt(password)
+
+			if new_record? || self.password_changed
+				self.encrypted_password = encrypt(password)
+			end
     end
 
     # Makes a salt for the password

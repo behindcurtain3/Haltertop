@@ -8,10 +8,6 @@
     <%= image_for game.black %>
   </div>
   <div class="center">
-    <% if game.result.nil? %>
-    <%= link_to "Play", game_path(game), :class => "button gray" %>
-    <% else %>
-    <%= link_to game.result, game_path(game), :class => "button gray" %>
-    <% end %>
+    <%= link_to game.get_button_text(current_user), game_path(game), :class => "button gray" %>
   </div>
 </li>

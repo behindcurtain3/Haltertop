@@ -135,6 +135,19 @@ class Game < ActiveRecord::Base
 		return result
 	end
 
+	# takes a user and returns appropriate text to display
+	def get_button_text(user)
+		if self.result.nil?
+			if user == self.white || user == self.black
+				return "Play"
+			else
+				return "Watch"
+			end
+		else
+			return self.result
+		end
+	end
+
 	private
 
 		def setup_board

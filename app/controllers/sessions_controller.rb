@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
   end
 
 	def redirect
-		session[:access_token] = Koala::Facebook::OAuth.new(auth_facebook_path).get_access_token(params[:code]) if params[:code]
+		session[:access_token] = Koala::Facebook::OAuth.new(auth_facebook_url).get_access_token(params[:code]) if params[:code]
 		@oath = Koala::Facebook::OAuth.new(session[:access_token])
 		@user = @oath.get_user_from_cookies(cookies)
 

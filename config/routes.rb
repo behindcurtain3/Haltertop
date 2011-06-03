@@ -1,5 +1,7 @@
 Haltertop::Application.routes.draw do
-  resources :users
+  match '/auth/facebook' => "sessions#redirect"
+
+	resources :users
   resources :sessions,
     :only => [ :new, :create, :destroy ]
 

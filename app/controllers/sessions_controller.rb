@@ -21,4 +21,12 @@ class SessionsController < ApplicationController
     sign_out
     redirect_to root_path
   end
+
+	def redirect
+		session[:access_token] = Koala::Facebook::OAuth.new(auth_facebook_path).get_access_token(params[:code]) if params[:code]
+		@oath = Koala::Facebook::OAuth.new(session[:access_token])
+		@user = @oath.get_user_from_cookies(cookies)
+
+		#redirect_to session[:access_token] ? success_path : failure_path
+	end
 end

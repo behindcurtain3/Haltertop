@@ -6,6 +6,7 @@ gem 'sqlite3'
 gem 'gritter'
 gem 'pusher'
 gem 'gravatar_image_tag', '1.0.0.pre2'
+gem 'koala'
 
 group :development do
   gem 'annotate-models', '1.0.4'

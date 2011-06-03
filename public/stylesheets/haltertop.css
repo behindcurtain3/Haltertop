@@ -387,6 +387,34 @@ div.game {
     border:1px solid rgba(0,0,255, 0.8); 
 }
 
+.friend_list {
+    overflow: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.friend_list li {
+    display: inline;
+}
+
+.friend_list img {
+    dislplay: block;
+    margin-right: auto;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    border:1px solid rgba(0,0,0, 0.7);
+}
+
+.friend_list img:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 255, 1);
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, 1);
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 255, 1);
+    border:1px solid rgba(0,0,255, 0.8);
+}
+
 .status {
     border: 1px black solid;
     float: right;

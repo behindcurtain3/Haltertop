@@ -23,13 +23,12 @@ class SessionsController < ApplicationController
   end
 
 	def redirect
-		#oauth = facebook_auth
-		#url = facebook_url
+		if params[:error]
+			gflash :notice => "We were unable to link your facebook account."
+			redirect_to root_path
+		end
 
-		#puts "Class: #{oauth.class}"
-		#session[:access_token] = oauth.get_access_token(params[:code]) if params[:code]
 		session[:access_token] = facebook_token(params[:code]) if params[:code]
-		#session[:access_token] = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url).get_access_token(params[:code]) if params[:code]
 
 		# needs to: check if token is avail...
 		#		check if user w/ same email exists, if so update the users fbid
@@ -79,6 +78,5 @@ class SessionsController < ApplicationController
 			redirect_to root_path
 		end	
 
-		#redirect_to session[:access_token] ? success_path : failure_path
 	end
 end

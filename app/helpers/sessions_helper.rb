@@ -66,7 +66,7 @@ module SessionsHelper
 	end
 
 	def facebook_url
-		Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url, :permissions => ["email"])
+		Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url, :permissions => ["email, offline_access"])
 	end
 
 	def facebook_token(code)
@@ -76,10 +76,13 @@ module SessionsHelper
   private
     def user_from_remember_token
 			if session[:access_token]
-				
-				if facebook_signed
-					u = facebook_signed.get_object("me")
-					return User.find_by_fbid(u['id'])
+				begin
+					if facebook_signed
+						u = facebook_signed.get_object("me")
+						return User.find_by_fbid(u['id'])
+					end
+				rescue #if any errors redirect to our fb url to reauth
+					redirect_to facebook_url
 				end
 
 			end

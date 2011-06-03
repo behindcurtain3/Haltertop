@@ -4,13 +4,15 @@ class PagesController < ApplicationController
 		@user = User.new
 		@friends = []
 		if signed_in? && facebook_signed
-			@fb_friends = facebook_signed.get_connections("me", "friends")
-			
-			@fb_friends.each do | friend |
-				user = User.find_by_fbid(friend['id'])
-				if user
-					@friends.push(user)
-				end
+			fb_friends = facebook_signed.get_connections("me", "friends")
+			ids = []
+			fb_friends.each do | friend |
+				ids << friend['id']
+			end
+
+			# only query if ids have something
+			if ids.length > 0
+				@friends = User.find(:all, :limit => 8, :order => "random()", :conditions => ["fbid IN (?)", ids])
 			end
 		end
 	end

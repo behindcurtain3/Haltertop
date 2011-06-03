@@ -7,7 +7,7 @@ class PagesController < ApplicationController
 			@fb_friends = facebook_signed.get_connections("me", "friends")
 			
 			@fb_friends.each do | friend |
-				user = User.find_by_fbid(friend['id'])
+				user = User.find_by_fbid(friend['id'].to_s)
 				if user
 					@friends.push(user)
 				end

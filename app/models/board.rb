@@ -13,6 +13,10 @@
 #
 
 class Board < ActiveRecord::Base
+	DRAW = "1/2 - 1/2"
+  WHITE_WIN = "1-0"
+  BLACK_WIN = "0-1"
+
 	belongs_to :game
 
 	attr_accessor :pieces, :turn,					#representation of pieces
@@ -60,14 +64,14 @@ class Board < ActiveRecord::Base
     # no more moves == game over
     if moves.nil?
       if valid_move.check.nil?
-        self.game.result = Game.DRAW
+        self.game.result = DRAW
       else
         valid_move.checkmate = true
         
         if self.turn == "w" # black had last move
-          self.game.result = Game.BLACK_WIN
+          self.game.result = BLACK_WIN
         else # white had last move
-          self.game.result = Game.WHITE_WIN
+          self.game.result = WHITE_WIN
         end
       end
       self.game.save

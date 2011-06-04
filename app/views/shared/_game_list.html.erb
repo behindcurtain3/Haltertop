@@ -1,9 +1,7 @@
-<% if games.empty? %>
-<p>You currently have <strong>0</strong> matches. <%= link_to "Play Now", play_path, :class => "button orange" %></p>
-<% else %>
-<ul class="game_list">
-<% games.each do |game| %>
-  <%= render :partial => 'shared/versus', :locals => {:game => game } %>
-<% end %>
-</ul>
-<% end %>
+<div class="game_list">
+  <ul>
+  <% games.each do |game| %>
+    <%= render :partial => 'shared/versus', :locals => {:game => game } %>
+  <% end %>
+  </ul>
+</div>

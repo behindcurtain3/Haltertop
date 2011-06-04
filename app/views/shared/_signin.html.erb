@@ -1,5 +1,5 @@
 <%= form_for(:session, :url => sessions_path, :class => "signin") do |f| %>
-  <div id="quicklogin">
+  <div>
     <%= f.text_field :email, :size => '10', :placeholder => "Email Address" %>
     <%= f.password_field :password,  :size => '10', :placeholder => "Password" %>
     <%= f.submit "Sign in", :class => "button orange" %>

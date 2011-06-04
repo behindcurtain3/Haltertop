@@ -7,10 +7,8 @@
 </div>
 <div>
   <h3>Getting Started</h3>
-  <p>SocialChess is a multiplayer chess app currently in <strong><span class="red">alpha</span></strong> testing. All you need to play is a modern web browser and you're all set!</p>
+  <p>SocialChess is a multiplayer <span class="red">chess app</span> currently in alpha testing.</p>
   <% if signed_in? %>
   <%= link_to "Play Now", play_path, :class => "button orange" %>
-  <% else %>
-  <%= link_to 'Login', facebook_url %>
   <% end %>
 </div>

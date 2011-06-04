@@ -1,3 +1,9 @@
 <h1>Sign up</h1>
 
-<%= render 'info_form', :button_text => "Sign Up" %>
+<p>We strongly suggest logging in via facebook</p>
+
+<%= render 'shared/facebook_form' %>
+
+<p>However, you may create a password account using the form below.</p>
+
+<%= render 'shared/full_user_form', :button_text => "Sign Up" %>

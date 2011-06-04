@@ -3,9 +3,7 @@
     <%= link_to image_tag("logo.png"), root_path, :class => "left" %>
     <nav>
       <ul>
-    <% unless signed_in? %>
-        <%= render 'shared/signin' %>
-    <% else %>
+    <% if signed_in? %>
         <%= render 'shared/user_menu' %>
     <% end %>
       </ul>

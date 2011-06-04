@@ -1,18 +1,11 @@
+<%= render "shared/facebook_form" %>
 
-<%= form_for(@user) do |f| %>
-  <p class="field">
-    <%= f.text_field :name, :placeholder => "Full Name" %>
-  </p>
-  <p class="field">
-    <%= f.text_field :email, :placeholder => "Email" %>
-  </p>
-  <p class="field">
-    <%= f.password_field :password, :placeholder => "Password" %>
-  </p>
-  <p class="field">
-    <%= f.password_field :password_confirmation, :placeholder => "Confirm Password" %>
-  </p>
-  <p class="actions">
-    <%= f.submit "Sign Up Now", :class => "button orange" %>
-  </p>
-<% end %>
+<div style="height: 1px; background-color: black; text-align: center; margin-top: 15px; margin-bottom: 10px;">
+  <span style="background-color: white; position: relative; top: -0.5em; padding: 0 3px 0;">
+    OR
+  </span>
+</div>
+
+<%= render "shared/min_user_form" %>
+
+<p class="medium">Already have a password account?<br/><%= link_to "sign in here", signin_path %></p>

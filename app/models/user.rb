@@ -17,7 +17,7 @@ require 'digest'
 
 class User < ActiveRecord::Base
   # Provides get/set methods
-  attr_accessor :password, :password_changed
+  attr_accessor :password, :password_changed, :me
 
   # Ensures only these attributes can be set by update_attributes
   attr_accessible :name, :email, :password, :password_confirmation, :fbid
@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
 	has_many :moves
 
 	def games
-		games_as_black + games_as_white
+		Game.find(:all, :order => "updated_at DESC", :conditions => ["black_id = ? OR white_id = ?", self.id, self.id])
 	end
 
   # Email regex check
@@ -97,12 +97,32 @@ class User < ActiveRecord::Base
 	end
 
 	def facebook
-		return nil if self.fbid.nil?
-		@fb ||= Koala::Facebook::GraphAPI.new
+		if not facebook?
+			return {}
+		end
+		
+		return self.me ||= fbgraph.get_object(self.fbid)
+	end
+
+	def facebook?
+		not self.fbid.nil?
+	end
+
+	def fbgraph
+		@graph ||= Koala::Facebook::GraphAPI.new
+	end
+
+	def active_games
+		Game.find(:all, :order => "updated_at DESC", :conditions => ["(black_id = ? OR white_id = ?) AND result is NULL", self.id, self.id])
+	end
+
+	def finished_games
+		Game.find(:all, :order => "updated_at DESC", :conditions => ["(black_id = ? OR white_id = ?) AND result is not NULL", self.id, self.id])
 	end
 
   # Private methods
   private
+
     # Encrypts the users password
     def encrypt_password
       self.salt = make_salt if new_record?

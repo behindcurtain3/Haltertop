@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   # before_filters are run before anything else is done on the controller
   # Authenticate the user
   before_filter :authenticate,
-    :except => [ :show, :new, :create ]
+    :except => [ :new, :create ]
 
   # Check for the correct user
   before_filter :correct_user,
@@ -26,6 +26,20 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @title = @user.name
+		@friends = []
+
+		if signed_in? && current_user?(@user)
+			fb_friends = facebook_signed(current_user.token).get_connections("me", "friends")
+			ids = []
+			fb_friends.each do | friend |
+				ids << friend['id']
+			end
+
+			# only query if ids have something
+			if ids.length > 0
+				@friends = User.find(:all, :limit => 8, :order => "random()", :conditions => ["fbid IN (?)", ids])
+			end
+		end
   end
 
   # GET /users/new

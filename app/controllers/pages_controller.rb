@@ -1,21 +1,12 @@
 class PagesController < ApplicationController
   def home
+		if signed_in?
+			redirect_to current_user
+		end
+
 		@title = "Home"
 		@user = User.new
-		@friends = []
-
-		if signed_in?
-			fb_friends = facebook_signed(current_user.token).get_connections("me", "friends")
-			ids = []
-			fb_friends.each do | friend |
-				ids << friend['id']
-			end
-
-			# only query if ids have something
-			if ids.length > 0
-				@friends = User.find(:all, :limit => 8, :order => "random()", :conditions => ["fbid IN (?)", ids])
-			end
-		end
+		
 	end
 
   def about

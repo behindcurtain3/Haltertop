@@ -1,5 +1,5 @@
 <div class="userbar">
-  <%= render :partial => 'users/user_box', :locals => { :user => current_user } %>
+  <%= render :partial => 'users/user_box', :locals => { :user => @user } %>
   <p>Played: <%= pluralize(current_user.games.count, "match") %></p>
   <p>Friends:</p>
   <ul class="friend_list">

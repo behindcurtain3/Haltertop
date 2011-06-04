@@ -3,8 +3,9 @@ class PagesController < ApplicationController
 		@title = "Home"
 		@user = User.new
 		@friends = []
-		if signed_in? && facebook_signed
-			fb_friends = facebook_signed.get_connections("me", "friends")
+
+		if signed_in?
+			fb_friends = facebook_signed(current_user.token).get_connections("me", "friends")
 			ids = []
 			fb_friends.each do | friend |
 				ids << friend['id']

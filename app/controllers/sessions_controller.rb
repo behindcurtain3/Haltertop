@@ -28,14 +28,15 @@ class SessionsController < ApplicationController
 			redirect_to root_path
 		end
 
-		session[:access_token] = facebook_token(params[:code]) if params[:code]
+		token = facebook_token(params[:code]) if params[:code]
+		session[:access_token] = token
 
 		# needs to: check if token is avail...
 		#		check if user w/ same email exists, if so update the users fbid
 		#		if user doesn't exist create one, assign it a random password also
 		# if no token return to root
-		if session[:access_token]
-			graph = facebook_signed
+		if token
+			graph = facebook_signed(token)
 			if graph.nil?
 				gflash :error => "Unable to setup GraphAPI"
 				redirect_to root_path
@@ -46,13 +47,19 @@ class SessionsController < ApplicationController
 			if ouruser
 				# set fbid if not already set
 				if ouruser.fbid.nil?
-					puts "ID: #{fbuser['id']}"
+					
 					if ouruser.update_attribute(:fbid, fbuser['id'])
 						gflash :success => "Thanks #{fbuser['first_name']}, your account is now linked with facebook."
 					else
 						gflash :error => "Unable to update account. #{ouruser.errors}"
 					end
 				end
+
+				# update token
+				if not ouruser.update_attribute(:token, token)
+					gflash :error => "Unable to set access token"
+				end
+
 				redirect_to root_path
 			else
 				# create new user
@@ -65,6 +72,7 @@ class SessionsController < ApplicationController
 				ouruser.fbid = fbuser['id']
 				ouruser.password = Time.now.utc
 				ouruser.password_confirmation = ouruser.password
+				ouruser.token = token
 				if ouruser.save!
 					gflash :success => "Welcome #{fbuser['first_name']}!"
 					redirect_to root_path

@@ -56,9 +56,8 @@ module SessionsHelper
     clear_return_to
   end
 
-	def facebook_signed
-		return nil if not session[:access_token]
-		@graph ||= Koala::Facebook::GraphAPI.new(session[:access_token])
+	def facebook_signed(token)
+		@graph ||= Koala::Facebook::GraphAPI.new(token)
 	end
 
 	def facebook_auth
@@ -66,29 +65,26 @@ module SessionsHelper
 	end
 
 	def facebook_url
-		Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url, :permissions => ["email, offline_access"])
+		Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => auth_facebook_url, :permissions => [facebook_permissions])
 	end
 
 	def facebook_token(code)
 		facebook_auth.get_access_token(code)
 	end
 
+	def facebook_permissions
+		"email, offline_access"
+	end
+
   private
     def user_from_remember_token
+			# first try to access our user via fb token
 			if session[:access_token]
-				begin
-					if facebook_signed
-						u = facebook_signed.get_object("me")
-						return User.find_by_fbid(u['id'])
-					end
-				rescue #if any errors redirect to our fb url to reauth
-					redirect_to facebook_url
-				end
-
+				return User.find_by_token(session[:access_token])
 			end
 
 			# finally try normal authentication
-			User.authenticate_with_salt(*remember_token)
+			return User.authenticate_with_salt(*remember_token)
     end
 
     def remember_token

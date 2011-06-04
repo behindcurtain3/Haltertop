@@ -1,7 +1,11 @@
 <h1>Settings</h1>
 <%= render 'shared/full_user_form', :button_text => "Save Changes" %>
 
+<% if not @user.facebook? %>
+
 <div>
-  <%= gravatar_for @user %>
+  <%= image_for @user %>
   <a href="http://gravatar.com/emails">change</a>
 </div>
+
+<% end %>

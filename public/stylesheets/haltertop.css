@@ -4,13 +4,14 @@
 body {
     padding: 0px;
     margin: 0px;
-    background-color: #555;
+    background-color: #666;
 }
 
 /* Header */
 
 header {
     background-color: #eceff6;
+    border-bottom: solid 1px #d4dae8;
     width: 100%;
     height: 48px;
     margin-top: 0px;
@@ -50,6 +51,7 @@ header img {
     box-shadow: 0 0 25px #000;
     border-radius: 3px;
     overflow: auto;
+
 }
 
 .content h1 {
@@ -108,24 +110,25 @@ nav ul li img {
 }
 
 .sidebar {
-    float:right;
+    float: right;
+    
+    height: 100%;
+    width: 250px;
     
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 5px;
-    text-align: center;
     margin-left: 15px;
-    width: 250px;
+
+    text-align: center;
+    
+    border-left: solid 1px #d4dae8;
 }
 
 .userbar {
     margin-top: 10px;
     text-align: left;
-}
 
-.avatar {
-    box-shadow:inset 0 0 10px #000000;
-    -moz-box-shadow:inset 0 0 10px #000000;
 }
 
 .light {
@@ -484,6 +487,7 @@ div.game {
 
 .userbox {
     font-size: 120%;
+    margin-bottom: 25px;
 }
 
 .userbox img {
@@ -600,5 +604,5 @@ input:focus, textarea:focus {
 }
 
 .reflect {
-    -webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
+    -webkit-box-reflect:below 3px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.7, transparent), to(white));
 }

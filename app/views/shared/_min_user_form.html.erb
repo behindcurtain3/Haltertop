@@ -1,0 +1,17 @@
+<%= form_for(@user) do |f| %>
+  <p class="field">
+    <%= f.text_field :name, :placeholder => "Full Name" %>
+  </p>
+  <p class="field">
+    <%= f.text_field :email, :placeholder => "Email" %>
+  </p>
+  <p class="field">
+    <%= f.password_field :password, :placeholder => "Password" %>
+  </p>
+  <p class="field">
+    <%= f.password_field :password_confirmation, :placeholder => "Confirm Password" %>
+  </p>
+  <p class="actions">
+    <%= f.submit "Sign Up Now", :class => "button orange" %>
+  </p>
+<% end %>

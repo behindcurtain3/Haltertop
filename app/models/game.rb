@@ -34,35 +34,77 @@ class Game < ActiveRecord::Base
 		return invalid_move_error if params[:type].nil?
 
 		board = current_board
-
+		puts "Trying a move:"
+		puts board.nil?
+		puts current_board.nil?
 		return invalid_move_error if board.nil?
 
-		move = Move.new
-		move.from = Point.new(params[:fr], params[:fc])
-		move.to = Point.new(params[:tr], params[:tc])
+		if params[:type] == "standard"
+			return invalid_move_error if waiting_for_promotion?
 
-		# do_move returns a new board instance or nil
-		move = board.try_move(move)
+			move = Move.new
+			move.from = Point.new(params[:fr], params[:fc])
+			move.to = Point.new(params[:tr], params[:tc])
 
-		puts move
+			# do_move returns a new board instance or nil
+			move = board.try_move(move)
 
-		return invalid_move_error if move.nil?
+			return invalid_move_error if move.nil?
 
-		move.game = self
-		move.notate
+			move.game = self
+			move.notate
 
-		#otherwise
-		if !move.save!
-			puts move.errors
+			#otherwise
+			if !move.save!
+				puts move.errors
+			end
+			
+			self.save
+			if move.promoted.nil?
+				return valid_move_result(move)
+			else
+				result = {
+					:status => "success",
+					:promotion => (board.turn == "w") ? "black" : "white"
+				}
+				return result
+			end
+		elsif params[:type] == "promotion"
+			return invalid_move_error unless waiting_for_promotion?
+
+			move = last_move
+			return invalid_move_error if move.nil?
+
+			return invalid_move_error if not ["queen","rook","bishop","knight"].include?(params[:to])
+
+			board.set_piece_type(move.promoted, params[:to])
+			move = board.update_after_move(move)
+			board.save
+
+			# re-notate the move
+			move.piece = board.get_pieces.to_a.find { |p| p.position == move.promoted }
+			move.notate
+			move.save
+
+			result = valid_move_result(move)
+			result[:set] = {
+				:position => move.to,
+				:type => params[:to]
+			}
+			return result
+		else
+			puts "invalid type"
+			return invalid_move_error
 		end
 
-		#todo, check for endgame
-		self.save
-		return valid_move_result(move)
 	end
 
 	def current_board
 		return Board.find(:last, :conditions => ["game_id = ?", self.id])
+	end
+
+	def last_move
+		return Move.find(:last, :conditions => ["game_id = ?", self.id])
 	end
 
   def winner?(user)
@@ -82,6 +124,19 @@ class Game < ActiveRecord::Base
       end
     end
   end
+
+	def waiting_for_promotion?
+		move = last_move
+		return false if move.nil?
+		return false if move.promoted.nil?
+
+		board = current_board
+		piece = board.get_pieces.to_a.find { |p| p.name == "pawn" && p.position.row == 7 && p.color == "black" }
+		return true unless piece.nil?
+		piece = board.get_pieces.to_a.find { |p| p.name == "pawn" && p.position.row == 0 && p.color == "white" }
+		return true unless piece.nil?
+		return false
+	end
 
 	def wrong_user_error
 		error = {
@@ -133,6 +188,21 @@ class Game < ActiveRecord::Base
 
 		result[:notation] = move.notation
 		return result
+	end
+
+	def whos_turn
+		turn = current_board.whos_turn
+
+		if waiting_for_promotion?
+			if turn == self.white
+				return self.black
+			else
+				return self.white
+			end
+		else
+			return turn
+		end
+
 	end
 
 	# takes a user and returns appropriate text to display

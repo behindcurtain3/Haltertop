@@ -297,7 +297,7 @@ Chess.prototype = {
 	$.each(json, function(i, move){
 	    if(!$.isArray(move))
 		return true;
-            console.log(move);
+
             for(var x = 0; x < move.length; x++){
 
                 var indexToSplice = -1;
@@ -343,6 +343,23 @@ Chess.prototype = {
         }
     },
 
+    set: function(data){
+	if(!data)
+	    return;
+
+	if(this.inverted){
+            data.position.col = this.invert(data.position.col, true);
+            data.position.row = this.invert(data.position.row, true)
+        }
+
+	for(var i = 0; i < this.pieces.length; i++){
+	    if(this.pieces[i].cell.column == data.position.col && this.pieces[i].cell.row == data.position.row){
+		this.pieces[i].type = data.type;
+		this.invalidate();
+	    }
+	}
+    },
+
     turn: function(t){
 	if(this.playerColor == t){
 	    this.yourturn = true;
@@ -363,6 +380,62 @@ Chess.prototype = {
 	    $('#black-move').fadeIn();
 	    $('#white-move').fadeOut();
 	}
+    },
+
+    askForPromotion: function(color){
+	if(this.playerColor != color)
+	    return;
+
+	var that = this;
+
+	$('#promotion').modal();
+	if(color == "white"){
+	    $('#white_pieces').show();
+	    $('#promote_white_queen').click(function(){
+		that.sendPromotion('queen');
+	    });
+	    $('#promote_white_rook').click(function(){
+		that.sendPromotion('rook');
+	    });
+	    $('#promote_white_bishop').click(function(){
+		that.sendPromotion('bishop');
+	    });
+	    $('#promote_white_knight').click(function(){
+		that.sendPromotion('knight');
+	    });
+	} else {
+	    $('#black_pieces').show();
+	    $('#promote_black_queen').click(function(){
+		that.sendPromotion('queen');
+	    });
+	    $('#promote_black_rook').click(function(){
+		that.sendPromotion('rook');
+	    });
+	    $('#promote_black_bishop').click(function(){
+		that.sendPromotion('bishop');
+	    });
+	    $('#promote_black_knight').click(function(){
+		that.sendPromotion('knight');
+	    });
+	    
+	}
+    },
+
+    sendPromotion: function(type){
+	var move = "type=promotion&to=" + type;
+	$.ajax({
+	    url: '/games/' + this.gameId + '/move',
+	    data: move,
+	    dataType: "json",
+	    success: function(json){
+		if(json.status != "success"){
+		    $.gritter.add({
+		       title: json.title,
+		       text: json.text
+		    });
+		}
+	    }
+	});
     },
 
     getCursorPosition: function(e){

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110530120854
+# Schema version: 20110604110255
 #
 # Table name: boards
 #
@@ -52,31 +52,10 @@ class Board < ActiveRecord::Base
 
 		# perform the move
 		valid_move = perform_move(valid_move)
-
-    # self.turn has been swapped, so use it here
-    valid_move.check = isCheck(self.turn)
-
-    # check for endgame conditions
-    # basically repeat above looking to see if there are any valid moves
-    moves = generate_moves(self.pieces, self.turn)
-    moves = filter_for_self_check(self.pieces, moves, self.turn)
-
-    # no more moves == game over
-    if moves.nil?
-      if valid_move.check.nil?
-        self.game.result = DRAW
-      else
-        valid_move.checkmate = true
-        
-        if self.turn == "w" # black had last move
-          self.game.result = BLACK_WIN
-        else # white had last move
-          self.game.result = WHITE_WIN
-        end
-      end
-      self.game.save
-    end
-
+		if valid_move.promoted.nil?
+			valid_move = update_after_move(valid_move)
+		end
+    
 		# create a new board and set it equal to this one, then save it
 		next_board = Board.new
 		next_board.game = self.game
@@ -87,6 +66,34 @@ class Board < ActiveRecord::Base
 
 		# finally return our move to the game model
 		return valid_move
+	end
+
+	def update_after_move(move)
+		# self.turn has been swapped, so use it here
+    move.check = isCheck(self.turn)
+
+    # check for endgame conditions
+    # basically repeat above looking to see if there are any valid moves
+    moves = generate_moves(self.pieces, self.turn)
+    moves = filter_for_self_check(self.pieces, moves, self.turn)
+
+    # no more moves == game over
+    if moves.nil?
+      if move.check.nil?
+        self.game.result = DRAW
+      else
+        move.checkmate = true
+
+        if self.turn == "w" # black had last move
+          self.game.result = BLACK_WIN
+        else # white had last move
+          self.game.result = WHITE_WIN
+        end
+      end
+      self.game.save
+    end
+
+		return move
 	end
 
 	def ready?
@@ -103,6 +110,16 @@ class Board < ActiveRecord::Base
 
 	def save_fen
 		self.fen = export_fen
+	end
+
+	def get_turn
+		setup if !ready?
+
+		if self.turn == "w"
+			return "white"
+		else
+			return "black"
+		end
 	end
 
 	def whos_turn
@@ -134,28 +151,36 @@ class Board < ActiveRecord::Base
 		return self.pieces
 	end
 
+	def set_piece_type(position, name)
+		setup if !ready?
+
+		piece = self.pieces.find { |p| p.position == position }
+
+		piece.name = name
+	end
+
   # check if color is in check
-    def isCheck(color)
-			piece_color = (color == "w") ? "white" : "black"
-      opponent = (color == "w") ? "b" : "w"
+	def isCheck(color)
+		piece_color = (color == "w") ? "white" : "black"
+		opponent = (color == "w") ? "b" : "w"
 
-      king = self.pieces.find { |p| p.name == "king" && p.color == piece_color }
-      return nil if king.nil?
+		king = self.pieces.find { |p| p.name == "king" && p.color == piece_color }
+		return nil if king.nil?
 
-      # we want to generate moves for ourselves again to see if any pieces attack the king
-      board = Board.new
-			board.game = self.game
-			board.set self.fen
-      next_moves = board.moves(opponent)
+		# we want to generate moves for ourselves again to see if any pieces attack the king
+		board = Board.new
+		board.game = self.game
+		board.set self.fen
+		next_moves = board.moves(opponent)
 
-      next_moves.each do | m |
-        if m.to == king.position
-          return king.position
-        end
-      end
+		next_moves.each do | m |
+			if m.to == king.position
+				return king.position
+			end
+		end
 
-      return nil
-    end
+		return nil
+	end
 
 	private
 
@@ -173,6 +198,12 @@ class Board < ActiveRecord::Base
 					if piece.name == "pawn"
 						self.halfmoves = 0
 
+						# check for promotion
+						if piece.color == "white" && move.to.row == 0
+							move.promoted = move.to
+						elsif piece.color == "black" && move.to.row == 7
+							move.promoted = move.to
+						end
 					elsif piece.name == "king"
 						if self.turn == "w"
 							self.K = false
@@ -577,12 +608,8 @@ class Board < ActiveRecord::Base
       return true
     end
 
-		# takes pieces etc and produces a fen string
-		def export_fen
-			return false if self.pieces.nil?
-
+		def export_pieces
 			fen = ""
-
 			# export pieces
 			(0..7).each do | row |
 				empties = 0 # reset each time through
@@ -607,6 +634,14 @@ class Board < ActiveRecord::Base
 					fen = fen + "/"
 				end
 			end
+			return fen
+		end
+
+		# takes pieces etc and produces a fen string
+		def export_fen
+			return false if self.pieces.nil?
+
+			fen = export_pieces
 
 			#add spacer
 			fen = fen + " "

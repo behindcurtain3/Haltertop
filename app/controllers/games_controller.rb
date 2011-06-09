@@ -53,7 +53,7 @@ class GamesController < ApplicationController
 	# PUT /games/#{id}/move
 	def move
 		@game = Game.find(params[:id])
-		if current_user? @game.current_board.whos_turn
+		if current_user? @game.whos_turn
 			result = @game.try_move(params)
 				
 				# Use Pusher to send the move to all clients listening to the game
@@ -61,7 +61,7 @@ class GamesController < ApplicationController
   				Pusher[@game.id.to_s].trigger('move', result)
         end
 		else
-			result = @game.invalid_move_error
+			result = @game.wrong_user_error
 		end
 
 		respond_to do |format|

@@ -25,7 +25,12 @@ $(function(){
       gChess.loadPieces();
       
       <% if @game.result.nil? %>
-      gChess.turn('<%= (@game.current_board.whos_turn == @game.white) ? "white" : "black" %>');
+	<% if @game.waiting_for_promotion? %>
+      gChess.turn('<%= (@game.current_board.get_turn == "white") ? "black" : "white" %>');
+      gChess.askForPromotion('<%= (@game.current_board.get_turn == "white") ? "black" : "white" %>')
+	<% else %>
+      gChess.turn('<%= @game.current_board.get_turn %>');
+	<% end %>
         <%  if (current_user?(@game.black) || current_user?(@game.white)) %>
       gChess.canvasElement.addEventListener("click", clickListener, false);
         <% end %>
@@ -57,19 +62,26 @@ $(function(){
   channel.bind('move', function(data) {
     console.log(data);
     if(data.status == "success"){
-      gChess.move(data);
-      gChess.capture(data.capture);
-      gChess.turn(data.turn);
-      gChess.numMoves++;
-
-      var i = Math.ceil(gChess.numMoves / 2);
-      if(gChess.numMoves % 2 != 0){
-        var s = '<li id="move_' + i + '">' + data.notation + '</li>';
-        $('#move_list').append(s);
+      if(data.promotion != null){
+	gChess.askForPromotion(data.promotion);
       } else {
-        $('#move_' + i).append('&nbsp;' + data.notation);
+	gChess.move(data);
+	gChess.capture(data.capture);
+	gChess.turn(data.turn);
+	gChess.numMoves++;
+
+	var i = Math.ceil(gChess.numMoves / 2);
+	if(gChess.numMoves % 2 != 0){
+	  var s = '<li id="move_' + i + '">' + data.notation + '</li>';
+	  $('#move_list').append(s);
+	} else {
+	  $('#move_' + i).append('&nbsp;' + data.notation);
+	}
+
+	$(document).oneTime(750, "set", function(){
+	  gChess.set(data.set);
+	});
       }
-      
 
     } else {
       $.gritter.add({

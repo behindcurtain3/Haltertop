@@ -42,15 +42,20 @@
 <%= render 'game.js' %>
 </script>
 
-<div id="promotion_modal" style="display: none;">
-  <ul class="piece_list">
-    <li><%= image_tag "white-queen.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "white-rook.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "white-bishop.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "white-knight.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "black-queen.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "black-rook.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "black-bishop.png", :class => "simplemodal-close" %></li>
-    <li><%= image_tag "black-knight.png", :class => "simplemodal-close" %></li>
+<div id="promotion" class="promotion_modal sm_round shadow" style="display: none;">
+  <div>
+    <h3>Select a Piece</h3>
+  </div>
+  <ul id="white_pieces" style="display:none;">
+    <li><%= link_to "#white_queen" do image_tag "white-queen.png", :class => "simplemodal-close", :id => "promote_white_queen" end %></li>
+    <li><%= link_to "#white_rook" do image_tag "white-rook.png", :class => "simplemodal-close", :id => "promote_white_rook" end %></li>
+    <li><%= link_to "#white_bishop" do image_tag "white-bishop.png", :class => "simplemodal-close", :id => "promote_white_bishop" end %></li>
+    <li><%= link_to "#white_knight" do image_tag "white-knight.png", :class => "simplemodal-close", :id => "promote_white_knight" end %></li>
+  </ul>
+  <ul id="black_pieces" style="display:none;">
+    <li><%= link_to "#black_queen" do image_tag "black-queen.png", :class => "simplemodal-close", :id => "promote_black_queen" end %></li>
+    <li><%= link_to "#black_rook" do image_tag "black-rook.png", :class => "simplemodal-close", :id => "promote_black_rook" end %></li>
+    <li><%= link_to "#black_bishop" do image_tag "black-bishop.png", :class => "simplemodal-close", :id => "promote_black_bishop" end %></li>
+    <li><%= link_to "#black_knight" do image_tag "black-knight.png", :class => "simplemodal-close", :id => "promote_black_knight" end %></li>
   </ul>
 </div>

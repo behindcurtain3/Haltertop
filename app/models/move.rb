@@ -26,7 +26,8 @@ class Move < ActiveRecord::Base
 	serialize :capture, Piece
 	serialize :check, Point
 	serialize :piece, Piece
-
+	serialize :promoted, Point
+	
 	belongs_to :game
 	belongs_to :user
 
@@ -39,31 +40,45 @@ class Move < ActiveRecord::Base
 		:capture, :promoted, :castle, :check, :enpassant, :notation
 
   def notate
-    n = ""
-    # add piece that is moving
-    if !castle.nil?
-      if self.castle[:from].col < self.castle[:to].col
-        n = "0-0-0"
-      else
-        n = "0-0"
-      end
-    else
-      if self.piece.name != "pawn"
-        n = self.piece.notation
-      end
-      n = n + "x" unless self.capture.nil?
-      n = n + self.to.notation
+		if self.notation.nil?
+			n = ""
+			# add piece that is moving
+			if !castle.nil?
+				if self.castle[:from].col < self.castle[:to].col
+					n = "0-0-0"
+				else
+					n = "0-0"
+				end
+			else
+				if self.piece.name != "pawn"
+					n = self.piece.notation
+				end
+				n += "x" unless self.capture.nil?
+				n += self.to.notation
 
-      unless self.checkmate.nil?
-        n += "#"
-      else
-        unless self.check.nil?
-          n = n + "+"
-        end
-      end
-    end
+				unless self.checkmate.nil?
+					n += "#"
+				else
+					unless self.check.nil?
+						n += "+"
+					end
+				end
+			end
 
-    self.notation = n
+			self.notation = n
+		else
+			# we already have notation, just need to add a character for promotion
+			self.notation += self.piece.notation
+			unless self.checkmate.nil?
+				self.notation += "#"
+			else
+				unless self.check.nil?
+					self.notation += "+"
+				end
+			end
+		end
+
+    
   end
 
 end

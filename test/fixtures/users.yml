@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110509040216
+# Schema version: 20110604110255
 #
 # Table name: users
 #
@@ -11,6 +11,8 @@
 #  encrypted_password :string(255)
 #  salt               :string(255)
 #  admin              :boolean
+#  fbid               :string(255)
+#  token              :string(255)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

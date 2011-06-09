@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     @title = @user.name
 		@friends = []
 
-		if signed_in? && current_user?(@user)
+		if signed_in? && current_user?(@user) && @user.facebook?
 			fb_friends = facebook_signed(current_user.token).get_connections("me", "friends")
 			ids = []
 			fb_friends.each do | friend |

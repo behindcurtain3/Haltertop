@@ -80,6 +80,10 @@ footer nav {
     border-radius:       5px;
 }
 
+.shadow {
+    box-shadow: 0 0 25px #000;
+}
+
 /* Navigation */
 
 nav {
@@ -479,6 +483,49 @@ div.game {
     -moz-border-radius:    3px;
     -webkit-border-radius:  3px;
     border-radius:       3px;
+}
+
+.promotion_modal {
+    left: 50%;
+    width: 512px;
+    height: 256px;
+    
+    background-color: #f7f7f7;
+    border: solid 1px #000;
+    padding: 0;
+}
+
+.promotion_modal div {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+}
+
+.promotion_modal div h3 {
+    padding: 5px 10px 5px;
+    text-align: center;
+}
+
+.promotion_modal ul {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    margin: 50px 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.promotion_modal li {
+    display: inline-block;
+}
+
+.promotion_modal img {
+    dislplay: block;
+    margin-right: auto;
+    margin-left: 10px;
+    margin-bottom: 5px;
 }
 
 .actions {

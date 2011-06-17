@@ -17,7 +17,7 @@ class Game < ActiveRecord::Base
   BLACK_WIN = "0-1"
 
 	# moves
-	has_many :moves, :dependent => :destroy
+	has_many :moves, :dependent => :destroy, :order => 'id'
 	has_many :boards, :dependent => :destroy
 
 	# User relationships

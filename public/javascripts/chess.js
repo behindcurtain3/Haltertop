@@ -16,6 +16,10 @@ function Chess(canvasElement, gameId, playerColor){
     this.targetTime = 750;
     this.targetTimeElapsed = -1;
 
+    // Sound
+    this.moveSfx = document.createElement("audio");
+    this.moveSfx.src = "../audio/Randomize3.mp3";
+
     // Drawing
     this.canvasValid = true;
     this.animating = false;
@@ -320,6 +324,7 @@ Chess.prototype = {
             }
 	});
         this.pieces.sort(this.sortpieces);
+	this.moveSfx.play();
     },
 
     capture: function(piece){

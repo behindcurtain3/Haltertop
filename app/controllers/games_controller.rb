@@ -42,6 +42,12 @@ class GamesController < ApplicationController
 
     # Attempt to save the new game
     if @game.save
+			@user = {
+				:id => current_user.id,
+				:name => current_user.name,
+				:color => (current_user == @game.white) ? "white" : "black"
+			}
+			Pusher[@game.id.to_s].trigger('opponent_added', @user)
       gflash :success => "Enjoy the game!"
       redirect_to @game
     else

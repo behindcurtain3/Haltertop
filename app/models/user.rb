@@ -88,9 +88,7 @@ class User < ActiveRecord::Base
 		else
 			if game.white.nil?
 				game.white = self
-			end
-
-			if game.black.nil?
+			else
 				game.black = self
 			end
 		end

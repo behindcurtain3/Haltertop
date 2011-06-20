@@ -1,7 +1,6 @@
 module UsersHelper
 
 	def image_for(user, classes = "sm_round", options = { :size => 48 })
-
 		if user.nil?
 			gravatar_image_tag("", :alt => "No Icon", :class => classes, :gravatar => options)
 		elsif user.facebook?
@@ -15,7 +14,6 @@ module UsersHelper
 			                                        :gravatar => options)
 			end
 		end
-
 	end
-	
+
 end

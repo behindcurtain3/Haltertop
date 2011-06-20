@@ -59,6 +59,15 @@ $(function(){
   <% if @game.result.nil? %>
   var pusher = new Pusher('<%= Pusher.key %>');
   var channel = pusher.subscribe('<%= @game.id %>');
+  channel.bind('opponent_added', function(data) {
+    console.log(data);
+    var pName = $('#black-name');
+    if(data.color == "white"){
+      pData = $('#white-name');
+    }
+    pName.html(data.name);
+
+  });
   channel.bind('move', function(data) {
     console.log(data);
     if(data.status == "success"){

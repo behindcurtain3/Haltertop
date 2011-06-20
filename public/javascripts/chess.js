@@ -358,7 +358,7 @@ Chess.prototype = {
         }
 
 	for(var i = 0; i < this.pieces.length; i++){
-	    if(this.pieces[i].cell.column == data.position.col && this.pieces[i].cell.row == data.position.row){
+	    if(this.pieces[i].target.column == data.position.col && this.pieces[i].target.row == data.position.row){
 		this.pieces[i].type = data.type;
 		this.invalidate();
 	    }

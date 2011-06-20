@@ -76,6 +76,7 @@ $(function(){
       } else {
 	gChess.move(data);
 	gChess.capture(data.capture);
+	gChess.set(data.set);
 	gChess.turn(data.turn);
 	gChess.numMoves++;
 
@@ -86,10 +87,6 @@ $(function(){
 	} else {
 	  $('#move_' + i).append('&nbsp;' + data.notation);
 	}
-
-	$(document).oneTime(750, "set", function(){
-	  gChess.set(data.set);
-	});
       }
 
     } else {
